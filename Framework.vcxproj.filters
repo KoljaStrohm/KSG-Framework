@@ -1,0 +1,422 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien\Framework">
+      <UniqueIdentifier>{ebc032cb-0fe8-4712-8cba-6f8cf72c9e6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\Objekte">
+      <UniqueIdentifier>{c85aabf4-2e43-4a74-90bc-2d92b7bf3259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\OS">
+      <UniqueIdentifier>{446e41c7-ea7d-4519-9cd1-1238232b08f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\Grafik">
+      <UniqueIdentifier>{d87f71ae-4946-4766-a9e3-e93f41e7f079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\Grafik\3D">
+      <UniqueIdentifier>{c3d8b482-b58f-48c6-9945-797f38a60fcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\Grafik\2D">
+      <UniqueIdentifier>{98ccc730-0ee3-4075-bfba-8998571c99e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\Grafik\DX">
+      <UniqueIdentifier>{cbb56eda-8286-4f8b-9a06-47b5af838106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework">
+      <UniqueIdentifier>{c35d3344-6ec8-4fa4-b32c-1976b6520a35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\OS">
+      <UniqueIdentifier>{d5fa078e-3896-4292-a26d-67a78fed965a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\Objekte">
+      <UniqueIdentifier>{446facfc-5180-4e05-a2ff-c5c0287705d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\Grafik">
+      <UniqueIdentifier>{8af2e4df-a840-42d3-a393-5d6b4bf7d569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\Grafik\2D">
+      <UniqueIdentifier>{849a8e90-f586-4537-8265-3b69a810dd5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\Grafik\DX">
+      <UniqueIdentifier>{4f762c9c-38af-494e-81a5-7a8fff22d551}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\OS\Datei">
+      <UniqueIdentifier>{fbd720d3-b19c-4501-b4dd-600cdbbea72d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\OS\Datei">
+      <UniqueIdentifier>{3ce6b48b-5906-41a0-b86b-2cce0876825b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\Grafik\4D">
+      <UniqueIdentifier>{638c4ef2-2ea4-4d4f-872a-f2012f97a696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Framework\Objekte3D">
+      <UniqueIdentifier>{28760380-5f68-43aa-87ae-353d20cad63d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\Objekte3D">
+      <UniqueIdentifier>{867266da-c3c0-4633-8374-989d2b60863c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\Grafik\3D">
+      <UniqueIdentifier>{6b73527a-d839-4081-a7b5-7e1d79b67cbd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Model2D.h">
+      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2.h">
+      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Mat3.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="AlphaFeld.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Knopf.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Fenster.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Fortschritt.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Liste.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Diagramm.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Rahmen.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Tabelle.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="TextFeld.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolTip.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Scroll.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Bildschirm.h">
+      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Betriebssystem.h">
+      <Filter>Headerdateien\Framework\OS</Filter>
+    </ClInclude>
+    <ClInclude Include="AuswahlBox.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="Prozess.h">
+      <Filter>Headerdateien\Framework\OS</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>Headerdateien\Framework\OS</Filter>
+    </ClInclude>
+    <ClInclude Include="Bild.h">
+      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderThread.h">
+      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="MausEreignis.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="TastaturEreignis.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Array.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Maus.h">
+      <Filter>Headerdateien\Framework\OS</Filter>
+    </ClInclude>
+    <ClInclude Include="Schluessel.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Schrift.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Punkt.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameworkMath.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Zeit.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Datei.h">
+      <Filter>Headerdateien\Framework\OS\Datei</Filter>
+    </ClInclude>
+    <ClInclude Include="DateiSystem.h">
+      <Filter>Headerdateien\Framework\OS\Datei</Filter>
+    </ClInclude>
+    <ClInclude Include="InitDatei.h">
+      <Filter>Headerdateien\Framework\OS\Datei</Filter>
+    </ClInclude>
+    <ClInclude Include="KSGTDatei.h">
+      <Filter>Headerdateien\Framework\OS\Datei</Filter>
+    </ClInclude>
+    <ClInclude Include="M2Datei.h">
+      <Filter>Headerdateien\Framework\OS\Datei</Filter>
+    </ClInclude>
+    <ClInclude Include="DateiDialog.h">
+      <Filter>Headerdateien\Framework\OS\Datei</Filter>
+    </ClInclude>
+    <ClInclude Include="Welt2D.h">
+      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Kam2D.h">
+      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="M2DVorschau.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectRegister.h">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Zeichnung.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultShader.h">
+      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="M3Datei.h">
+      <Filter>Headerdateien\Framework\OS\Datei</Filter>
+    </ClInclude>
+    <ClInclude Include="Model3D.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Zeichnung3D.h">
+      <Filter>Headerdateien\Framework\Objekte3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Mat4.h">
+      <Filter>Headerdateien\Framework\Grafik\4D</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Kam3D.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="DreieckListe.h">
+      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Welt3D.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Render3D.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Textur.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="DXBuffer.h">
+      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Headerdateien\Framework\Objekte3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Model3DList.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec4.h">
+      <Filter>Headerdateien\Framework\Grafik\4D</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturList.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation3D.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Maus.cpp">
+      <Filter>Quelldateien\Framework\OS</Filter>
+    </ClCompile>
+    <ClCompile Include="Prozess.cpp">
+      <Filter>Quelldateien\Framework\OS</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>Quelldateien\Framework\OS</Filter>
+    </ClCompile>
+    <ClCompile Include="AlphaFeld.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="AuswahlBox.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Diagramm.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Fenster.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Fortschritt.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Knopf.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Liste.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Rahmen.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Scroll.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Tabelle.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="TextFeld.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolTip.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Quelldateien\Framework\Grafik\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Bild.cpp">
+      <Filter>Quelldateien\Framework\Grafik\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Bildschirm.cpp">
+      <Filter>Quelldateien\Framework\Grafik\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderThread.cpp">
+      <Filter>Quelldateien\Framework\Grafik\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="MausEreignis.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Model2D.cpp">
+      <Filter>Quelldateien\Framework\Grafik\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Punkt.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Schluessel.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Schrift.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="TastaturEreignis.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Zeit.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Datei.cpp">
+      <Filter>Quelldateien\Framework\OS\Datei</Filter>
+    </ClCompile>
+    <ClCompile Include="DateiSystem.cpp">
+      <Filter>Quelldateien\Framework\OS\Datei</Filter>
+    </ClCompile>
+    <ClCompile Include="InitDatei.cpp">
+      <Filter>Quelldateien\Framework\OS\Datei</Filter>
+    </ClCompile>
+    <ClCompile Include="KSGTDatei.cpp">
+      <Filter>Quelldateien\Framework\OS\Datei</Filter>
+    </ClCompile>
+    <ClCompile Include="M2Datei.cpp">
+      <Filter>Quelldateien\Framework\OS\Datei</Filter>
+    </ClCompile>
+    <ClCompile Include="DateiDialog.cpp">
+      <Filter>Quelldateien\Framework\OS\Datei</Filter>
+    </ClCompile>
+    <ClCompile Include="Welt2D.cpp">
+      <Filter>Quelldateien\Framework\Grafik\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Kam2D.cpp">
+      <Filter>Quelldateien\Framework\Grafik\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="M2DVorschau.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="Zeichnung.cpp">
+      <Filter>Quelldateien\Framework\Objekte</Filter>
+    </ClCompile>
+    <ClCompile Include="M3Datei.cpp">
+      <Filter>Quelldateien\Framework\OS\Datei</Filter>
+    </ClCompile>
+    <ClCompile Include="Zeichnung3D.cpp">
+      <Filter>Quelldateien\Framework\Objekte3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Quelldateien\Framework\Grafik\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Welt3D.cpp">
+      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Render3D.cpp">
+      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Kam3D.cpp">
+      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Textur.cpp">
+      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Model3D.cpp">
+      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="DXBuffer.cpp">
+      <Filter>Quelldateien\Framework\Grafik\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Quelldateien\Framework\Objekte3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Model3DList.cpp">
+      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturList.cpp">
+      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestShader.hlsl">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,352 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C67E1D50-8FED-42FC-9538-1818297CF817}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Framework</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <ReferencePath>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win32;$(ReferencePath)</ReferencePath>
+    <SourcePath>$(SourcePath)</SourcePath>
+    <IncludePath>C:\Program Files %28x86%29\Visual Leak Detector\include;DXSDK_DIR)include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win32;$(DXSDK_DIR)lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <SourcePath>$(SourcePath)</SourcePath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <CustomBuildBeforeTargets>Build</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <CustomBuildBeforeTargets>Build</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
+    <CustomBuildBeforeTargets>Build</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;FRAMEWORK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>dxerr.lib;dxguid.lib;d3dx9.lib;d3dx10.lib;d3d9.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;FRAMEWORK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3dcompiler.lib;d3d9.lib;d3d11.lib;DXGI.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Main Server\Main Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Register Server\Register Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Patch Server\Patch Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Login Server\Login Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Information Server\Information Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Chat Server\Chat Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\DatenbankServer\DatenbankServer\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Anmeldung Server\Anmeldung Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Spiel Server\Spiel Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Erhaltung Server\Erhaltung Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Shop Server\Shop Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Historie Server\Historie Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\News Server\News Server\framework.dll"
+copy "x64\Debug\Framework.dll" "..\Test\Test\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\Start\Start\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\patcher\patcher\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\Icon\Icon\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\SMP\SMP\framework.dll"
+copy "x64\Debug\Framework.dll" "..\LTDB Konverter\LTDB Konverter\framework.dll"
+copy "x64\Debug\Framework.dll" "..\GSL Konverter\GSL Konverter\framework.dll"</Command>
+      <Outputs>kopiere Dateien...;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FRAMEWORK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3dcompiler.lib;d3d9.lib;d3d11.lib;DXGI.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy "Release\Framework.dll" "..\..\Spiele Platform\Server\Fertig\x32\dlls\framework.dll"
+copy "Release\Framework.dll" "..\..\Spiele Platform\Klient\Fertig\x32\framework.dll"
+copy "Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x32\framework.dll"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>kopiere...;%(Outputs)</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FRAMEWORK_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3dcompiler.lib;d3d9.lib;d3d11.lib;DXGI.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy "x64\Release\Framework.dll" "..\..\Spiele Platform\Server\Fertig\x64\dlls\framework.dll"
+copy "x64\Release\Framework.dll" "..\..\Spiele Platform\Klient\Fertig\x64\framework.dll"
+copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework.dll"</Command>
+      <Outputs>kopiere...;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="AlphaFeld.h" />
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Animation3D.h" />
+    <ClInclude Include="Array.h" />
+    <ClInclude Include="AuswahlBox.h" />
+    <ClInclude Include="Bild.h" />
+    <ClInclude Include="Bildschirm.h" />
+    <ClInclude Include="Cube.h" />
+    <ClInclude Include="DXBuffer.h" />
+    <ClInclude Include="Datei.h" />
+    <ClInclude Include="DateiDialog.h" />
+    <ClInclude Include="DateiSystem.h" />
+    <ClInclude Include="DefaultShader.h" />
+    <ClInclude Include="Diagramm.h" />
+    <ClInclude Include="DreieckListe.h" />
+    <ClInclude Include="Fenster.h" />
+    <ClInclude Include="Fortschritt.h" />
+    <ClInclude Include="FrameworkMath.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="InitDatei.h" />
+    <ClInclude Include="Kam2D.h" />
+    <ClInclude Include="Kam3D.h" />
+    <ClInclude Include="Knopf.h" />
+    <ClInclude Include="KSGTDatei.h" />
+    <ClInclude Include="Liste.h" />
+    <ClInclude Include="M2Datei.h" />
+    <ClInclude Include="M3Datei.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="Mat3.h" />
+    <ClInclude Include="Mat4.h" />
+    <ClInclude Include="Maus.h" />
+    <ClInclude Include="MausEreignis.h" />
+    <ClInclude Include="Model2D.h" />
+    <ClInclude Include="M2DVorschau.h" />
+    <ClInclude Include="Model3D.h" />
+    <ClInclude Include="Model3DList.h" />
+    <ClInclude Include="ObjectRegister.h" />
+    <ClInclude Include="Render3D.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Textur.h" />
+    <ClInclude Include="TexturList.h" />
+    <ClInclude Include="Vec4.h" />
+    <ClInclude Include="Welt3D.h" />
+    <ClInclude Include="Zeichnung.h" />
+    <ClInclude Include="Prozess.h" />
+    <ClInclude Include="Punkt.h" />
+    <ClInclude Include="Rahmen.h" />
+    <ClInclude Include="RenderThread.h" />
+    <ClInclude Include="Schluessel.h" />
+    <ClInclude Include="Schrift.h" />
+    <ClInclude Include="Scroll.h" />
+    <ClInclude Include="Tabelle.h" />
+    <ClInclude Include="TastaturEreignis.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TextFeld.h" />
+    <ClInclude Include="Thread.h" />
+    <ClInclude Include="ToolTip.h" />
+    <ClInclude Include="Betriebssystem.h" />
+    <ClInclude Include="Vec2.h" />
+    <ClInclude Include="Vec3.h" />
+    <ClInclude Include="Welt2D.h" />
+    <ClInclude Include="Zeichnung3D.h" />
+    <ClInclude Include="Zeit.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AlphaFeld.cpp" />
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="AuswahlBox.cpp" />
+    <ClCompile Include="Bild.cpp" />
+    <ClCompile Include="Bildschirm.cpp" />
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="Datei.cpp" />
+    <ClCompile Include="DateiDialog.cpp" />
+    <ClCompile Include="DateiSystem.cpp" />
+    <ClCompile Include="Diagramm.cpp" />
+    <ClCompile Include="DXBuffer.cpp" />
+    <ClCompile Include="Fenster.cpp" />
+    <ClCompile Include="Fortschritt.cpp" />
+    <ClCompile Include="Global.cpp" />
+    <ClCompile Include="InitDatei.cpp" />
+    <ClCompile Include="Kam2D.cpp" />
+    <ClCompile Include="Kam3D.cpp" />
+    <ClCompile Include="Knopf.cpp" />
+    <ClCompile Include="KSGTDatei.cpp" />
+    <ClCompile Include="Liste.cpp" />
+    <ClCompile Include="M2Datei.cpp" />
+    <ClCompile Include="M2DVorschau.cpp" />
+    <ClCompile Include="M3Datei.cpp" />
+    <ClCompile Include="Maus.cpp" />
+    <ClCompile Include="MausEreignis.cpp" />
+    <ClCompile Include="Model2D.cpp" />
+    <ClCompile Include="Model3D.cpp" />
+    <ClCompile Include="Model3DList.cpp" />
+    <ClCompile Include="Render3D.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Textur.cpp" />
+    <ClCompile Include="TexturList.cpp" />
+    <ClCompile Include="Welt3D.cpp" />
+    <ClCompile Include="Zeichnung3D.cpp" />
+    <ClCompile Include="Zeichnung.cpp" />
+    <ClCompile Include="Prozess.cpp" />
+    <ClCompile Include="Punkt.cpp" />
+    <ClCompile Include="Rahmen.cpp" />
+    <ClCompile Include="RenderThread.cpp" />
+    <ClCompile Include="Schluessel.cpp" />
+    <ClCompile Include="Schrift.cpp" />
+    <ClCompile Include="Scroll.cpp" />
+    <ClCompile Include="Tabelle.cpp" />
+    <ClCompile Include="TastaturEreignis.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextFeld.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ToolTip.cpp" />
+    <ClCompile Include="Welt2D.cpp" />
+    <ClCompile Include="Zeit.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
