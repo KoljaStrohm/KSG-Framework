@@ -51,8 +51,8 @@ namespace Framework
         // Setzt die Drehung des Knochens relativ zum Model Ursprung
         //  winkel: Ein Vektor der die Drehung um die verschiedenen Achsen als Komponenten hat
         void setDrehung( Vec3< float > &winkel );
-        //
-        void render( Render3D *zRObj, Mat4< float > &mat, )
+        // 
+        void render( Render3D *zRObj, Mat4< float > &mat );
     };
 
     class Skelett
