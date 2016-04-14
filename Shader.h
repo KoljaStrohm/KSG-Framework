@@ -65,7 +65,8 @@ namespace Framework
         //  zD3d11Context: Das Context Objekt, das zum kopieren verwendt werden soll
         //  data: Einen zeiger auf en byte Array der größe des Buffers
         //  index: Der Index des Buffers
-        bool füllConstBuffer( ID3D11DeviceContext *zD3d11Context, char *data, int index );
+        //  län: Die Länge der Daten in Bytes (-1 für die maximale größe des Buffers)
+        bool füllConstBuffer( ID3D11DeviceContext *zD3d11Context, char *data, int index, int län = -1 );
         // Gibt die Länge eines constanten Buffers zurück
         //  index: Der Index des Buffers
         int getConstBufferLänge( int index ) const;

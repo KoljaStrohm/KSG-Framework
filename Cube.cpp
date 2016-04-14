@@ -14,9 +14,6 @@ using namespace Framework;
 Cube::Cube( float size )
     : Model3D()
 {
-    for( int i = 0; i < 6; i++ )
-        texturUpdate[ i ] = 0;
-
     if( m3dRegister->hatModel( Standart3DTypes::würfel ) )
         model = m3dRegister->getModel( Standart3DTypes::würfel );
     else
@@ -173,11 +170,6 @@ Cube::Cube( float size )
     textur = new Model3DTextur();
 }
 
-// Destruktor
-Cube::~Cube()
-{
-}
-
 // Setzt die Textur des Würfels, so dass sie an allen Seiten gleich ist
 //  textur: Die Textur als Bild
 void Cube::setTextur( Bild *textur )
@@ -190,8 +182,6 @@ void Cube::setTextur( Bild *textur )
     this->textur->setPolygonTextur( UNTEN, t->getThis() );
     this->textur->setPolygonTextur( VORNE, t->getThis() );
     this->textur->setPolygonTextur( HINTEN, t );
-    for( int i = 0; i < 6; i++ )
-        texturUpdate[ i ] = 1;
     rend = 1;
 }
 
@@ -208,8 +198,6 @@ void Cube::setTextur( int id )
     this->textur->setPolygonTextur( UNTEN, t->getThis() );
     this->textur->setPolygonTextur( VORNE, t->getThis() );
     this->textur->setPolygonTextur( HINTEN, t );
-    for( int i = 0; i < 6; i++ )
-        texturUpdate[ i ] = 1;
     rend = 1;
 }
 
@@ -221,7 +209,6 @@ void Cube::setTextur( Bild *textur, CubeSeite s )
     Textur *t = new Textur();
     t->setBildZ( textur );
     this->textur->setPolygonTextur( s, t );
-    texturUpdate[ s ] = 1;
     rend = 1;
 }
 
@@ -234,29 +221,7 @@ void Cube::setTextur( int id, CubeSeite s )
     if( !t )
         return;
     this->textur->setPolygonTextur( s, t );
-    texturUpdate[ s ] = 1;
     rend = 1;
-}
-
-// Zeichnet den Würfel
-//  zRObj: Ein Zeiger auf das Objekt, das zum Zeichnen verwendet werden soll (ohne erhöhten Reference Counter)
-void Cube::render( Render3D *zRObj )
-{
-    Array< Textur* > tmp;
-    for( int i = 0; i < 6; i++ )
-    {
-        if( texturUpdate[ i ] )
-        {
-            Textur *t = textur->zPolygonTextur( i );
-            if( tmp.getWertIndex( t ) < 0 )
-            {
-                //t->updateTextur( zRObj );
-                tmp.add( t );
-            }
-            texturUpdate[ i ] = 0;
-        }
-    }
-    __super::render( zRObj );
 }
 
 // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.

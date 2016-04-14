@@ -141,14 +141,19 @@ void Model3DData::removePolygon( int index )
     polygons->lösche( index );
 }
 
+// Aktualisiert die Vertecies
+//  zRObj: Das Objekt, mit dem die Grafikkarte verwaltet wird
+void Model3DData::aktualisiereVertecies( Render3D *zRObj )
+{
+    vertexBuffer->copieren( zRObj );
+}
+
 // Zeichnet alle Polygons
 //  world: Die Welt Matrix, die das Model in die Welt transformiert
 //  zTxt: Eine Liste mit Texturen der einzelnen Polygone
 //  zRObj: Das Objekt, mit dem gezeichnet werden soll
 void Model3DData::render( Mat4< float > &welt, const Model3DTextur *zTxt, Render3D *zRObj )
 {
-    vertexBuffer->copieren( zRObj );
-    zRObj->beginnModel( welt, vertexBuffer, id );
     int ind = 0;
     for( auto *i = &polygons->getArray(); i && i->set; i = i->next )
     {
@@ -180,6 +185,18 @@ Polygon3D *Model3DData::getPolygon( int index )
 float Model3DData::getRadius() const
 {
     return radius;
+}
+
+// Gibt die Id der Daten zurück, wenn sie in einer Model3DList registriert wurden. (siehe Framework::zM3DRegister())
+int Model3DData::getId() const
+{
+    return id;
+}
+
+// Gibt einen Buffer mit allen Vertecies des Models zurück
+const DXVertexBuffer *Model3DData::zVertexBuffer() const
+{
+    return vertexBuffer;
 }
 
 // Erhöht den Reference Counting Zähler.
@@ -302,7 +319,20 @@ void Model3D::render( Render3D *zRObj )
 {
     if( !model )
         return;
+    zRObj->beginnModel( this );
     model->render( welt, textur, zRObj );
+}
+
+// Gibt die Id der Daten zurück, wenn sie in einer Model3DList registriert wurden. (siehe Framework::zM3DRegister())
+int Model3D::getDatenId() const
+{
+    return model ? model->getId() : -1;
+}
+
+// Gibt einen Buffer mit allen Vertecies des Models zurück
+const DXVertexBuffer *Model3D::zVertexBuffer() const
+{
+    return model ? model->zVertexBuffer() : 0;
 }
 
 // Erhöht den Reference Counting Zähler.

@@ -59,6 +59,11 @@ namespace Framework
         // Legt fest, ob das Objekt teilweise oder ganz transparente stellen enthält
         //  a: true, wenn teilweise oder ganz transparente stellen vorhanden sind
         __declspec( dllexport ) void setAlpha( bool a );
+        // Errechnet die Matrizen aller Knochen des Skeletts der Zeichnung
+        //  viewProj: Die miteinander multiplizierten Kameramatrizen
+        //  matBuffer: Ein Array mit Matrizen, der gefüllt werden soll
+        //  return: Die Anzahl der Matrizen, die die Zeichnung benötigt
+        __declspec( dllexport ) int errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer );
         // Verarbeitet ein Mausereignis
         //  me: Das Mausereignis, das verarbeitet werden soll
         __declspec( dllexport ) virtual void doMausEreignis( MausEreignis &me );
@@ -77,20 +82,22 @@ namespace Framework
         // Gibt den radius einer Kugel zurück, die das gesammte Model umschließt
         __declspec( dllexport ) float getRadius() const;
         // Gibt einen Punkt zurück, der die Position der Zeichnung in der Welt darstellt
-        const Vec3< float > &getPos() const;
+        __declspec( dllexport ) const Vec3< float > &getPos() const;
         // Gibt die X Position der Zeichnung in der Welt zurück
-        float getX() const;
+        __declspec( dllexport ) float getX() const;
         // Gibt die Y Position der Zeichnung in der Welt zurück
-        float getY() const;
+        __declspec( dllexport ) float getY() const;
         // Gibt die Z Position der Zeichnung in der Welt zurück
-        float getZ() const;
+        __declspec( dllexport ) float getZ() const;
         // Gibt einen Vektor zurück, der die drehung der Zeichnung in der Welt darstellt. x ist die Drehung um die X Achse im Bogenmaß usw
-        const Vec3< float > &getDrehung() const;
+        __declspec( dllexport ) const Vec3< float > &getDrehung() const;
         // Gibt die Drehung um die X Achse im Bogenmaß zurück
-        float getXDrehung() const;
+        __declspec( dllexport ) float getXDrehung() const;
         // Gibt die Drehung um die Y Achse im Bogenmaß zurück
-        float getYDrehung() const;
+        __declspec( dllexport ) float getYDrehung() const;
         // Gibt die Drehung um die Z Achse im Bogenmaß zurück
-        float getZDrehung() const;
+        __declspec( dllexport ) float getZDrehung() const;
+        // Gibt die Matrix zurück, die die Zeichnung in den Welt Raum übersetzt
+        __declspec( dllexport ) const Mat4< float > &getMatrix() const;
     };
 }

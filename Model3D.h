@@ -22,6 +22,7 @@ namespace Framework
     {
         Vec3< float > pos;
         Vec2< float > tPos;
+        int knochenId;
     };
 
     class Knochen
@@ -32,10 +33,17 @@ namespace Framework
         int *indexList;
         int indexAnz;
         DXIndexBuffer *indexBuffer;
+        Knochen *geschwister;
+        Knochen *kinder;
+        int id;
+
+        // Fügt dem Knochen ein Geschwister Knochen hinzu
+        //  k: Der Knochen, der hinzugefügt werden soll
+        void addGeschwisterKnochen( Knochen *k );
 
     public:
         // Konstruktor
-        Knochen();
+        Knochen( int id );
         // Destruktor
         ~Knochen();
         // Setzt die Anzahl der mit dem Knochen verbundenen Vertecies
@@ -51,16 +59,44 @@ namespace Framework
         // Setzt die Drehung des Knochens relativ zum Model Ursprung
         //  winkel: Ein Vektor der die Drehung um die verschiedenen Achsen als Komponenten hat
         void setDrehung( Vec3< float > &winkel );
+        // Fügt einem bestimmten Knochen ein Kind Knochen hinzu
+        //  id: Die id des Knochens, wo der Knochen als Kind hinzugefügt werden soll
+        //  k: Der Knochen, der hinzugefügt werden soll
+        void addKind( int id, Knochen *k );
+        // Berechnet die Matrizen des Knochen und die von all seinen Geschwister Knochen und Kind Knochen
+        //  elternMat: Die fertig berechnete Matrix des Elternknochens
+        //  matBuffer: Ein Array, in dem alle berechneten Matrizen gespeichert werden sollen
+        void kalkulateMatrix( Mat4< float > elternMat, Mat4< float > *matBuffer );
         // 
-        void render( Render3D *zRObj, Mat4< float > &mat );
+        void render( Render3D *zRObj );
     };
 
     class Skelett
     {
     private:
+        Knochen *k;
+        int nextId;
+        int ref;
 
     public:
-
+        // Konstruktor
+        Skelett();
+        // Destruktor
+        ~Skelett();
+        // Gibt die Id des nächsten Knochens zurück und berechnet die neue Id für den Knochen danach
+        // Es können maximal 128 Knochen für ein Skelett existieren. Wenn diese Zahl überschritten wird, so wird -1 zurückgegeben
+        int getNextKnochenId();
+        // Fügt dem Skellet einen Knochen hinzu
+        //  k: Der Knochen
+        //  elternId: Die Id des Eltern Knochens. Wenn der Knochen kein Elternknochen besitzt, kannder Parameter weggelassen werden.
+        void addKnochen( Knochen *k, int elternId = -1 );
+        // Berechnet die Matrizen der Knochen
+        //  modelMatrix: Die Matrix, die das Skelett in den Raum der Welt transformiert
+        //  matBuffer: Ein Array von Matrizen, der durch die Knochen Matrizen gefüllt wird
+        void kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuffer );
+        // Zeichnet die Knochen
+        //  zRObj: Das Objekt, mit dem gezeichnet werden soll
+        void render( Render3D *zRObj );
     };
 
     struct Polygon3D
@@ -108,6 +144,8 @@ namespace Framework
         // Entfernt ein Polygon
         //  index: Der Index des Polygons
         __declspec( dllexport ) void removePolygon( int index );
+        // Aktualisiert die Vertecies
+        __declspec( dllexport ) void aktualisiereVertecies( Render3D *zRObj );
         // Zeichnet alle Polygons
         //  world: Die Welt Matrix, die das Model in die Welt transformiert
         //  zTxt: Eine Liste mit Texturen der einzelnen Polygone
@@ -120,6 +158,10 @@ namespace Framework
         __declspec( dllexport ) Polygon3D *getPolygon( int index );
         // Gibt den radius einer Kugel zurück, die das gesammte Model umschließt
         __declspec( dllexport ) float getRadius() const;
+        // Gibt die Id der Daten zurück, wenn sie in einer Model3DList registriert wurden. (siehe Framework::zM3DRegister())
+        __declspec( dllexport ) int getId() const;
+        // Gibt einen Buffer mit allen Vertecies des Models zurück
+        __declspec( dllexport ) const DXVertexBuffer *zVertexBuffer() const;
         // Erhöht den Reference Counting Zähler.
         //  return: this.
         __declspec( dllexport ) Model3DData *getThis();
@@ -182,6 +224,10 @@ namespace Framework
         // Zeichnet das Model
         //  zRObj: Ein Zeiger auf das Objekt, das zum Zeichnen verwendet werden soll (ohne erhöhten Reference Counter)
         __declspec( dllexport ) void render( Render3D *zRObj ) override;
+        // Gibt die Id der Daten zurück, wenn sie in einer Model3DList registriert wurden. (siehe Framework::zM3DRegister())
+        __declspec( dllexport ) int getDatenId() const;
+        // Gibt einen Buffer mit allen Vertecies des Models zurück
+        __declspec( dllexport ) const DXVertexBuffer *zVertexBuffer() const;
         // Erhöht den Reference Counting Zähler.
         //  return: this.
         __declspec( dllexport ) Model3D *getThis();

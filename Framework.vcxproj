@@ -251,6 +251,7 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Textur.h" />
     <ClInclude Include="TexturList.h" />
+    <ClInclude Include="TexturModel.h" />
     <ClInclude Include="Vec4.h" />
     <ClInclude Include="Welt3D.h" />
     <ClInclude Include="Zeichnung.h" />
@@ -307,6 +308,7 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Textur.cpp" />
     <ClCompile Include="TexturList.cpp" />
+    <ClCompile Include="TexturModel.cpp" />
     <ClCompile Include="Welt3D.cpp" />
     <ClCompile Include="Zeichnung3D.cpp" />
     <ClCompile Include="Zeichnung.cpp" />

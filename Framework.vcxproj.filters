@@ -225,9 +225,6 @@
     <ClInclude Include="Mat4.h">
       <Filter>Headerdateien\Framework\Grafik\4D</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
-    </ClInclude>
     <ClInclude Include="Kam3D.h">
       <Filter>Headerdateien\Framework\Grafik\3D</Filter>
     </ClInclude>
@@ -260,6 +257,12 @@
     </ClInclude>
     <ClInclude Include="Animation3D.h">
       <Filter>Headerdateien\Framework\Grafik\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Headerdateien\Framework\Objekte</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturModel.h">
+      <Filter>Headerdateien\Framework\Objekte3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -412,6 +415,9 @@
     </ClCompile>
     <ClCompile Include="TexturList.cpp">
       <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturModel.cpp">
+      <Filter>Quelldateien\Framework\Objekte3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

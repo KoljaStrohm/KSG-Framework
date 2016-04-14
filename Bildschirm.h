@@ -46,6 +46,7 @@ namespace Framework
     class DXVertexBuffer; // DXBuffer.h
     class DXIndexBuffer; // DXBuffer.h
     class Textur; // Textur.h
+    class TexturModel; // TexturModel.h
 
     struct Monitor
     {
@@ -146,8 +147,6 @@ namespace Framework
         ID3D11Device *d3d11Device;
         ID3D11DeviceContext *d3d11Context;
         IDXGISwapChain *d3d11SpawChain;
-        DXVertexBuffer *vertexBuffer;
-        DXIndexBuffer *indexBuffer;
         Textur *frameworkTextur;
         ID3D11SamplerState* sampleState;
         ID3D11RenderTargetView *rtview;
@@ -161,6 +160,7 @@ namespace Framework
         VertexShader *vertexShader;
         Render3D *renderObj;
         D3D11_VIEWPORT *vp;
+        TexturModel *texturModel;
         bool rend3D;
 
         void cleanUpDirectX();

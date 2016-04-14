@@ -151,17 +151,20 @@ bool Shader::löscheConstBuffer( int index )
 //  zD3d11Context: Das Context Objekt, das zum kopieren verwendt werden soll
 //  data: Einen zeiger auf en byte Array der größe des Buffers
 //  index: Der Index des Buffers
-bool Shader::füllConstBuffer( ID3D11DeviceContext *zD3d11Context, char *data, int index )
+//  län: Die Länge der Daten in Bytes (-1 für die maximale größe des Buffers)
+bool Shader::füllConstBuffer( ID3D11DeviceContext *zD3d11Context, char *data, int index, int län )
 {
     if( index < 0 || index >= 14 )
         return 0;
     if( !constBuffers[ index ] )
         return 0;
+    if( län < 0 )
+        län = buffLän[ index ];
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     HRESULT res = zD3d11Context->Map( constBuffers[ index ], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource );
     if( res != S_OK )
         return 0;
-    memcpy( mappedResource.pData, data, buffLän[ index ] );
+    memcpy( mappedResource.pData, data, län );
     zD3d11Context->Unmap( constBuffers[ index ], 0 );
     return 1;
 }

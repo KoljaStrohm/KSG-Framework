@@ -16,11 +16,14 @@ namespace Framework
     class DXVertexBuffer; // DXBuffer.h
     class DXIndexBuffer; // DXBuffer.h
     class Textur; // Textur.h
+    class Model3D; // Model3D.h
 
     class Render3D
     {
     private:
-        Mat4< float > matrixBuffer[ 3 ];
+        Mat4< float > matrixBuffer[ 128 ];
+        Mat4< float > view;
+        Mat4< float > proj;
         Vec4< float > frustrum[ 6 ];
         Vec3< float > kamPos;
         ID3D11Device *device;
@@ -59,9 +62,8 @@ namespace Framework
         //  kamPos: Die Position der Kamera in der Welt
         __declspec( dllexport ) void setKameraMatrix( Mat4< float > &view, Mat4< float > &proj, Vec3< float > &kamPos );
         // Beginnt das Zeichnen eines bestimmten objektes
-        //  world: Die Matrix, die das Model aus dem Model space in den world space übersetzt
-        //  zVertexBuffer: Ein VertexBuffer mit allen Punkten des Models ohne erhöhten Reference Counter
-        __declspec( dllexport ) void beginnModel( Mat4< float > &world, DXVertexBuffer *zVertexBuffer, int modelId );
+        //  zMdl: Das 3D Modelohne erhöhten Reference Counter
+        __declspec( dllexport ) void beginnModel( Model3D *zMdl );
         // Zeichnet eine bestimmte struktur
         //  zIndexBuffer: Ein IndexBuffer, der auf verschiedene Vertices aus dem Vertex Buffer des Models zeigt. Ohne erhöhten Reference Counter
         //  textur: Ein Zeiger auf die Textur, die verwendet werden soll ohne erhöhten Reference Counter
