@@ -319,6 +319,7 @@ void Model3D::render( Render3D *zRObj )
 {
     if( !model )
         return;
+    model->aktualisiereVertecies( zRObj );
     zRObj->beginnModel( this );
     model->render( welt, textur, zRObj );
 }

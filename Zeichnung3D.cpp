@@ -116,7 +116,7 @@ void Zeichnung3D::setAlpha( bool a )
 //  return: Die Anzahl der Matrizen, die die Zeichnung benötigt
 int Zeichnung3D::errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer )
 {
-    matBuffer[ 0 ] = welt * viewProj;
+    matBuffer[ 0 ] = viewProj * welt;
     return 1;
 }
 

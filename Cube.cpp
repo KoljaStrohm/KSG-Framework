@@ -34,6 +34,8 @@ Cube::Cube( float size )
         float back = front + stdSize;
 
         Vertex3D *vertecies = new Vertex3D[ 24 ];
+        for( int i = 0; i < 24; i++ )
+            vertecies[ i ].knochenId = 0;
         vertecies[ 0 ].pos = Vec3<float >( left, top, front );
         vertecies[ 0 ].tPos = Vec2< float >( 0.f, 0.f );
         vertecies[ 1 ].pos = Vec3<float >( right, top, front );

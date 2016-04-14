@@ -13,6 +13,8 @@ TexturModel::TexturModel()
     : Model3D()
 {
     Vertex3D *vertecies = new Vertex3D[ 4 ];
+    for( int i = 0; i < 4; i++ )
+        vertecies[ i ].knochenId = 0;
     vertecies[ 0 ].pos = Vec3<float >( -50, 50, 0.f );
     vertecies[ 0 ].tPos = Vec2< float >( 0.f, 0.f );
     vertecies[ 1 ].pos = Vec3<float >( 50, 50, 0.f );
@@ -67,6 +69,8 @@ void TexturModel::setGröße( Vec2< float > gr )
 {
     gr /= 2;
     Vertex3D *vertecies = new Vertex3D[ 4 ];
+    for( int i = 0; i < 4; i++ )
+        vertecies[ i ].knochenId = 0;
     vertecies[ 0 ].pos = Vec3<float >( -gr.x, gr.y, 0.f );
     vertecies[ 0 ].tPos = Vec2< float >( 0.f, 0.f );
     vertecies[ 1 ].pos = Vec3<float >( gr.x, gr.y, 0.f );
@@ -76,6 +80,18 @@ void TexturModel::setGröße( Vec2< float > gr )
     vertecies[ 3 ].pos = Vec3<float >( gr.x, -gr.y, 0.f );
     vertecies[ 3 ].tPos = Vec2< float >( 1.f, 1.f );
     model->setVertecies( vertecies, 4 );
+    Polygon3D *p = new Polygon3D();
+    p->indexAnz = 6;
+    p->indexList = new int[ p->indexAnz ];
+    p->indexBuffer->setLänge( p->indexAnz * 4 );
+    p->indexBuffer->setData( p->indexList );
+    p->indexList[ 0 ] = 0;
+    p->indexList[ 1 ] = 3;
+    p->indexList[ 2 ] = 2;
+    p->indexList[ 3 ] = 0;
+    p->indexList[ 4 ] = 1;
+    p->indexList[ 5 ] = 3;
+    model->addPolygon( p );
 }
 
 // Setzt die Größe, in der die Textur angezeigt wird
@@ -86,6 +102,8 @@ void TexturModel::setGröße( float b, float h )
     b /= 2;
     h /= 2;
     Vertex3D *vertecies = new Vertex3D[ 4 ];
+    for( int i = 0; i < 4; i++ )
+        vertecies[ i ].knochenId = 0;
     vertecies[ 0 ].pos = Vec3<float >( -b, h, 0.f );
     vertecies[ 0 ].tPos = Vec2< float >( 0.f, 0.f );
     vertecies[ 1 ].pos = Vec3<float >( b, h, 0.f );
@@ -95,6 +113,18 @@ void TexturModel::setGröße( float b, float h )
     vertecies[ 3 ].pos = Vec3<float >( b, -h, 0.f );
     vertecies[ 3 ].tPos = Vec2< float >( 1.f, 1.f );
     model->setVertecies( vertecies, 4 );
+    Polygon3D *p = new Polygon3D();
+    p->indexAnz = 6;
+    p->indexList = new int[ p->indexAnz ];
+    p->indexBuffer->setLänge( p->indexAnz * 4 );
+    p->indexBuffer->setData( p->indexList );
+    p->indexList[ 0 ] = 0;
+    p->indexList[ 1 ] = 3;
+    p->indexList[ 2 ] = 2;
+    p->indexList[ 3 ] = 0;
+    p->indexList[ 4 ] = 1;
+    p->indexList[ 5 ] = 3;
+    model->addPolygon( p );
 }
 
 // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.

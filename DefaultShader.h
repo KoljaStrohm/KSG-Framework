@@ -23,7 +23,7 @@ namespace Framework
         {                                                                                               \n\
             float4 position : POSITION;                                                                 \n\
             float2 tex : TEXCOORD0;                                                                     \n\
-            int knochen : KNOCHEN_ID;                                                                   \n\
+            uint knochen : KNOCHEN_ID0;                                                                 \n\
         };                                                                                              \n\
                                                                                                         \n\
         struct PixelInputType                                                                           \n\
