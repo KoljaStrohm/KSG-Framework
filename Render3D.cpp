@@ -145,8 +145,8 @@ void Render3D::releaseShader( int listIndex, int anz )
 //  kamPos: Die Position der Kamera in der Welt
 void Render3D::setKameraMatrix( Mat4< float > &view, Mat4< float > &proj, Vec3< float > &kamPos )
 {
-    matrixBuffer[ 1 ] = view;
-    matrixBuffer[ 2 ] = proj;
+    this->view = view;
+    this->proj = proj;
     this->kamPos = kamPos;
 
     Mat4< float > tmp = proj * view;
@@ -186,19 +186,19 @@ void Render3D::setKameraMatrix( Mat4< float > &view, Mat4< float > &proj, Vec3< 
 }
 
 // Beginnt das Zeichnen eines bestimmten objektes
-//  world: Die Matrix, die das Model aus dem Model space in den world space übersetzt
-//  zVertexBuffer: Ein VertexBuffer mit allen Punkten des Models ohne erhöhten Reference Counter
-void Render3D::beginnModel( Mat4< float > &world, DXVertexBuffer *zVertexBuffer, int modelId )
+//  zMdl: Das 3D Modelohne erhöhten Reference Counter
+void Render3D::beginnModel( Model3D *zMdl )
 {
-    matrixBuffer[ 0 ] = world;
+    Mat4< float > trans = proj * view;
+    int anz = zMdl->errechneMatrizen( trans, matrixBuffer );
     if( shader->z( VERTEX ) && shaderId->hat( VERTEX ) )
-        shader->z( VERTEX )->z( shaderId->get( VERTEX ) )->füllConstBuffer( context, (char*)matrixBuffer, 0 );
-    if( lastObjektId == -1 || lastObjektId != modelId )
+        shader->z( VERTEX )->z( shaderId->get( VERTEX ) )->füllConstBuffer( context, (char*)matrixBuffer, 0, sizeof( Mat4< float > ) * anz );
+    if( lastObjektId == -1 || lastObjektId != zMdl->getDatenId() )
     {
-        lastObjektId = modelId;
+        lastObjektId = zMdl->getDatenId();
         unsigned int offset = 0;
-        ID3D11Buffer *b = zVertexBuffer->zBuffer();
-        unsigned int es = (unsigned)zVertexBuffer->getElementLänge();
+        ID3D11Buffer *b = zMdl->zVertexBuffer()->zBuffer();
+        unsigned int es = (unsigned)zMdl->zVertexBuffer()->getElementLänge();
         context->IASetVertexBuffers( 0, 1, &b, &es, &offset );
     }
 }

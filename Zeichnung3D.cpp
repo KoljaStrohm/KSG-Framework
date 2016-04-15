@@ -110,6 +110,16 @@ void Zeichnung3D::setAlpha( bool a )
     rend = 1;
 }
 
+// Errechnet die Matrizen aller Knochen des Skeletts der Zeichnung
+//  viewProj: Die miteinander multiplizierten Kameramatrizen
+//  matBuffer: Ein Array mit Matrizen, der gefüllt werden soll
+//  return: Die Anzahl der Matrizen, die die Zeichnung benötigt
+int Zeichnung3D::errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer )
+{
+    matBuffer[ 0 ] = viewProj * welt;
+    return 1;
+}
+
 // Verarbeitet ein Mausereignis
 //  me: Das Mausereignis, das verarbeitet werden soll
 void Zeichnung3D::doMausEreignis( MausEreignis &me )
@@ -197,4 +207,10 @@ float Zeichnung3D::getYDrehung() const
 float Zeichnung3D::getZDrehung() const
 {
     return angle.z;
+}
+
+// Gibt die Matrix zurück, die die Zeichnung in den Welt Raum übersetzt
+const Mat4< float > &Zeichnung3D::getMatrix() const
+{
+    return welt;
 }

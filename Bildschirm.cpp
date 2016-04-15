@@ -21,6 +21,8 @@
 #include "DXBuffer.h"
 #include "Model3D.h"
 #include "Textur.h"
+#include "TexturModel.h"
+#include "TexturList.h"
 #include <d3d11.h>
 #include <d3d9.h>
 
@@ -507,8 +509,6 @@ Bildschirm3D::Bildschirm3D( WFenster *fenster )
     d3d11Context( 0 ),
     d3d11SpawChain( 0 ),
     frameworkTextur( 0 ),
-    vertexBuffer( 0 ),
-    indexBuffer( 0 ),
     vertexShader( 0 ),
     pixelShader( 0 ),
     sampleState( 0 ),
@@ -521,7 +521,8 @@ Bildschirm3D::Bildschirm3D( WFenster *fenster )
     kameras( new RCArray< Kam3D >() ),
     rend3D( 0 ),
     vp( 0 ),
-    renderObj( new Render3D() )
+    renderObj( new Render3D() ),
+    texturModel( new TexturModel() )
 {}
 
 // Destruktor 
@@ -529,6 +530,7 @@ Bildschirm3D::~Bildschirm3D()
 {
     kameras->release();
     renderObj->release();
+    texturModel->release();
     cleanUpDirectX();
 }
 
@@ -554,16 +556,6 @@ void Bildschirm3D::cleanUpDirectX()
     {
         frameworkTextur->release();
         frameworkTextur = NULL;
-    }
-    if( vertexBuffer )
-    {
-        vertexBuffer->release();
-        vertexBuffer = NULL;
-    }
-    if( indexBuffer )
-    {
-        indexBuffer->release();
-        indexBuffer = NULL;
     }
     if( pixelShader )
     {
@@ -770,7 +762,7 @@ void Bildschirm3D::update() // aktualisiert directX
     D3D11_DEPTH_STENCIL_DESC depthDisabledStencilDesc;
     // Clear the second depth stencil state before setting the parameters.
     ZeroMemory( &depthDisabledStencilDesc, sizeof( depthDisabledStencilDesc ) );
-    
+
     // Now create a second depth stencil state which turns off the Z buffer for 2D rendering.  The only difference is 
     // that DepthEnable is set to false, all other parameters are the same as the other depth stencil state.
     depthDisabledStencilDesc.DepthEnable = false;
@@ -787,7 +779,7 @@ void Bildschirm3D::update() // aktualisiert directX
     depthDisabledStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
     depthDisabledStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-    
+
     // Create the state using the device.
     result = d3d11Device->CreateDepthStencilState( &depthDisabledStencilDesc, &depthDisabledStencilState );
 
@@ -804,7 +796,7 @@ void Bildschirm3D::update() // aktualisiert directX
     pixelShader->setShaderCode( &shader );
     pixelShader->compile( d3d11Device, "TexturePixelShader", "5_0" );
 
-    D3D11_INPUT_ELEMENT_DESC polygonLayout[ 2 ];
+    D3D11_INPUT_ELEMENT_DESC polygonLayout[ 3 ];
     // Create the vertex input layout description.
     // This setup needs to match the VertexType stucture in the ModelClass and in the shader.
     polygonLayout[ 0 ].SemanticName = "POSITION";
@@ -823,8 +815,16 @@ void Bildschirm3D::update() // aktualisiert directX
     polygonLayout[ 1 ].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
     polygonLayout[ 1 ].InstanceDataStepRate = 0;
 
-    vertexShader->erstelleInputLayout( d3d11Device, polygonLayout, 2 );
-    vertexShader->erstelleConstBuffer( d3d11Device, sizeof( Mat4< float > ) * 3, 0 );
+    polygonLayout[ 2 ].SemanticName = "KNOCHEN_ID";
+    polygonLayout[ 2 ].SemanticIndex = 0;
+    polygonLayout[ 2 ].Format = DXGI_FORMAT_R32_UINT;
+    polygonLayout[ 2 ].InputSlot = 0;
+    polygonLayout[ 2 ].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+    polygonLayout[ 2 ].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    polygonLayout[ 2 ].InstanceDataStepRate = 0;
+
+    vertexShader->erstelleInputLayout( d3d11Device, polygonLayout, 3 );
+    vertexShader->erstelleConstBuffer( d3d11Device, sizeof( Mat4< float > ) * 128, 0 );
 
     // Create a texture sampler state description.
     D3D11_SAMPLER_DESC samplerDesc;
@@ -848,60 +848,12 @@ void Bildschirm3D::update() // aktualisiert directX
     //---------------------------------------------------------------
     // Framework Backbuffer Texture
 
-
-    unsigned long indices[ 6 ];
-    Vertex3D vertices[ 6 ];
-
-    // Load the index array with data.
-    for( int i = 0; i < 6; i++ )
-    {
-        indices[ i ] = i;
-    }
-    vertexBuffer = new DXVertexBuffer( sizeof( Vertex3D ) );
-    vertexBuffer->setLänge( sizeof( vertices ) );
-    vertexBuffer->setData( vertices );
-
-    indexBuffer = new DXIndexBuffer( sizeof( int ) );
-    indexBuffer->setLänge( sizeof( int ) * 6 );
-    indexBuffer->setData( indices );
-
     frameworkTextur = new Textur();
     frameworkTextur->setBildZ( renderB->getThis() );
+    texturRegister->addTextur( frameworkTextur->getThis(), "f_Render_Bild" );
 
-    float left, right, top, bottom;
-    // Calculate the screen coordinates of the left side of the bitmap.
-    left = (float)( ( backBufferGröße.x / 2.0 ) * -1 );
-
-    // Calculate the screen coordinates of the right side of the bitmap.
-    right = left + (float)backBufferGröße.x;
-
-    // Calculate the screen coordinates of the top of the bitmap.
-    top = (float)( backBufferGröße.y / 2.0 );
-
-    // Calculate the screen coordinates of the bottom of the bitmap.
-    bottom = top - (float)backBufferGröße.y;
-
-    // Load the vertex array with data.
-    // First triangle.
-    vertices[ 0 ].pos = Vec3< float >( left, top, 0.0f );  // Top left.
-    vertices[ 0 ].tPos = Vec2< float >( 0.0f, 0.0f );
-
-    vertices[ 1 ].pos = Vec3< float >( right, bottom, 0.0f );  // Bottom right.
-    vertices[ 1 ].tPos = Vec2< float >( 1.0f, 1.0f );
-
-    vertices[ 2 ].pos = Vec3< float >( left, bottom, 0.0f );  // Bottom left.
-    vertices[ 2 ].tPos = Vec2< float >( 0.0f, 1.0f );
-
-    // Second triangle.
-    vertices[ 3 ].pos = Vec3< float >( left, top, 0.0f );  // Top left.
-    vertices[ 3 ].tPos = Vec2< float >( 0.0f, 0.0f );
-
-    vertices[ 4 ].pos = Vec3< float >( right, top, 0.0f );  // Top right.
-    vertices[ 4 ].tPos = Vec2< float >( 1.0f, 0.0f );
-
-    vertices[ 5 ].pos = Vec3< float >( right, bottom, 0.0f );  // Bottom right.
-    vertices[ 5 ].tPos = Vec2< float >( 1.0f, 1.0f );
-
+    texturModel->setGröße( backBufferGröße );
+    texturModel->setTextur( frameworkTextur->getId() );
 
     D3D11_BLEND_DESC blendState;
     ZeroMemory( &blendState, sizeof( D3D11_BLEND_DESC ) );
@@ -932,9 +884,6 @@ void Bildschirm3D::update() // aktualisiert directX
     d3d11Context->PSSetSamplers( 0, 1, &sampleState );
     renderObj->benutzeShader( PIXEL, pixelShader->getThis() );
 
-    vertexBuffer->copieren( renderObj );
-    indexBuffer->copieren( renderObj );
-
     rend = 1;
     unlock();
 }
@@ -945,6 +894,7 @@ void Bildschirm3D::tick( double tickval )
     __super::tick( tickval );
     for( auto i = kameras->getArray(); i.set; i++ )
         rend3D |= i.var->tick( tickval );
+    rend3D |= texturModel->tick( tickval );
     unlock();
 }
 
@@ -1033,11 +983,10 @@ void Bildschirm3D::render() // Zeichnet das Bild
 
         d3d11Context->RSSetViewports( 1, vp );
 
-        Mat4< float > welt = welt.identity();
         float screenAspect = (float)backBufferGröße.x / (float)backBufferGröße.y;
-        renderObj->setKameraMatrix( welt.translation( Vec3< float >( 0.f, 0.f, backBufferGröße.y * 1.2075f ) ), welt.projektion( DirectX::XM_PI / 4.0f, screenAspect, 0.1f, 10000.f ), Vec3< float >( 0.f, 0.f, backBufferGröße.y * 1.2075f ) );
-        renderObj->beginnModel( welt, vertexBuffer, -1 );
-        renderObj->draw( indexBuffer, frameworkTextur );
+        Mat4< float > view = view.translation( Vec3< float >( 0.f, 0.f, backBufferGröße.y * 1.2075f ) );
+        renderObj->setKameraMatrix( view, view.projektion( DirectX::XM_PI / 4.0f, screenAspect, 0.1f, 10000.f ), Vec3< float >( 0.f, 0.f, backBufferGröße.y * 1.2075f ) );
+        texturModel->render( renderObj );
 
         result = d3d11SpawChain->Present( 0, 0 );
         renderZeit->messungEnde();

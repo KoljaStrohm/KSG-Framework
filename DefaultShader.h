@@ -8,20 +8,13 @@ namespace Framework
     void getVertexShader( Text &ret )
     {
         ret = "////////////////////////////////////////////////////////////////////////////////         \n\
-        // Filename: texture.vs                                                                         \n\
-        ////////////////////////////////////////////////////////////////////////////////                \n\
-                                                                                                        \n\
-                                                                                                        \n\
         /////////////                                                                                   \n\
         // GLOBALS //                                                                                   \n\
         /////////////                                                                                   \n\
-        cbuffer MatrixBuffer                                                                            \n\
+        cbuffer MatrixBuffer : register( b0 )                                                           \n\
         {                                                                                               \n\
-            matrix worldMatrix;                                                                         \n\
-            matrix viewMatrix;                                                                          \n\
-            matrix projectionMatrix;                                                                    \n\
+            matrix knochenMatrix[ 128 ];                                                                \n\
         };                                                                                              \n\
-                                                                                                        \n\
                                                                                                         \n\
         //////////////                                                                                  \n\
         // TYPEDEFS //                                                                                  \n\
@@ -30,6 +23,7 @@ namespace Framework
         {                                                                                               \n\
             float4 position : POSITION;                                                                 \n\
             float2 tex : TEXCOORD0;                                                                     \n\
+            uint knochen : KNOCHEN_ID0;                                                                 \n\
         };                                                                                              \n\
                                                                                                         \n\
         struct PixelInputType                                                                           \n\
@@ -37,7 +31,6 @@ namespace Framework
             float4 position : SV_POSITION;                                                              \n\
             float2 tex : TEXCOORD0;                                                                     \n\
         };                                                                                              \n\
-                                                                                                        \n\
                                                                                                         \n\
         ////////////////////////////////////////////////////////////////////////////////                \n\
         // Vertex Shader                                                                                \n\
@@ -54,10 +47,7 @@ namespace Framework
             output.tex = input.tex;                                                                     \n\
                                                                                                         \n\
             // Calculate the position of the vertex against the world, view, and projection matrices.   \n\
-            output.position = input.position;                                                           \n\
-            output.position = mul( input.position, worldMatrix );                                       \n\
-            output.position = mul( output.position, viewMatrix );                                       \n\
-            output.position = mul( output.position, projectionMatrix );                                 \n\
+            output.position = mul( input.position, knochenMatrix[ input.knochen ] );                    \n\
                                                                                                         \n\
             return output;                                                                              \n\
         }";
