@@ -7,6 +7,191 @@
 
 using namespace Framework;
 
+// Inhalt der Knochen Klasse
+
+// Konstruktor
+Knochen::Knochen( int id )
+{
+    pos = Vec3< float >( 0, 0, 0 );
+    winkel = Vec3< float >( 0, 0, 0 );
+    geschwister = 0;
+    kinder = 0;
+    this->id = id;
+}
+
+// Destruktor
+Knochen::~Knochen()
+{
+    delete geschwister;
+    delete kinder;
+}
+
+// private
+
+// Fügt dem Knochen ein Geschwister Knochen hinzu
+//  k: Der Knochen, der hinzugefügt werden soll
+void Knochen::addGeschwisterKnochen( Knochen *k )
+{
+    if( !geschwister )
+        geschwister = k;
+    else
+        geschwister->addGeschwisterKnochen( k );
+}
+
+// public
+
+// Setzt die Position des Knochens relativ zum Model Ursprung
+//  pos: Die Position
+void Knochen::setPosition( Vec3< float > &pos )
+{
+    this->pos = pos;
+}
+
+// Setzt die Drehung des Knochens relativ zum Model Ursprung
+//  winkel: Ein Vektor der die Drehung um die verschiedenen Achsen als Komponenten hat
+void Knochen::setDrehung( Vec3< float > &winkel )
+{
+    this->winkel = winkel;
+}
+
+// Fügt einem bestimmten Knochen ein Kind Knochen hinzu
+//  id: Die id des Knochens, wo der Knochen als Kind hinzugefügt werden soll
+//  k: Der Knochen, der hinzugefügt werden soll
+void Knochen::addKind( int id, Knochen *k )
+{
+    if( this->id == id )
+    {
+        if( !kinder )
+            kinder = k;
+        else
+            kinder->addGeschwisterKnochen( k );
+    }
+    else
+    {
+        if( kinder )
+            kinder->addKind( id, k );
+        else
+        {
+            Text err = "Es wurde kein Knochen mit der Id: ";
+            err += id;
+            err += " im Skelett gefunden, um ein Kind Knochen hinzuzufügen. Datei:" __FILE__ ", Zeile: ";
+            err += __LINE__;
+            err += "!";
+            delete k;
+            throw std::out_of_range( err );
+        }
+    }
+}
+
+// Berechnet die Matrizen des Knochen und die von all seinen Geschwister Knochen und Kind Knochen
+//  elternMat: Die fertig berechnete Matrix des Elternknochens
+//  matBuffer: Ein Array, in dem alle berechneten Matrizen gespeichert werden sollen
+//  kamMatrix: Die vereiniegung der view und projektions Matrizen
+void Knochen::kalkulateMatrix( Mat4< float > &elternMat, Mat4< float > *matBuffer, Mat4< float > &kamMat )
+{
+    if( geschwister )
+        geschwister->kalkulateMatrix( elternMat, matBuffer, kamMat );
+    matBuffer[ id ] = matBuffer[ id ].translation( pos ) * matBuffer[ id ].rotationZ( winkel.z ) * matBuffer[ id ].rotationX( winkel.x ) * matBuffer[ id ].rotationY( winkel.y );
+    matBuffer[ id ] = elternMat * matBuffer[ id ];
+    if( kinder )
+        kinder->kalkulateMatrix( matBuffer[ id ], matBuffer, kamMat );
+    matBuffer[ id ] = kamMat * matBuffer[ id ];
+}
+
+// Kopiert den Knochen mit allen Geschwister Knochen und Kind Knochen
+Knochen *Knochen::kopiereKnochen() const
+{
+    Knochen *ret = new Knochen( id );
+    ret->pos = pos;
+    ret->winkel = winkel;
+    if( geschwister )
+        ret->geschwister = geschwister->kopiereKnochen();
+    if( kinder )
+        ret->kinder = kinder->kopiereKnochen();
+    return ret;
+}
+
+// Gibt die Id des Knochens zurück
+int Knochen::getId() const
+{
+    return id;
+}
+
+// Inhalt der Skelett Klasse
+
+// Konstruktor
+Skelett::Skelett()
+{
+    k = 0;
+    nextId = 0;
+    ref = 1;
+}
+
+// Destruktor
+Skelett::~Skelett()
+{
+    if( k )
+        delete k;
+}
+
+// Gibt die Id des nächsten Knochens zurück und berechnet die neue Id für den Knochen danach
+// Es können maximal 128 Knochen für ein Skelett existieren. Wenn diese Zahl überschritten wird, so wird -1 zurückgegeben
+int Skelett::getNextKnochenId()
+{
+    return nextId++;
+}
+
+// Fügt dem Skellet einen Knochen hinzu
+//  k: Der Knochen
+//  elternId: Die Id des Eltern Knochens. Wenn der Knochen kein Elternknochen besitzt, kannder Parameter weggelassen werden.
+void Skelett::addKnochen( Knochen *k, int elternId )
+{
+    if( !this->k )
+        this->k = k;
+    else
+        this->k->addKind( elternId, k );
+    if( k->getId() >= nextId )
+        nextId = k->getId() + 1;
+}
+
+// Berechnet die Matrizen der Knochen
+//  modelMatrix: Die Matrix, die das Skelett in den Raum der Welt transformiert
+//  matBuffer: Ein Array von Matrizen, der durch die Knochen Matrizen gefüllt wird
+//  return: gibt die Anzahl der verwendeten Matrizen zurück
+//  kamMatrix: Die vereiniegung der view und projektions Matrizen
+int Skelett::kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuffer, Mat4< float > &kamMatrix )
+{
+    k->kalkulateMatrix( modelMatrix, matBuffer, kamMatrix );
+    return nextId;
+}
+
+// Kopiert das Skelett
+Skelett *Skelett::kopiereSkelett() const
+{
+    Skelett *ret = new Skelett();
+    ret->nextId = nextId;
+    if( k )
+        ret->addKnochen( k->kopiereKnochen() );
+    return ret;
+}
+
+// Erhöht den Reference Counting Zähler.
+Skelett *Skelett::getThis()
+{
+    ref++;
+    return this;
+}
+
+// Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
+//  return: 0.
+Skelett *Skelett::release()
+{
+    ref--;
+    if( !ref )
+        delete this;
+    return 0;
+}
+
 // Inhalt des Polygon3D Struct
 
 // Konstruktor
@@ -30,6 +215,7 @@ Polygon3D::~Polygon3D()
 Model3DData::Model3DData()
 {
     id = -1;
+    skelett = 0;
     vertexList = 0;
     polygons = new Array< Polygon3D* >();
     vertexBuffer = new DXVertexBuffer( sizeof( Vertex3D ) );
@@ -53,14 +239,27 @@ void Model3DData::clearModel()
     for( auto i = polygons->getArray(); i.set; i++ )
         delete i.var;
     polygons->leeren();
+    if( skelett )
+        skelett->release();
+    skelett = 0;
+    radius = 0;
+}
+
+// Setzt den Zeiger auf ein standartmäßig verwendete Skelett
+//  s: Das Skelett, das verwendet werden soll
+void Model3DData::setSkelettZ( Skelett *s )
+{
+    if( skelett )
+        skelett->release();
+    skelett = s;
 }
 
 // Setzt einen Zeiger auf eine Liste mit allen Vertecies des Models
 //  vertexList: Ein Array mit Vertecies
-        //  anz: Die Anzahl der Vertecies im Array
+//  anz: Die Anzahl der Vertecies im Array
 void Model3DData::setVertecies( Vertex3D *vertexList, int anz )
 {
-    clearModel();
+    delete[] this->vertexList;
     this->vertexList = vertexList;
     vertexBuffer->setData( vertexList );
     vertexBuffer->setLänge( sizeof( Vertex3D ) * anz );
@@ -113,7 +312,7 @@ void Model3DData::copyModel2D( Model2DData *model, float z )
                 for( auto *k = &j.var->zListe()->getArray(); k && k->set; k = k->next )
                 {
                     vertexList[ index ].pos = Vec3< float >( k->var->punkt->x, k->var->punkt->y, z );
-                    vertexList[ index ].tPos = (Vec2< float >)*k->var->textur;
+                    vertexList[ index ].tPos = ( Vec2< float > )*k->var->textur;
                     if( k->next && k->next->set && k->next->next && k->next->next->set )
                     {
                         p->indexList[ p->indexAnz ] = index;
@@ -148,6 +347,18 @@ void Model3DData::aktualisiereVertecies( Render3D *zRObj )
     vertexBuffer->copieren( zRObj );
 }
 
+// Berechnet die Matrizen der Knochen
+//  modelMatrix: Die Matrix, die das Skelett in den Raum der Welt transformiert
+//  matBuffer: Ein Array von Matrizen, der durch die Knochen Matrizen gefüllt wird
+//  return: gibt die Anzahl der verwendeten Matrizen zurück
+//  kamMatrix: Die vereiniegung der view und projektions Matrizen
+int Model3DData::kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuffer, Mat4< float > &kamMatrix ) const
+{
+    if( !skelett )
+        return 0;
+    return skelett->kalkulateMatrix( modelMatrix, matBuffer, kamMatrix );
+}
+
 // Zeichnet alle Polygons
 //  world: Die Welt Matrix, die das Model in die Welt transformiert
 //  zTxt: Eine Liste mit Texturen der einzelnen Polygone
@@ -167,14 +378,14 @@ void Model3DData::render( Mat4< float > &welt, const Model3DTextur *zTxt, Render
 }
 
 // Gibt die Anzahl an Polygonen zurück
-int Model3DData::getPolygonAnzahl()
+int Model3DData::getPolygonAnzahl() const
 {
     return polygons->getEintragAnzahl();
 }
 
 // Gibt ein bestimmtes Polygon zurück
 //  index: Der Index des Polygons
-Polygon3D *Model3DData::getPolygon( int index )
+Polygon3D *Model3DData::getPolygon( int index ) const
 {
     if( !polygons->hat( index ) )
         return 0;
@@ -274,6 +485,7 @@ Model3D::Model3D()
 {
     model = 0;
     textur = 0;
+    skelett = 0;
     ref = 1;
 }
 
@@ -284,6 +496,17 @@ Model3D::~Model3D()
         model->release();
     if( textur )
         textur->release();
+    if( skelett )
+        skelett->release();
+}
+
+// Setzt den Zeiger auf das zum Annimieren verwendete Skelett
+//  s: Das Skelett, das verwendet werden soll
+void Model3D::setSkelettZ( Skelett *s )
+{
+    if( skelett )
+        skelett->release();
+    skelett = s;
 }
 
 // Setzt die Daten des Models
@@ -302,6 +525,22 @@ void Model3D::setModelTextur( Model3DTextur *txt )
     if( textur )
         textur->release();
     textur = txt;
+}
+
+// Errechnet die Matrizen aller Knochen des Skeletts des Models
+//  viewProj: Die miteinander multiplizierten Kameramatrizen
+//  matBuffer: Ein Array mit Matrizen, der gefüllt werden soll
+//  return: Die Anzahl der Matrizen, die das Model benötigt
+int Model3D::errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer )
+{
+    int ret = 0;
+    if( skelett )
+        ret = skelett->kalkulateMatrix( welt, matBuffer, viewProj );
+    else if( model )
+        ret = model->kalkulateMatrix( welt, matBuffer, viewProj );
+    if( !ret )
+        return __super::errechneMatrizen( viewProj, matBuffer );
+    return ret;
 }
 
 // Verarbeitet die vergangene Zeit

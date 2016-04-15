@@ -63,7 +63,7 @@ namespace Framework
         //  viewProj: Die miteinander multiplizierten Kameramatrizen
         //  matBuffer: Ein Array mit Matrizen, der gefüllt werden soll
         //  return: Die Anzahl der Matrizen, die die Zeichnung benötigt
-        __declspec( dllexport ) int errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer );
+        __declspec( dllexport ) virtual int errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer );
         // Verarbeitet ein Mausereignis
         //  me: Das Mausereignis, das verarbeitet werden soll
         __declspec( dllexport ) virtual void doMausEreignis( MausEreignis &me );

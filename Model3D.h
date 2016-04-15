@@ -18,21 +18,11 @@ namespace Framework
     class Model3DTextur; // Model3D.h
     class Model3DList; // Model3DList.h
 
-    struct Vertex3D
-    {
-        Vec3< float > pos;
-        Vec2< float > tPos;
-        int knochenId;
-    };
-
     class Knochen
     {
     private:
         Vec3< float > pos;
         Vec3< float > winkel;
-        int *indexList;
-        int indexAnz;
-        DXIndexBuffer *indexBuffer;
         Knochen *geschwister;
         Knochen *kinder;
         int id;
@@ -43,32 +33,28 @@ namespace Framework
 
     public:
         // Konstruktor
-        Knochen( int id );
+        __declspec( dllexport ) Knochen( int id );
         // Destruktor
-        ~Knochen();
-        // Setzt die Anzahl der mit dem Knochen verbundenen Vertecies
-        //  anz: Die Anzahl der Vertecies
-        void setVertexAnzahl( int anz );
-        // Setzt deinen bestimmten Vertex des Knochens
-        //  i: Der Index des Vertex im Knochen
-        //  vId: Der Index des Vertex im Model
-        inline void setVertex( int i, int vId );
+        __declspec( dllexport ) ~Knochen();
         // Setzt die Position des Knochens relativ zum Model Ursprung
         //  pos: Die Position
-        void setPosition( Vec3< float > &pos );
+        __declspec( dllexport ) void setPosition( Vec3< float > &pos );
         // Setzt die Drehung des Knochens relativ zum Model Ursprung
         //  winkel: Ein Vektor der die Drehung um die verschiedenen Achsen als Komponenten hat
-        void setDrehung( Vec3< float > &winkel );
+        __declspec( dllexport ) void setDrehung( Vec3< float > &winkel );
         // Fügt einem bestimmten Knochen ein Kind Knochen hinzu
         //  id: Die id des Knochens, wo der Knochen als Kind hinzugefügt werden soll
         //  k: Der Knochen, der hinzugefügt werden soll
-        void addKind( int id, Knochen *k );
+        __declspec( dllexport ) void addKind( int id, Knochen *k );
         // Berechnet die Matrizen des Knochen und die von all seinen Geschwister Knochen und Kind Knochen
         //  elternMat: Die fertig berechnete Matrix des Elternknochens
         //  matBuffer: Ein Array, in dem alle berechneten Matrizen gespeichert werden sollen
-        void kalkulateMatrix( Mat4< float > elternMat, Mat4< float > *matBuffer );
-        // 
-        void render( Render3D *zRObj );
+        //  kamMatrix: Die vereiniegung der view und projektions Matrizen
+        __declspec( dllexport ) void kalkulateMatrix( Mat4< float > &elternMat, Mat4< float > *matBuffer, Mat4< float > &kamMat );
+        // Kopiert den Knochen mit allen Geschwister Knochen und Kind Knochen
+        __declspec( dllexport ) Knochen *kopiereKnochen() const;
+        // Gibt die Id des Knochens zurück
+        __declspec( dllexport ) int getId() const;
     };
 
     class Skelett
@@ -80,23 +66,37 @@ namespace Framework
 
     public:
         // Konstruktor
-        Skelett();
+        __declspec( dllexport ) Skelett();
         // Destruktor
-        ~Skelett();
+        __declspec( dllexport ) ~Skelett();
         // Gibt die Id des nächsten Knochens zurück und berechnet die neue Id für den Knochen danach
         // Es können maximal 128 Knochen für ein Skelett existieren. Wenn diese Zahl überschritten wird, so wird -1 zurückgegeben
-        int getNextKnochenId();
+        __declspec( dllexport ) int getNextKnochenId();
         // Fügt dem Skellet einen Knochen hinzu
         //  k: Der Knochen
         //  elternId: Die Id des Eltern Knochens. Wenn der Knochen kein Elternknochen besitzt, kannder Parameter weggelassen werden.
-        void addKnochen( Knochen *k, int elternId = -1 );
+        __declspec( dllexport ) void addKnochen( Knochen *k, int elternId = -1 );
         // Berechnet die Matrizen der Knochen
         //  modelMatrix: Die Matrix, die das Skelett in den Raum der Welt transformiert
         //  matBuffer: Ein Array von Matrizen, der durch die Knochen Matrizen gefüllt wird
-        void kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuffer );
-        // Zeichnet die Knochen
-        //  zRObj: Das Objekt, mit dem gezeichnet werden soll
-        void render( Render3D *zRObj );
+        //  return: gibt die Anzahl der verwendeten Matrizen zurück
+        //  kamMatrix: Die vereiniegung der view und projektions Matrizen
+        __declspec( dllexport ) int kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuffer, Mat4< float > &kamMatrix );
+        // Kopiert das Skelett
+        __declspec( dllexport ) Skelett *kopiereSkelett() const;
+        // Erhöht den Reference Counting Zähler.
+        //  return: this.
+        __declspec( dllexport ) Skelett *getThis();
+        // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
+        //  return: 0.
+        __declspec( dllexport ) Skelett *release();
+    };
+
+    struct Vertex3D
+    {
+        Vec3< float > pos;
+        Vec2< float > tPos;
+        int knochenId;
     };
 
     struct Polygon3D
@@ -116,6 +116,7 @@ namespace Framework
     class Model3DData
     {
     private:
+        Skelett *skelett;
         Vertex3D *vertexList;
         DXVertexBuffer *vertexBuffer;
         Array< Polygon3D* > *polygons;
@@ -130,6 +131,9 @@ namespace Framework
         __declspec( dllexport ) ~Model3DData();
         // Löscht alle Model daten
         __declspec( dllexport ) void clearModel();
+        // Setzt den Zeiger auf ein standartmäßig verwendete Skelett
+        //  s: Das Skelett, das verwendet werden soll
+        __declspec( dllexport ) void setSkelettZ( Skelett *s );
         // Setzt einen Zeiger auf eine Liste mit allen Vertecies des Models
         //  vertexList: Ein Array mit Vertecies
         //  anz: Die Anzahl der Vertecies im Array
@@ -146,16 +150,22 @@ namespace Framework
         __declspec( dllexport ) void removePolygon( int index );
         // Aktualisiert die Vertecies
         __declspec( dllexport ) void aktualisiereVertecies( Render3D *zRObj );
+        // Berechnet die Matrizen der Knochen des Standart Skeletts
+        //  modelMatrix: Die Matrix, die das Skelett in den Raum der Welt transformiert
+        //  matBuffer: Ein Array von Matrizen, der durch die Knochen Matrizen gefüllt wird
+        //  return: gibt die Anzahl der verwendeten Matrizen zurück. 0, falls kein Standart Skelett gesetzt wurde
+        //  kamMatrix: Die vereiniegung der view und projektions Matrizen
+        int kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuffer, Mat4< float > &kamMatrix ) const;
         // Zeichnet alle Polygons
         //  world: Die Welt Matrix, die das Model in die Welt transformiert
         //  zTxt: Eine Liste mit Texturen der einzelnen Polygone
         //  zRObj: Das Objekt, mit dem gezeichnet werden soll
         __declspec( dllexport ) void render( Mat4< float > &welt, const Model3DTextur *zTxt, Render3D *zRObj );
         // Gibt die Anzahl an Polygonen zurück
-        __declspec( dllexport ) int getPolygonAnzahl();
+        __declspec( dllexport ) int getPolygonAnzahl() const;
         // Gibt ein bestimmtes Polygon zurück
         //  index: Der Index des Polygons
-        __declspec( dllexport ) Polygon3D *getPolygon( int index );
+        __declspec( dllexport ) Polygon3D *getPolygon( int index ) const;
         // Gibt den radius einer Kugel zurück, die das gesammte Model umschließt
         __declspec( dllexport ) float getRadius() const;
         // Gibt die Id der Daten zurück, wenn sie in einer Model3DList registriert wurden. (siehe Framework::zM3DRegister())
@@ -203,6 +213,7 @@ namespace Framework
     {
     protected:
         Model3DData *model;
+        Skelett *skelett;
         Model3DTextur *textur;
         int ref;
 
@@ -211,16 +222,24 @@ namespace Framework
         __declspec( dllexport ) Model3D();
         // Destruktor
         __declspec( dllexport ) ~Model3D();
+        // Setzt den Zeiger auf das zum Annimieren verwendete Skelett
+        //  s: Das Skelett, das verwendet werden soll
+        __declspec( dllexport ) void setSkelettZ( Skelett *s );
         // Setzt die Daten des Models
         //  data: Die Daten
         __declspec( dllexport ) void setModelDaten( Model3DData *data );
         // Setzt die zum Zeichnen zu benutzenden Texturen
         //  txt: Ein Liste mit Texturen zu den verschiedenen Polygonen zugeordnet
         __declspec( dllexport ) void setModelTextur( Model3DTextur *txt );
+        // Errechnet die Matrizen aller Knochen des Skeletts des Models
+        //  viewProj: Die miteinander multiplizierten Kameramatrizen
+        //  matBuffer: Ein Array mit Matrizen, der gefüllt werden soll
+        //  return: Die Anzahl der Matrizen, die das Model benötigt
+        __declspec( dllexport ) int errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer ) override;
         // Verarbeitet die vergangene Zeit
         //  tickval: Die zeit in sekunden, die seit dem letzten Aufruf der Funktion vergangen ist
         //  return: true, wenn sich das Objekt verändert hat, false sonnst.
-        __declspec( dllexport ) virtual bool tick( double tickval );
+        __declspec( dllexport ) virtual bool tick( double tickval ) override;
         // Zeichnet das Model
         //  zRObj: Ein Zeiger auf das Objekt, das zum Zeichnen verwendet werden soll (ohne erhöhten Reference Counter)
         __declspec( dllexport ) void render( Render3D *zRObj ) override;
