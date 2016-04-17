@@ -8,6 +8,7 @@ namespace Framework
     class Zeichnung3D; // Zeichnung.h
     class Render3D; // Render3D.h
 
+    // Speichert alle 3D Zeichnungen einer Szene ab
     class Welt3D
     {
     private:

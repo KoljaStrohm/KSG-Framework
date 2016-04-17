@@ -19,15 +19,16 @@ namespace Framework
     class VScrollBar; // Scroll.h
     class HScrollBar; // Scroll.h
 
+    // Eine Zeichnung für das 2D GUI Framework
 	class Zeichnung
 	{
     public:
         class Style
         {
         public:
-            const static __int64 Sichtbar = 0x00001;
-            const static __int64 Erlaubt = 0x00002;
-            const static __int64 Fokus = 0x00040;// 0x80
+            const static __int64 Sichtbar = 0x00001; // Wenn dieser Style gesetzt ist, wird die Zeichnung beim Zeichnen angezeigt
+            const static __int64 Erlaubt = 0x00002; // Wenn dieser Style gesetzt ist, kann der Benutzer mit der Zeichnung interagieren
+            const static __int64 Fokus = 0x00040; // Wenn dieser Style gesetzt ist, werden die Tastatur Ereignisse von der Zeichnung verarbeitet
         };
 	protected:
 		Punkt pos;
@@ -51,50 +52,130 @@ namespace Framework
 		__declspec( dllexport ) Zeichnung();
 		// Destruktor 
 		__declspec( dllexport ) ~Zeichnung();
-		// nicht constant 
+		// Legt fest, ob sich die Zeichnung seit des letzten Bildes verändert hat und neu gezeichnet werden muss
 		__declspec( dllexport ) void setRender();
+        // Setzt den Text, der erscheint, wenn der Benutzer für längere Zeit mit der Maus in der Zeichnung verweilt
+        //  txt: Der Text, der angezeigt werden soll
+        //  zScreen: Ein Zeiger auf das Verwendete Bildschirm Objekt ohne erhöhten Reference Counter
 		__declspec( dllexport ) void setToolTipText( const char *txt, Bildschirm *zScreen );
+        // Dies ist notwendig, falls mehrere Threads gleichzeitig die Zeichnung benutzen.
+        // Wenn lockZeichnung() von zwei threads aufgerufen wird, wartet der letzte so lange, bis der erste unlockZeichnung() aufgerufen hat.
 		__declspec( dllexport ) void lockZeichnung();
+        // Dies ist notwendig, falls mehrere Threads gleichzeitig die Zeichnung benutzen.
+        // Wenn lockZeichnung() von zwei threads aufgerufen wird, wartet der letzte so lange, bis der erste unlockZeichnung() aufgerufen hat.
 		__declspec( dllexport ) void unlockZeichnung();
-		__declspec( dllexport ) void setMausEreignisParameter( void *p ); // setzt den Parameter vom Maus Ereignis
-		__declspec( dllexport ) void setTastaturEreignisParameter( void *p ); // setzt den Parameter vom Tastatur Ereignis
-		__declspec( dllexport ) void setMausEreignis( bool( *ak )( void *, void *, MausEreignis ) ); // setzt das Maus Ereignis
-		__declspec( dllexport ) void setTastaturEreignis( bool( *ak )( void *, void *, TastaturEreignis ) ); // setzt das TastaturEreignis
-		__declspec( dllexport ) void setNMausEreignisParameter( void *p ); // setzt den Parameter vom Maus Ereignis
-		__declspec( dllexport ) void setNTastaturEreignisParameter( void *p ); // setzt den Parameter vom Tastatur Ereignis
-		__declspec( dllexport ) void setNMausEreignis( bool( *ak )( void *, void *, MausEreignis ) ); // setzt das Maus Ereignis
-		__declspec( dllexport ) void setNTastaturEreignis( bool( *ak )( void *, void *, TastaturEreignis ) ); // setzt das TastaturEreignis
-		__declspec( dllexport ) virtual void doMausEreignis( MausEreignis &me ); // ruft Mak auf
-		__declspec( dllexport ) virtual void doTastaturEreignis( TastaturEreignis &te ); // ruft Tak auf
-		__declspec( dllexport ) virtual bool tick( double tickval ); // tick
-		__declspec( dllexport ) void setPosition( const Punkt &pos ); // setzt die position
-		__declspec( dllexport ) void setX( int xPos ); // setzt die x position
-		__declspec( dllexport ) void setY( int yPos ); // setzt die y position
-		__declspec( dllexport ) void setGröße( const Punkt &gr ); // setzt die Größe
-		__declspec( dllexport ) void setPosition( int x, int y ); // setzt die position
-		__declspec( dllexport ) void setGröße( int x, int y ); // setzt die Größe
-		__declspec( dllexport ) void setStyle( __int64 style ); // setzt den Style des Zeichnunges
-		__declspec( dllexport ) void setStyle( __int64 style, bool add_löschen );
+        // setzt den Parameter, der bei einem Maus Ereignis an die Rückruffunktion übergeben wird
+        //  p: Der Parameter
+		__declspec( dllexport ) void setMausEreignisParameter( void *p );
+        // Setzt den Parameter, der bei einem Tastatur Ereignis an die Rückruffunktion übergeben wird
+        //  p: Der Parameter
+		__declspec( dllexport ) void setTastaturEreignisParameter( void *p );
+        // Setzt die Rückruffunktion, die bei einem Maus Ereignis aufgerufen werden soll.
+        // Wenn die Rückruffunktion 0 zurückgiebt, oder nicht gesetzt wurde, wird ein Maus Ereignis von der Zeichnung nicht weiter beachtet
+        // Es kann die Standartfunktion __ret1ME verwendet werden, die in MausEreignis.h definiert ist und immer 1 zurückgibt
+		//  ak: Ein Zeiger auf die Rückruffunktion
+        __declspec( dllexport ) void setMausEreignis( bool( *ak )( void *, void *, MausEreignis ) );
+        // Setzt die Rückruffunktion, die bei einem Tastatur Ereignis aufgerufen werdne soll.
+        // Wenn die Rückruffunktion 0 zurückgiebt, oder nicht gesetzt wurde, wird ein Tastatur Ereignis von der Zeichnung nicht weiter beachtet
+        // Es kann die Standartfunktion __ret1TE verwendet werden, die in TastaturEreignis.h definiert ist und immer 1 zurückgibt
+        // Weitere Standartfunktionen sind _nurNummernTE und _nurHexTE ebenfals aus TastaturEreignis.h
+        //  ak: Ein Zeiger auf die Rückruffunktion
+		__declspec( dllexport ) void setTastaturEreignis( bool( *ak )( void *, void *, TastaturEreignis ) );
+        // setzt den Parameter, der bei einem Maus Ereignis an die Rückruffunktion übergeben wird, die aufgerufen wird, fals das Ereignis von der Zeichnung verarbeitet wurde
+        //  p: Der Parameter
+		__declspec( dllexport ) void setNMausEreignisParameter( void *p );
+        // Setzt den Parameter, der bei einem Tastatur Ereignis an die Rückruffunktion übergeben wird, die aufgerufen wird, fals das Ereignis von der Zeichnung verarbeitet wurde
+        //  p: Der Parameter
+		__declspec( dllexport ) void setNTastaturEreignisParameter( void *p );
+        // Setzt die Rückruffunktion, die bei einem Maus Ereignis aufgerufen werden soll, nachdem das Ereignis bereits von der Zeichnung verarbeitet wurde
+        // Wenn die Rückruffunktion 1 zurückgiebt, oder nicht gesetzt wurde, wird das Maus Ereignis von keiner weiteren Zeichnung verarbeitet, die zum Beispiel hinter dieser Zeichnung liegen
+        // Es kann die Standartfunktion __ret1ME verwendet werden, die in MausEreignis.h definiert ist und immer 1 zurückgibt
+        //  ak: Ein Zeiger auf die Rückruffunktion
+		__declspec( dllexport ) void setNMausEreignis( bool( *ak )( void *, void *, MausEreignis ) );
+        // Setzt die Rückruffunktion, die bei einem Tastatur Ereignis aufgerufen werdne soll, nachdem das Ereignis bereits von der Zeichnung verarbeitet wurde
+        // Wenn die Rückruffunktion 1 zurückgiebt, oder nicht gesetzt wurde, wird das Tastatur Ereignis von keiner weiteren Zeichnung verarbeitet
+        // Es kann die Standartfunktion __ret1TE verwendet werden, die in TastaturEreignis.h definiert ist und immer 1 zurückgibt
+        // Weitere Standartfunktionen sind _nurNummernTE und _nurHexTE ebenfals aus TastaturEreignis.h
+        //  ak: Ein Zeiger auf die Rückruffunktion
+		__declspec( dllexport ) void setNTastaturEreignis( bool( *ak )( void *, void *, TastaturEreignis ) );
+        // Verarbeitet ein Maus Ereignis. Wird vom Framework automatisch aufgerufen.
+        //  me: Das Ereignis
+		__declspec( dllexport ) virtual void doMausEreignis( MausEreignis &me );
+        // Verarbeitet ein Tastatur Ereignis. Wird vom Framework automatisch aufgerufen
+        //  te: Das Ereignis
+		__declspec( dllexport ) virtual void doTastaturEreignis( TastaturEreignis &te );
+        // Verarbeitet die Zeit, die seit dem letzten aufruf dieser Funktion vergangen ist
+        //  tickVal: Die vergangene Zeit in Sekunden
+		__declspec( dllexport ) virtual bool tick( double tickval );
+        // Setzt die Position der Zeichnung
+        //  pos: Die Position in Pixeln
+		__declspec( dllexport ) void setPosition( const Punkt &pos );
+        // Setzt die X Position der Zeichnung
+        //  xPos: Die Position in Pixeln
+		__declspec( dllexport ) void setX( int xPos );
+        // Setzt die Y Position der Zeichnung
+        //  yPos: Die Position in Pixeln
+		__declspec( dllexport ) void setY( int yPos );
+        // Setzt die Größe der Zeichnung
+        //  gr: Ein Punkt mit x als Breite und y als Höhe in Pixeln
+        __declspec( dllexport ) void setGröße( const Punkt &gr );
+        // Setzt die Position der Zeichnung
+        //  x: Die X Position in Pixeln
+        //  y: Die Y Position in Pixeln
+		__declspec( dllexport ) void setPosition( int x, int y );
+        // Setzt die Größe der Zeichnung
+        //  br: Die Breite in Pixeln
+        //  hö: Die Höhe in Pixeln
+		__declspec( dllexport ) void setGröße( int br, int hö );
+        // Setzt den Style der Zeichnung
+        //  style: Der neue Style bestehend aus den Flags aus der zugehörigen Style Klasse
+		__declspec( dllexport ) void setStyle( __int64 style );
+        // Setzt den Style der Zeichnung
+        //  style: Alle Style Flags, die verändert werden sollen
+        //  add_löschen: 1, falls der Style hinzugefügt werden soll. 0, falls der Style entfernt weden soll
+        __declspec( dllexport ) void setStyle( __int64 style, bool add_löschen );
+        // Fügt Style Flags hinzu
+        //  style: Der Style, der hinzugefügt werden soll
 		__declspec( dllexport ) void addStyle( __int64 style );
+        // Entfernt Style Flags
+        //  style: Der Style, der entfernt werden soll
 		__declspec( dllexport ) void löscheStyle( __int64 style );
-		__declspec( dllexport ) virtual void render( Bild &zRObj ); // zeichnet nach zRObj
-		// constant 
-		__declspec( dllexport ) bool hatMausEreignis() const; // prüft, ob Mak gesetzt ist
-		__declspec( dllexport ) bool hatTastaturEreignis() const; // prüft, ob Tak gesetzt ist
-		__declspec( dllexport ) const Punkt &getPosition() const; // gibt die Position zurück
-		__declspec( dllexport ) const Punkt &getGröße() const; // gibt die Größe zurück
-		__declspec( dllexport ) int getBreite() const; // gibt die Breite zurück
-		__declspec( dllexport ) int getHöhe() const; // gibt die Höhe zurück
-		__declspec( dllexport ) int getX() const; // gibt X zurück
-		__declspec( dllexport ) int getY() const; // gibt Y zurück
-		__declspec( dllexport ) ToolTip *getToolTip() const; // gibt den ToolTip Text
+        // Zeichnet die Zeihnung in ein bestimmtes Bild
+        //  zRObj: Das Bild, in das gezeichnet werden soll
+		__declspec( dllexport ) virtual void render( Bild &zRObj );
+		// Gibt zurück, ob eine Rückruffunktion für Maus Ereignisse gesetzt wurde
+		__declspec( dllexport ) bool hatMausEreignis() const;
+        // Gibt zurück, ob eine Rückruffunktion für Tastatur Ereignisse gesetzt wurde
+		__declspec( dllexport ) bool hatTastaturEreignis() const;
+        // Gibt die Position der Zeichnung in Pixeln zurück
+		__declspec( dllexport ) const Punkt &getPosition() const;
+        // Gibt die Größe der Zeichnung in Pixeln zurück. x für Breite und y für Höhe
+		__declspec( dllexport ) const Punkt &getGröße() const;
+        // Gibt die Breite der Zeichnung in Pixeln zurück
+		__declspec( dllexport ) int getBreite() const;
+        // Gibt die Höhe der Zeichnung in Pixeln zurück
+		__declspec( dllexport ) int getHöhe() const;
+        // Gibt die X Position der Zeichnung in Pixeln zurück
+		__declspec( dllexport ) int getX() const;
+        // Gibt die Y Position der Zeichnung in Pixeln zurück
+		__declspec( dllexport ) int getY() const;
+        // Gibt einen Zeiger auf das Tooltip Objekt zurück, walls es verwendet wird
+		__declspec( dllexport ) ToolTip *getToolTip() const;
+        // Gibt einen Zeiger auf das Tooltip Objekt ohne erhöhten Reference Counter zurück, walls es verwendet wird
 		__declspec( dllexport ) ToolTip *zToolTip() const;
-        __declspec( dllexport ) inline bool hatStyle( __int64 style ) const; // prüft, ob style vorhanden
-        __declspec( dllexport ) inline bool hatStyleNicht( __int64 style ) const; // prüft, ob style nicht vorhanden
-		__declspec( dllexport ) virtual Zeichnung *dublizieren() const; // Erzeugt eine Kopie des Zeichnungs
-		// reference Counting 
+        // Gibt zurück, ob bestimmte Styles gesetzt wurden
+        //  style: Die Styles, die überprüft werden sollen
+        //  return: 1, falls alle Styles in style gesetzt wurden
+        __declspec( dllexport ) inline bool hatStyle( __int64 style ) const;
+        // Gibt zurück, ob bestimmte Styles nicht gesetzt wurden
+        //  style: Die Styles, die geprüft werden sollen
+        //  return: 1, falls alle Styles in style nicht gesetzt wurden
+        __declspec( dllexport ) inline bool hatStyleNicht( __int64 style ) const;
+        // Kopiert die Komplette Zeichnung, so dass sie ohne Effekt auf das Original verändert werden kann
+        __declspec( dllexport ) virtual Zeichnung *dublizieren() const;
 	};
 
+    // Ein Array von Zeichnungen, der von den Bildschirm Klassen verwendet wird, um die Objekte der GUI zu speichern
 	class ZeichnungArray// Array von Zeichnungen
 	{
 	private:
@@ -107,34 +188,58 @@ namespace Framework
 		__declspec( dllexport ) ZeichnungArray();
 		// Destruktor 
 		__declspec( dllexport ) ~ZeichnungArray();
-		// nicht const 
-		__declspec( dllexport ) bool addZeichnung( Zeichnung *obj ); // Fügt ein Zeichnung hinzu
-		__declspec( dllexport ) bool removeZeichnung( Zeichnung *obj ); // Entfernt ein Zeichnung
-		__declspec( dllexport ) bool removeZeichnung( int i ); // Entfernt das i-te Zeichnung
-		__declspec( dllexport ) void setNext0(); // Setzt das nächste Zeichnung zu 0
-		__declspec( dllexport ) void updateIndex( int i ); // aktualisiert die Index variable
-		// constant 
-		__declspec( dllexport ) ZeichnungArray *getNext() const; // gibt das nächste Zeichnung zurück
-		__declspec( dllexport ) Zeichnung *getZeichnung( int i ) const; // gibt das i-te Zeichnung zurück
-		__declspec( dllexport ) Zeichnung *getZeichnung() const; // gibt das Zeichnung zurück
-		__declspec( dllexport ) int getIndex() const; // Gibt den Index zurück
-		__declspec( dllexport ) void sendMausAll( MausEreignis &me ) const; // sendet me an alle volgenden Zeichnunge
-		__declspec( dllexport ) void sendTastaturAll( TastaturEreignis &te ) const; // sendet te an alle volgenden Zeichnunge
-		__declspec( dllexport ) void render( Bild &zRObj ); // Zeichnet alle nach zRObj
-		__declspec( dllexport ) bool tick( double tickval ); // tick
-	};
+		// Fügt dem Array eine Zeichnung hinzu. Es kann jede Zeichnung nur einmal hinzugefügt werden
+		//  obj: Die neue Zeichnung
+        //  return: 1, falls die Zeichnung erfolgreich hinzugefügt wurde.
+        __declspec( dllexport ) bool addZeichnung( Zeichnung *obj );
+        // Entfernt eine Zeichnung
+        //  obj: Die Zeichnung, die entfernt werden soll
+        //  return 1, falls die Zeichnung erfolgreich entfernt wurde
+        __declspec( dllexport ) bool removeZeichnung( Zeichnung *obj );
+        // Entfernt eine Zeichnung
+        //  i: Der Index der Zeichnung, die entfernt werden soll
+        //  return 1, falls die Zeichnung erfolgreich entfernt wurde
+		__declspec( dllexport ) bool removeZeichnung( int i );
+        // Setzt den Zeiger auf das Nächste Array Element auf 0
+		__declspec( dllexport ) void setNext0();
+        // Aktualisiert die Array indizes.
+        //  i: Der Index des ersten Elements
+		__declspec( dllexport ) void updateIndex( int i );
+		// Gibt den Zeiger auf das nchste Array Element zurück
+		__declspec( dllexport ) ZeichnungArray *getNext() const;
+        // Gibt eine Zeichnung zurück
+        //  i: Der Index der Zeichnung
+		__declspec( dllexport ) Zeichnung *getZeichnung( int i ) const;
+        // Gibt die Zeichnung dieses Array Elements zurück
+		__declspec( dllexport ) Zeichnung *getZeichnung() const;
+        // Gibt den Index dieses Array Elements zurück
+		__declspec( dllexport ) int getIndex() const;
+        // Sendet an alle Zeichnungen ein Maus Ereignis. Die zuletzt hinzugefügte Zeichnung bekommt das Ereignis als Erste
+        //  me: Das Ereignis
+		__declspec( dllexport ) void sendMausAll( MausEreignis &me ) const;
+        // Sendet an alle Zeichnungen ein Tastatur Ereignis. Die zuletzt hinzugefügte Zeichnung bekommt das Ereignis als Erste
+        //  te: Das Ereignis
+		__declspec( dllexport ) void sendTastaturAll( TastaturEreignis &te ) const;
+        // Zeichnet alle Zeichnungen. Die zuletzt hinzugefügte Zeichnung ist oben
+        //  zRObj: Das Bild, in das alle Zeichnungen gezeichnet werden sollen
+		__declspec( dllexport ) void render( Bild &zRObj );
+        // Verarbeitet bei allen Zeichnungen die Vergangene Zeit seit dem letzten Aufruf der Funktion
+        //  tickVal: Die vergangene Zeit in Sekunden
+		__declspec( dllexport ) bool tick( double tickval );
+    };
 
+    // Eine Zeichnung für das 2D GUI Framework mit Hintergrund, Rahmen und Scroll Balken
     class ZeichnungHintergrund : public Zeichnung
     {
     public:
         class Style : public Zeichnung::Style
         {
         public:
-            const static __int64 Rahmen = 0x00010; // 0x4
-            const static __int64 Hintergrund = 0x00020; // 0x8
-            const static __int64 HAlpha = 0x00040; // 0x10
-            const static __int64 HBild = 0x00080; // 0x20
-            const static __int64 Buffered = 0x00100; // 0x40
+            const static __int64 Rahmen = 0x00010; // Wenn dieser Flag gesetzt wird, bekommt die Zeichnugn einen Rahmen
+            const static __int64 Hintergrund = 0x00020; // Wenn dieser Flag gesetzt wird, bekommt die Zeichnung einen Hintergrund
+            const static __int64 HAlpha = 0x00040; // Wenn dieser Flag gesetzt wird, wird der Hintergrund durchsichtig. Benötigt Flag Hintergrund
+            const static __int64 HBild = 0x00080; // Wenn dieser Flag gesetzt wird, wird ein Bild als hintergrund verwendet. Benötigt Flag Hintergrund
+            const static __int64 Buffered = 0x00100; // Wenn dieser Flag gesetzt wird, Erscheint ein Farbübergang als Rahmen
             const static __int64 VScroll = 0x00200; // Wenn dieser Flag gesetzt wird, erscheint eine Scrollbar am rechten Rand
             const static __int64 HScroll = 0x00400; // Wenn dieser Flag gesetzt wird, erscheint eine Scrollbar am unteren Rand
         };

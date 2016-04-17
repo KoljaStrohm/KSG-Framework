@@ -44,7 +44,7 @@ namespace Framework
 
     // Standart Maus Ereinis Rückruffunktion
     //  param: Ein beliebiger Parameter
-    //  obj: Das Zeichnung, welches diese Funktion aufruft
+    //  obj: Die Zeichnung, welches diese Funktion aufruft
     //  te: Das Mausereignis, welches verarbeitet werden soll
     //  return: (true), wenn aufrufende Zeichnung das Ereignis weiterverarbeiten soll. (false) sonnst.
     // Gibt immer (true) zurück

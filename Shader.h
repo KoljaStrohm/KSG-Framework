@@ -20,6 +20,7 @@ namespace Framework
         PIXEL
     };
 
+    // Eine Shader Klasse, die alle Constanten Buffers eines Shaders verwaltet
     class Shader
     {
     protected:
@@ -80,6 +81,7 @@ namespace Framework
         virtual Shader *release();
     };
 
+    // Verwaltet einen Pixel Shader
     class PixelShader : public Shader
     {
     private:
@@ -104,6 +106,7 @@ namespace Framework
         Shader *release();
     };
 
+    // Verwaltet einen Vertex Shader
     class VertexShader : public Shader
     {
     private:

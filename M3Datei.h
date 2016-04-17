@@ -7,6 +7,7 @@ namespace Framework
     class Text;
     class Model3DData;
 
+    // Verwaltet eine Datei, in der 3d Modelle abgespeichert wurden
     class M3Datei
     {
     private:

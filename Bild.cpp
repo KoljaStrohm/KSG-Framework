@@ -314,6 +314,7 @@ void Bild::setFarbe( int f )
         for( int *i = fc, *end = i + größe.x * größe.y; i < end; i++ )
             *i = f;
     }
+    rend = 1;
 }
 
 void Bild::füllRegion( int x, int y, int b, int h, int ff )
@@ -444,6 +445,7 @@ void Bild::alphaPixelDP( int x, int y, int f )
         cf[ 3 ] = ( cf[ 3 ] > alpha[ alphaAnzahl ] ) * ( cf[ 3 ] - alpha[ alphaAnzahl ] );
     }
     alphaPixelP( fc[ x + y * größe.x ], f );
+    rend = 1;
 }
 
 void Bild::alphaPixelDP( int i, int f )
@@ -451,6 +453,7 @@ void Bild::alphaPixelDP( int i, int f )
     int x = i % größe.x;
     int y = i / größe.x;
     alphaPixelDP( x, y, f );
+    rend = 1;
 }
 
 void Bild::setPixelDP( int x, int y, int f )
@@ -469,6 +472,7 @@ void Bild::setPixelDP( int x, int y, int f )
     if( x < dpx || y < dpy || x > dgx || y > dgy )
         return;
     fc[ x + y * größe.x ] = f;
+    rend = 1;
 }
 
 void Bild::setPixelDP( int i, int f )
@@ -476,6 +480,7 @@ void Bild::setPixelDP( int i, int f )
     int x = i % größe.x;
     int y = i / größe.x;
     setPixelDP( x, y, f );
+    rend = 1;
 }
 
 void Bild::drawLinieH( int x, int y, int län, int f ) // zeichnet eine horizontale Linie
@@ -1459,6 +1464,7 @@ void Bild::drawDreieck( Punkt a, Punkt b, Punkt c, int farbe ) // füllt eine Dre
             drawFlatDreieck( b.y, c.y, m3, b3, m2, b2, farbe );
         }
     }
+    rend = 1;
 }
 
 void Bild::drawDreieckTextur( Punkt a, Punkt b, Punkt c, Punkt ta, Punkt tb, Punkt tc, Bild &textur ) // füllt eine Dreieck aus
@@ -1598,6 +1604,7 @@ void Bild::drawDreieckTextur( Punkt a, Punkt b, Punkt c, Punkt ta, Punkt tb, Pun
         }
         drawFlatDreieckTextur( b.y, c.y, m3, b3, m2, b2, tb.x, tb.y, q.x, q.y, tx1o, ty1o, tx2o, ty2o, txf, tyf, textur );
     }
+    rend = 1;
 }
 
 void Bild::drawDreieckAlpha( Punkt a, Punkt b, Punkt c, int farbe ) // füllt eine Dreieck aus
@@ -1665,6 +1672,7 @@ void Bild::drawDreieckAlpha( Punkt a, Punkt b, Punkt c, int farbe ) // füllt ein
             drawFlatDreieckAlpha( b.y, c.y, m3, b3, m2, b2, farbe );
         }
     }
+    rend = 1;
 }
 
 void Bild::drawDreieckTexturAlpha( Punkt a, Punkt b, Punkt c, Punkt ta, Punkt tb, Punkt tc, Bild &textur ) // füllt eine Dreieck aus
@@ -1799,6 +1807,7 @@ void Bild::drawDreieckTexturAlpha( Punkt a, Punkt b, Punkt c, Punkt ta, Punkt tb
         }
         drawFlatDreieckTexturAlpha( b.y, c.y, m3, b3, m2, b2, tb.x, tb.y, q.x, q.y, tx1o, ty1o, tx2o, ty2o, txf, tyf, textur );
     }
+    rend = 1;
 }
 
 bool Bild::setDrawOptions( const Punkt &pos, const Punkt &gr ) // setzt die Drawoptionen
@@ -1956,9 +1965,9 @@ Bild *Bild::release()
 
 
 #ifdef WIN32
-// Inhalt der BildO Klasse aus Bild.h
+// Inhalt der BildZ Klasse aus Bild.h
 // Konstruktor 
-BildO::BildO()
+BildZ::BildZ()
     : ZeichnungHintergrund(),
     bild( 0 ),
     ref( 1 )
@@ -1968,14 +1977,14 @@ BildO::BildO()
 }
 
 // Destruktor 
-BildO::~BildO()
+BildZ::~BildZ()
 {
     if( bild )
         bild->release();
 }
 
 // nicht constant 
-void BildO::setBildZ( Bild *b ) // setzt das Bild
+void BildZ::setBildZ( Bild *b ) // setzt das Bild
 {
     if( bild )
         bild->release();
@@ -1984,12 +1993,12 @@ void BildO::setBildZ( Bild *b ) // setzt das Bild
         vertikalScrollBar = new VScrollBar();
     if( !horizontalScrollBar )
         horizontalScrollBar = new HScrollBar();
-    horizontalScrollBar->getScrollData()->maxBreite = b->getBreite();
-    vertikalScrollBar->getScrollData()->maxHöhe = b->getHöhe();
+    horizontalScrollBar->getScrollData()->max = b->getBreite();
+    vertikalScrollBar->getScrollData()->max = b->getHöhe();
     rend = 1;
 }
 
-void BildO::setBild( Bild *b )
+void BildZ::setBild( Bild *b )
 {
     if( !bild )
         bild = new Bild();
@@ -1999,18 +2008,18 @@ void BildO::setBild( Bild *b )
         vertikalScrollBar = new VScrollBar();
     if( !horizontalScrollBar )
         horizontalScrollBar = new HScrollBar();
-    horizontalScrollBar->getScrollData()->maxBreite = b->getBreite();
-    vertikalScrollBar->getScrollData()->maxHöhe = b->getHöhe();
+    horizontalScrollBar->getScrollData()->max = b->getBreite();
+    vertikalScrollBar->getScrollData()->max = b->getHöhe();
     b->release();
     rend = 1;
 }
 
-bool BildO::tick( double tickVal ) // tick
+bool BildZ::tick( double tickVal ) // tick
 {
     return __super::tick( tickVal );
 }
 
-void BildO::doMausEreignis( MausEreignis &me ) // ruft Mak auf
+void BildZ::doMausEreignis( MausEreignis &me ) // ruft Mak auf
 {
     if( me.verarbeitet || !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) )
     {
@@ -2072,7 +2081,7 @@ void BildO::doMausEreignis( MausEreignis &me ) // ruft Mak auf
     me.my += pos.y;
 }
 
-void BildO::render( Bild &zRObj ) // zeichnet nach zRObj
+void BildZ::render( Bild &zRObj ) // zeichnet nach zRObj
 {
     if( hatStyle( Style::Sichtbar ) )
     {
@@ -2105,9 +2114,9 @@ void BildO::render( Bild &zRObj ) // zeichnet nach zRObj
                     return;
                 }
                 if( hatStyle( Style::Alpha ) )
-                    zRObj.alphaBild( -horizontalScrollBar->getScrollData()->anzeigeBeginn, -vertikalScrollBar->getScrollData()->anzeigeBeginn, bild->getBreite(), bild->getHöhe(), *bild );
+                    zRObj.alphaBild( -horizontalScrollBar->getScroll(), -vertikalScrollBar->getScroll(), bild->getBreite(), bild->getHöhe(), *bild );
                 else
-                    zRObj.drawBild( -horizontalScrollBar->getScrollData()->anzeigeBeginn, -vertikalScrollBar->getScrollData()->anzeigeBeginn, bild->getBreite(), bild->getHöhe(), *bild );
+                    zRObj.drawBild( -horizontalScrollBar->getScroll(), -vertikalScrollBar->getScroll(), bild->getBreite(), bild->getHöhe(), *bild );
                 zRObj.releaseDrawOptions();
             }
         }
@@ -2117,21 +2126,21 @@ void BildO::render( Bild &zRObj ) // zeichnet nach zRObj
 }
 
 // constant 
-Bild *BildO::getBild() const // gibt das Bild zurück
+Bild *BildZ::getBild() const // gibt das Bild zurück
 {
     if( bild )
         return bild->getThis();
     return 0;
 }
 
-Bild *BildO::zBild() const
+Bild *BildZ::zBild() const
 {
     return bild;
 }
 
-Zeichnung *BildO::dublizieren() const // erstellt eine Kopie des Zeichnungs
+Zeichnung *BildZ::dublizieren() const // erstellt eine Kopie des Zeichnungs
 {
-    BildO *obj = new BildO();
+    BildZ *obj = new BildZ();
     obj->setPosition( pos );
     obj->setGröße( gr );
     obj->setMausEreignisParameter( makParam );
@@ -2155,13 +2164,13 @@ Zeichnung *BildO::dublizieren() const // erstellt eine Kopie des Zeichnungs
 }
 
 // Reference Counting 
-BildO *BildO::getThis()
+BildZ *BildZ::getThis()
 {
     ++ref;
     return this;
 }
 
-BildO *BildO::release()
+BildZ *BildZ::release()
 {
     --ref;
     if( !ref )

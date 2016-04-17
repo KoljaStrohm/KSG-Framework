@@ -13,6 +13,7 @@ namespace Framework
     class Render3D; // Render3D.h
     class Welt3D; // Welt3D.h
 
+    // Eine 3d Kamera, die einen Ausschnitt einer 3D Welt in einen bestimmten Teil des Bildschirms zeichnet
     class Kam3D
     {
     private:

@@ -818,7 +818,7 @@ void AuswahlListe::render( Bild &zRObj ) // zeichnet nach zRObj
             dy += tf->getHöhe();
         }
         if( vertikalScrollBar )
-            vertikalScrollBar->getScrollData()->maxHöhe = maxHöhe;
+            vertikalScrollBar->getScrollData()->max = maxHöhe;
     }
     zRObj.releaseDrawOptions();
     unlockZeichnung();

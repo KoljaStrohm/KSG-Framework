@@ -1710,7 +1710,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
 								gr.y = fMaxHö;
 							}
 							else if( vSc )
-								vScroll->getScrollData()->anzeigeHöhe = gr.y;
+								vScroll->getScrollData()->anzeige = gr.y;
 							rend = 1;
 							ret1 = 1;
 						}
@@ -1725,7 +1725,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
 							{
 								mset = 1;
 								if( vSc )
-									vScroll->getScrollData()->anzeigeHöhe = gr.y;
+									vScroll->getScrollData()->anzeige = gr.y;
 							}
 							rend = 1;
 							ret1 = 1;
@@ -1748,7 +1748,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
 								gr.x = fMaxBr;
 							}
 							else if( hSc )
-								hScroll->getScrollData()->anzeigeBreite = gr.x;
+								hScroll->getScrollData()->anzeige = gr.x;
 							rend = 1;
 							ret1 = 1;
 						}
@@ -1763,7 +1763,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
 							{
 								mset = 1;
 								if( hSc )
-									hScroll->getScrollData()->anzeigeBreite = gr.x;
+									hScroll->getScrollData()->anzeige = gr.x;
 							}
 							rend = 1;
 							ret1 = 1;
@@ -1865,16 +1865,16 @@ void Fenster::doMausEreignis( MausEreignis &me )
 				me.mx -= rbr;
 				me.my -= rbr + th;
 				if( hatStyle( Style::VScroll ) && vScroll )
-					me.my += vScroll->getScrollData()->anzeigeBeginn;
+					me.my += vScroll->getScroll();
 				if( hatStyle( Style::HScroll ) && hScroll )
-					me.mx += hScroll->getScrollData()->anzeigeBeginn;
+					me.mx += hScroll->getScroll();
 				members->sendMausAll( me );
 				me.mx += rbr;
 				me.my += rbr + th;
-				if( hatStyle( Style::VScroll ) && vScroll )
-					me.my -= vScroll->getScrollData()->anzeigeBeginn;
+                if( hatStyle( Style::VScroll ) && vScroll )
+                    me.my -= vScroll->getScroll();
 				if( hatStyle( Style::HScroll ) && hScroll )
-					me.mx -= hScroll->getScrollData()->anzeigeBeginn;
+					me.mx -= hScroll->getScroll();
 			}
 			if( inside && hatStyleNicht( Style::METransparenz ) )
 				me.verarbeitet = 1;
@@ -2045,13 +2045,7 @@ void Fenster::render( Bild &zRObj ) // zeichent nach zRObj
 				members->render( zRObj );
 			else
 			{
-				VScrollData *vsd = 0;
-				HScrollData *hsd = 0;
-				if( vSc )
-					vsd = vScroll->getScrollData();
-				if( hSc )
-					hsd = hScroll->getScrollData();
-				zRObj.addScrollOffset( hsd ? hsd->anzeigeBeginn : 0, vsd ? vsd->anzeigeBeginn : 0 );
+				zRObj.addScrollOffset( hSc ? hScroll->getScroll() : 0, vSc ? vScroll->getScroll() : 0 );
 				members->render( zRObj );
 			}
 		}
@@ -2371,7 +2365,7 @@ VScrollBar *Fenster::getVScrollBar() const // gibt die Vertikale Scroll Bar zurü
 {
 	if( !vScroll )
 		return 0;
-	return vScroll->getThis();
+	return (VScrollBar*)vScroll->getThis();
 }
 
 VScrollBar *Fenster::zVScrollBar() const
@@ -2383,7 +2377,7 @@ HScrollBar *Fenster::getHScrollBar() const // gibt die Horizontale Scroll Bar zu
 {
 	if( !hScroll )
 		return 0;
-	return hScroll->getThis();
+	return (HScrollBar*)hScroll->getThis();
 }
 
 HScrollBar *Fenster::zHScrollBar() const
@@ -2442,13 +2436,13 @@ Zeichnung *Fenster::dublizieren() const // Erzeugt eine Kopie des Fensters
 	}
 	if( vScroll )
 	{
-		ret->setVSBMax( vScroll->getScrollData()->maxHöhe );
-		ret->setVSBScroll( vScroll->getScrollData()->anzeigeBeginn );
+		ret->setVSBMax( vScroll->getScrollData()->max );
+		ret->setVSBScroll( vScroll->getScroll() );
 	}
 	if( hScroll )
 	{
-		ret->setHSBMax( hScroll->getScrollData()->maxBreite );
-		ret->setHSBScroll( hScroll->getScrollData()->anzeigeBeginn );
+		ret->setHSBMax( hScroll->getScrollData()->max );
+		ret->setHSBScroll( hScroll->getScroll() );
 	}
 	ret->setMin( min );
 	ret->setMax( max );

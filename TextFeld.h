@@ -99,7 +99,7 @@ namespace Framework
         // Verarbeitet Tastatur Nachrichten
         //  me: Das Ereignis, was durch die Tastatureingabe ausgelößt wurde
 		__declspec( dllexport ) void doTastaturEreignis( TastaturEreignis &te ) override;
-        // Zeichnet das Objekt nach zRObj, falls er sichtbar ist
+        // Zeichnet das Objekt nach zRObj, falls es sichtbar ist
         //  zRObj: Das Bild, in welches gezeichnet werden soll
 		__declspec( dllexport ) virtual void render( Bild &zRObj ) override;
 		// Gibt den Text aus dem Textfeld zurück

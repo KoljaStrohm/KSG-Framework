@@ -201,7 +201,7 @@ void TextFeld::updateVScroll( int pos ) // scrollt nach unten
         {
             if( sPos - schrift->getZeilenabstand() - schrift->getTextHöhe( &Text( "a" ) ) < vertikalScrollBar->getScroll() )
                 vertikalScrollBar->scroll( sPos - schrift->getZeilenabstand() - schrift->getTextHöhe( &Text( "a" ) ) );
-            if( sPos + schrift->getZeilenabstand() + schrift->getTextHöhe( &Text( "a" ) ) > vertikalScrollBar->getScroll() + vertikalScrollBar->getScrollData()->anzeigeHöhe )
+            if( sPos + schrift->getZeilenabstand() + schrift->getTextHöhe( &Text( "a" ) ) > vertikalScrollBar->getScroll() + vertikalScrollBar->getScrollData()->anzeige )
                 vertikalScrollBar->scroll( sPos + ( schrift->getZeilenabstand() + schrift->getTextHöhe( &Text( "a" ) ) ) * 2 - hö );
         }
         rend = 1;
@@ -236,7 +236,7 @@ void TextFeld::updateHScroll( int pos ) // scrollt zur Curser Position
             Text *t = text->getTeilText( p1, pos );
             int cbr = schrift->getTextBreite( t );
             t->release();
-            if( cbr + schriftGröße > horizontalScrollBar->getScroll() + horizontalScrollBar->getScrollData()->anzeigeBreite )
+            if( cbr + schriftGröße > horizontalScrollBar->getScroll() + horizontalScrollBar->getScrollData()->anzeige )
                 horizontalScrollBar->scroll( cbr + schriftGröße - br );
             if( cbr - schriftGröße < horizontalScrollBar->getScroll() )
                 horizontalScrollBar->scroll( cbr - schriftGröße );

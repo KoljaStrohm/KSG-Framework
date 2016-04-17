@@ -57,21 +57,21 @@ namespace Framework
 
     // Standart Tastatur Ereinis Rückruffunktion
     //  param: Ein beliebiger Parameter
-    //  obj: Das Zeichnung, welches diese Funktion aufruft
+    //  obj: Die Zeichnung, welches diese Funktion aufruft
     //  te: Das Tastaturereignis, welches verarbeitet werden soll
     //  return: (true), wenn aufrufende Zeichnung das Ereignis weiterverarbeiten soll. (false) sonnst.
     // Gibt immer (true) zurück
 	__declspec( dllexport ) bool _ret1TE( void *param, void *obj, TastaturEreignis te );
     // Standart Tastatur Ereinis Rückruffunktion
     //  param: Ein beliebiger Parameter
-    //  obj: Das Zeichnung, welches diese Funktion aufruft
+    //  obj: Die Zeichnung, welches diese Funktion aufruft
     //  te: Das Tastaturereignis, welches verarbeitet werden soll
     //  return: (true), wenn aufrufende Zeichnung das Ereignis weiterverarbeiten soll. (false) sonnst.
     // Gibt nur (true) zurück, wenn die Taste zwischen '0' und '9' ist, oder zum Löschen oder Cursorbewegen dient
 	__declspec( dllexport ) bool _nurNummernTE( void *param, void *obj, TastaturEreignis te );
     // Standart Tastatur Ereinis Rückruffunktion
     //  param: Ein beliebiger Parameter
-    //  obj: Das Zeichnung, welches diese Funktion aufruft
+    //  obj: Die Zeichnung, welches diese Funktion aufruft
     //  te: Das Tastaturereignis, welches verarbeitet werden soll
     //  return: (true), wenn aufrufende Zeichnung das Ereignis weiterverarbeiten soll. (false) sonnst.
     // Gibt nur (true) zurück, wenn die Taste zwischen '0' und '9' oder 'A' und 'F' ist, oder zum Löschen oder Cursorbewegen dient

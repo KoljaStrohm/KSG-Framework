@@ -780,7 +780,7 @@ void ZeichnungHintergrund::render( Bild &rObj )
                 unlockZeichnung();
                 return;
             }
-            horizontalScrollBar->update( horizontalScrollBar->getScrollData()->maxBreite, innenGröße.x );
+            horizontalScrollBar->update( horizontalScrollBar->getScrollData()->max, innenGröße.x );
         }
         else
         {
@@ -792,7 +792,7 @@ void ZeichnungHintergrund::render( Bild &rObj )
                 return;
             }
         }
-        vertikalScrollBar->update( vertikalScrollBar->getScrollData()->maxHöhe, innenGröße.y );
+        vertikalScrollBar->update( vertikalScrollBar->getScrollData()->max, innenGröße.y );
     }
     else if( hs )
     {
@@ -959,13 +959,13 @@ Zeichnung *ZeichnungHintergrund::dublizieren() const // Erzeugt eine Kopie des Z
     if( vertikalScrollBar )
     {
         obj->setVertikalKlickScroll( vertikalScrollBar->getKlickScroll() );
-        obj->setVertikalScrollPos( vertikalScrollBar->getScrollData()->anzeigeBeginn );
+        obj->setVertikalScrollPos( vertikalScrollBar->getScroll() );
         obj->setVertikalScrollFarbe( vertikalScrollBar->getFarbe(), vertikalScrollBar->getBgFarbe() );
     }
     if( horizontalScrollBar )
     {
         obj->setHorizontalKlickScroll( horizontalScrollBar->getKlickScroll() );
-        obj->setHorizontalScrollPos( horizontalScrollBar->getScrollData()->anzeigeBeginn );
+        obj->setHorizontalScrollPos( horizontalScrollBar->getScroll() );
         obj->setHorizontalScrollFarbe( horizontalScrollBar->getFarbe(), horizontalScrollBar->getBgFarbe() );
     }
     return obj;

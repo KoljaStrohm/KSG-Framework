@@ -16,9 +16,6 @@
     <Filter Include="Headerdateien\Framework">
       <UniqueIdentifier>{ebc032cb-0fe8-4712-8cba-6f8cf72c9e6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headerdateien\Framework\Objekte">
-      <UniqueIdentifier>{c85aabf4-2e43-4a74-90bc-2d92b7bf3259}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headerdateien\Framework\OS">
       <UniqueIdentifier>{446e41c7-ea7d-4519-9cd1-1238232b08f8}</UniqueIdentifier>
     </Filter>
@@ -39,9 +36,6 @@
     </Filter>
     <Filter Include="Quelldateien\Framework\OS">
       <UniqueIdentifier>{d5fa078e-3896-4292-a26d-67a78fed965a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Quelldateien\Framework\Objekte">
-      <UniqueIdentifier>{446facfc-5180-4e05-a2ff-c5c0287705d2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Quelldateien\Framework\Grafik">
       <UniqueIdentifier>{8af2e4df-a840-42d3-a393-5d6b4bf7d569}</UniqueIdentifier>
@@ -70,6 +64,12 @@
     <Filter Include="Quelldateien\Framework\Grafik\3D">
       <UniqueIdentifier>{6b73527a-d839-4081-a7b5-7e1d79b67cbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Framework\Objekte2D">
+      <UniqueIdentifier>{c85aabf4-2e43-4a74-90bc-2d92b7bf3259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework\Objekte2D">
+      <UniqueIdentifier>{446facfc-5180-4e05-a2ff-c5c0287705d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model2D.h">
@@ -84,41 +84,38 @@
     <ClInclude Include="Mat3.h">
       <Filter>Headerdateien\Framework\Grafik\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
-    </ClInclude>
     <ClInclude Include="AlphaFeld.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Knopf.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Fenster.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Fortschritt.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Liste.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Diagramm.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Rahmen.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Tabelle.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="TextFeld.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="ToolTip.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Scroll.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Bildschirm.h">
       <Filter>Headerdateien\Framework\Grafik\DX</Filter>
@@ -127,7 +124,7 @@
       <Filter>Headerdateien\Framework\OS</Filter>
     </ClInclude>
     <ClInclude Include="AuswahlBox.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="Prozess.h">
       <Filter>Headerdateien\Framework\OS</Filter>
@@ -195,20 +192,14 @@
     <ClInclude Include="DateiDialog.h">
       <Filter>Headerdateien\Framework\OS\Datei</Filter>
     </ClInclude>
-    <ClInclude Include="Welt2D.h">
-      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Kam2D.h">
-      <Filter>Headerdateien\Framework\Grafik\2D</Filter>
-    </ClInclude>
     <ClInclude Include="M2DVorschau.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="ObjectRegister.h">
       <Filter>Headerdateien\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Zeichnung.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
     <ClInclude Include="DefaultShader.h">
       <Filter>Headerdateien\Framework\Grafik\DX</Filter>
@@ -249,20 +240,23 @@
     <ClInclude Include="Model3DList.h">
       <Filter>Headerdateien\Framework\Grafik\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Vec4.h">
-      <Filter>Headerdateien\Framework\Grafik\4D</Filter>
-    </ClInclude>
     <ClInclude Include="TexturList.h">
       <Filter>Headerdateien\Framework\Grafik\3D</Filter>
     </ClInclude>
     <ClInclude Include="Animation3D.h">
       <Filter>Headerdateien\Framework\Grafik\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Headerdateien\Framework\Objekte</Filter>
-    </ClInclude>
     <ClInclude Include="TexturModel.h">
       <Filter>Headerdateien\Framework\Objekte3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Headerdateien\Framework\Objekte2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Ebene3D.h">
+      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,43 +270,40 @@
       <Filter>Quelldateien\Framework\OS</Filter>
     </ClCompile>
     <ClCompile Include="AlphaFeld.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="AuswahlBox.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Diagramm.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Fenster.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Fortschritt.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Knopf.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Liste.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Rahmen.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Scroll.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Tabelle.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="TextFeld.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="ToolTip.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>Quelldateien\Framework\Grafik\2D</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Bild.cpp">
       <Filter>Quelldateien\Framework\Grafik\2D</Filter>
@@ -368,17 +359,11 @@
     <ClCompile Include="DateiDialog.cpp">
       <Filter>Quelldateien\Framework\OS\Datei</Filter>
     </ClCompile>
-    <ClCompile Include="Welt2D.cpp">
-      <Filter>Quelldateien\Framework\Grafik\2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Kam2D.cpp">
-      <Filter>Quelldateien\Framework\Grafik\2D</Filter>
-    </ClCompile>
     <ClCompile Include="M2DVorschau.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="Zeichnung.cpp">
-      <Filter>Quelldateien\Framework\Objekte</Filter>
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
     <ClCompile Include="M3Datei.cpp">
       <Filter>Quelldateien\Framework\OS\Datei</Filter>
@@ -419,10 +404,8 @@
     <ClCompile Include="TexturModel.cpp">
       <Filter>Quelldateien\Framework\Objekte3D</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TestShader.hlsl">
-      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
-    </None>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Quelldateien\Framework\Objekte2D</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

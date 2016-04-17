@@ -944,7 +944,7 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
 				rbr = rahmen->getRBreite();
 			if( ( ( me.mx > gr.x - 15 - rbr && me.my > gr.y ) || me.id == ME_UScroll || me.id == ME_DScroll ) && me.id != ME_Betritt && me.id != ME_Verlässt )
 			{
-                vertikalScrollBar->doMausMessage( gr.x - rbr - 15, gr.y, 15, vertikalScrollBar->getScrollData()->anzeigeHöhe, me );
+                vertikalScrollBar->doMausMessage( gr.x - rbr - 15, gr.y, 15, vertikalScrollBar->getScrollData()->anzeige, me );
 				me.verarbeitet = 1;
 			}
 		}
@@ -1256,7 +1256,7 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
 			if( vsb && ausklappHöhe )
 			{
 				br -= 15;
-                vertikalScrollBar->getScrollData()->anzeigeHöhe = ausklappHöhe - rbr;
+                vertikalScrollBar->getScrollData()->anzeige = ausklappHöhe - rbr;
                 vertikalScrollBar->render( br - rbr, gr.y, 15, ausklappHöhe - rbr, zRObj );
 			}
 			if( ( ausklappHöhe && !zRObj.setDrawOptionsErzwingen( 0, gr.y, br - rbr, hö - rbr - gr.y ) ) || ( !ausklappHöhe && !zRObj.setDrawOptions( 0, gr.y, br - rbr, hö - rbr - gr.y ) ) )
@@ -1559,7 +1559,7 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
 				dy += tf->getHöhe();
 			}
 			if( vertikalScrollBar )
-                vertikalScrollBar->getScrollData()->maxHöhe = maxHöhe;
+                vertikalScrollBar->getScrollData()->max = maxHöhe;
 			zRObj.releaseDrawOptions();
 		}
 		zRObj.releaseDrawOptions();

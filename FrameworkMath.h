@@ -25,7 +25,7 @@ inline int minInt( int a, int b )
 }
 
 // Gibt den positiven Wert eines Zeichnunges zurück.
-// Klappt nur, wenn der - operator definiert ist
+// Klappt nur, wenn der - und der < 0 operator definiert ist
 template< typename T>
 inline T abs( T t )
 {

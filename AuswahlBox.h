@@ -14,33 +14,34 @@ namespace Framework
 	class Text; // Tet.h
 	class Schrift; // Schrift.h
 
+    // Eine Zeichnung des 2D GUI Frameworks. Repräsentiert eine Box, aus der der Nutzer durch ausklappen verschiedene Werte auswählen kann
 	class AuswahlBox : public ZeichnungHintergrund
 	{
     public:
         class Style : public ZeichnungHintergrund::Style
         {
         public:
-            const static __int64 FeldRahmen = 0x000001000;
-            const static __int64 FeldHintergrund = 0x000002000;
-            const static __int64 FeldHBild = 0x000004000;
-            const static __int64 FeldHAlpha = 0x000008000;
-            const static __int64 FeldBuffer = 0x000010000;
-            const static __int64 AuswahlHintergrund = 0x000020000;
-            const static __int64 AuswahlHBild = 0x000040000;
-            const static __int64 AuswahlHAlpha = 0x000080000;
-            const static __int64 AuswahlBuffer = 0x000100000;
-            const static __int64 AuswahlRahmen = 0x000200000;
-            const static __int64 MultiStyled = 0x000400000;
-            const static __int64 MaxHöhe = 0x004000000;
-            const static __int64 MausHintergrund = 0x008000000;
-            const static __int64 MausHBild = 0x010000000;
-            const static __int64 MausHAlpha = 0x020000000;
-            const static __int64 MausBuffer = 0x040000000;
-            const static __int64 MausRahmen = 0x080000000;
+            const static __int64 FeldRahmen = 0x000001000; // Wenn dieser Flag gesetzt ist, hat jeder Wert aus der Liste einen Rahmen
+            const static __int64 FeldHintergrund = 0x000002000; // Wenn dieser Flag gesetzt ist, hat jeder Wert aus der Liste einen Hintergrund
+            const static __int64 FeldHBild = 0x000004000; // Wenn dieser Flag gesetzt ist, hat jeder Wert aus der Liste ein Bild als Hintergrund
+            const static __int64 FeldHAlpha = 0x000008000; // Wenn dieser Flag gesetzt ist, hat jeder Wert aus der Liste einen Transparenten Hintergrund
+            const static __int64 FeldBuffer = 0x000010000; // Wenn dieser Flag gesetzt ist, hat jeder Wert aus der Liste einen Farbübergang
+            const static __int64 AuswahlHintergrund = 0x000020000; // Wenn dieser Flag gesetzt ist, bekommt der Wert, der gerade ausgewählt ist einen Hintergrund
+            const static __int64 AuswahlHBild = 0x000040000; // Wenn dieser Flag gesetzt ist, bekommt der Wert, der gerade ausgewählt ist ein Hintergrundbild
+            const static __int64 AuswahlHAlpha = 0x000080000; // Wenn dieser Flag gesetzt ist, bekommt der Wert, der gerade ausgewählt ist einen transparenten Hintergrund
+            const static __int64 AuswahlBuffer = 0x000100000; // Wenn dieser Flag gesetzt ist, bekommt der Wert, der gerade ausgewählt ist einen Farbübergang
+            const static __int64 AuswahlRahmen = 0x000200000; // Wenn dieser Flag gesetzt ist, bekommt der Wert, der gerade ausgewählt ist einen Rahmen
+            const static __int64 MultiStyled = 0x000400000; // Wenn dieser Flag gesetzt ist, hat jeder Wert seine eigenen Hintergründe unt Rahmen und nicht alle die selben
+            const static __int64 MaxHöhe = 0x004000000; // Legt eine maximale Höhe der ausgeklappten Liste fest. Es erscheint automatisch eine Scrollbar wenn mehr Elemente da sind als sichtbar sein können
+            const static __int64 MausHintergrund = 0x008000000; // Wenn dieser Flag gesetzt ist, hat ein Element, wo die Maus drau zeigt, einen Hintergrund
+            const static __int64 MausHBild = 0x010000000; // Wenn dieser Flag gesetzt ist, hat ein Element, wo die Maus drauf zeigt, ein Hintergrundbild
+            const static __int64 MausHAlpha = 0x020000000; // Wenn dieser Flag gesetzt ist, hat ein Element, wo die Maus drauf zeigt, einen transparenten Hintergrund
+            const static __int64 MausBuffer = 0x040000000; // Wenn dieser Flag gesetzt ist, hat ein Element, wo die Maus drauf zeigt, einen Farbübergang
+            const static __int64 MausRahmen = 0x080000000; // Wenn dieser Flag gesetzt ist, hat ein Element, wo die Maus drauf zeigt, einen Rahmen
             //const int NachObenAusklappen	= 0x100000000;
             //const int AutoAusklappRichtung	= 0x200000000;
 
-            const static __int64 Normal = Sichtbar | Erlaubt | Rahmen | FeldRahmen | AuswahlBuffer | AuswahlRahmen | MaxHöhe | VScroll | MausRahmen | MausBuffer;
+            const static __int64 Normal = Sichtbar | Erlaubt | Rahmen | FeldRahmen | AuswahlBuffer | AuswahlRahmen | MaxHöhe | VScroll | MausRahmen | MausBuffer; // Normaler Style: Sichtbar, Erlaubt, Rahmen, FeldRahmen, AuswahlBuffer, AuswahlRahmen, MaxHöhe, VScroll, MausRahmen, MausBuffer
         };
 	private:
 		Schrift *schrift;
@@ -81,42 +82,132 @@ namespace Framework
 		__declspec( dllexport ) AuswahlBox();
 		// Destruktor 
 		__declspec( dllexport ) ~AuswahlBox();
-		// nicht constant
-		__declspec( dllexport ) void setEventParam( void *p ); // setzt den Event Parameter
-		__declspec( dllexport ) void setEventAktion( void( *eAk )( void *p, AuswahlBox *, int, int ) ); // setzt die Event Funktion
-		__declspec( dllexport ) void setSchriftZ( Schrift *schrift ); // setzt die schrift
-		__declspec( dllexport ) void addEintrag( const char *txt ); // Eintrag hinzufügen
+		// Setzt den Parameter der Rückruffunktion, die aufgerufen wird, wenn der Benutzer ein neues element auswählt
+        //  p: Der Parameter
+		__declspec( dllexport ) void setEventParam( void *p );
+        // Setzt die Rückruffunktion, die Aufgerufen wird, wenn der Benutzer ein neues Element auswählt
+        //  eAk: Die Rückruffunktion
+        __declspec( dllexport ) void setEventAktion( void( *eAk )( void *p, AuswahlBox *, int, int ) );
+        // Setzt die verwendete Schrift
+        //  schrift: Die Schrift
+		__declspec( dllexport ) void setSchriftZ( Schrift *schrift );
+        // Fügt der Liste einen auswählbaren Eintrag hinzu. Der erste Eintrag ist zu Beginn automatisch ausgewählt
+        //  txt: Der Text des Eintrags
+		__declspec( dllexport ) void addEintrag( const char *txt );
+        // Fügt der Liste einen auswählbaren Eintrag hinzu. Der erste Eintrag ist zu Beginn automatisch ausgewählt
+        //  txt: Der Text des Eintrags
 		__declspec( dllexport ) void addEintrag( Text *txt );
+        // Fügt der Liste einen auswählbaren Eintrag hinzu. Der erste Eintrag ist zu Beginn automatisch ausgewählt
+        //  txt: Ein Zeiger auf den Eintrag
 		__declspec( dllexport ) void addEintragZ( TextFeld *txt );
-		__declspec( dllexport ) void setEintrag( int i, const char *txt ); // Eintrag setzen
+        // Ändert den Text eines Eintrags
+        //  i: Der Index des Eintrags
+        //  txt: Der neue Text
+		__declspec( dllexport ) void setEintrag( int i, const char *txt );
+        // Ändert den Text eines Eintrags
+        //  i: Der Index des Eintrags
+        //  txt: Der neue Text
 		__declspec( dllexport ) void setEintrag( int i, Text *txt );
+        // Ändert einen Eintrag
+        //  i: Der Index des Eintrags
+        //  txt: Ein Zeiger auf den neuen Eintrag
 		__declspec( dllexport ) void setEintragZ( int i, TextFeld *txt );
-		__declspec( dllexport ) void löscheEintrag( int i ); // Eintrag entfernen
-		__declspec( dllexport ) void setAusklappKnopfZ( Knopf *ausK ); // Ausklapp Knopf setzen
-		__declspec( dllexport ) void setEintragRahmenZ( int i, LRahmen *rahmen ); // Eintrag Rahmen setzen
-		__declspec( dllexport ) void setEintragRahmenFarbe( int i, int f ); // Eintrag Rahmen Farbe setzen
-		__declspec( dllexport ) void setEintragRahmenBreite( int i, int rbr ); // Eintrag Rahmen Breite setzen
-		__declspec( dllexport ) void setEintragHintergrundFarbe( int i, int f ); // Eintrag Hintergrund farbe setzen
-		__declspec( dllexport ) void setEintragHintergrundBildZ( int i, Bild *bgB ); // Eintrag Hintergrund Bild setzen
+        // Löscht einen Eintrag
+        //  i: Der Index des Eintrags
+		__declspec( dllexport ) void löscheEintrag( int i );
+        // Setzt einen Zeiger auf den Knopf, der zum aus und einklappen der Liste verwendet wird
+        //  ausK: Der Knopf
+		__declspec( dllexport ) void setAusklappKnopfZ( Knopf *ausK );
+        // Setzt einen Zeiger auf einen Rahmen, der für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  rahmen: Der Rahemn
+		__declspec( dllexport ) void setEintragRahmenZ( int i, LRahmen *rahmen );
+        // Setzt die Farbe eines Rahmens, der für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  f: Die farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setEintragRahmenFarbe( int i, int f );
+        // Setzt die Breite eines Rahmens, der für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  rbr: Die Breite des Rahmens in Pixeln
+		__declspec( dllexport ) void setEintragRahmenBreite( int i, int rbr );
+        // Setzt eine Hintergrund Farbe, die für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  f: Die farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setEintragHintergrundFarbe( int i, int f );
+        // Setzt einen zeiger auf ein Hintergrund Bild, das für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  bgB: Das Hintergrund Bild
+		__declspec( dllexport ) void setEintragHintergrundBildZ( int i, Bild *bgB );
+        // Setzt ein Hintergrund Bild durch Kopieren, das für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  bgB: Das Hintergrund Bild
 		__declspec( dllexport ) void setEintragHintergrundBild( int i, Bild *bgB );
-		__declspec( dllexport ) void setEintragAlphaFeldZ( int i, AlphaFeld *af ); // Eintrag AlphaFeld setzen
-		__declspec( dllexport ) void setEintragAlphaFeldFarbe( int i, int afF ); // Eintrag AlphaFeld Farbe setzen
-		__declspec( dllexport ) void setEintragAlphaFeldStärke( int i, int afSt ); // Eintrag AlphaFeld Stärke setzen
-		__declspec( dllexport ) void setAuswRahmenZ( LRahmen *rahmen ); // Auswahl Rahmen setzen
-		__declspec( dllexport ) void setAuswRahmenFarbe( int f ); // Auswahl Rahmen Farbe setzen
-		__declspec( dllexport ) void setAuswRahmenBreite( int rbr ); // Auswahl Rahmen Breite setzen
-		__declspec( dllexport ) void setAuswHintergrundFarbe( int f ); // Auswahl Hintergrund Farbe setzen
-		__declspec( dllexport ) void setAuswHintergrundBildZ( Bild *bgB ); // Auswahl Hintergrund Bild setzen
+        // Setzt einen zeiger auf einen Farbübergangn, der für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  af: Der Farbübergang
+		__declspec( dllexport ) void setEintragAlphaFeldZ( int i, AlphaFeld *af );
+        // Setzt dei Farbe eines Farbübergangns, der für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  afF: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setEintragAlphaFeldFarbe( int i, int afF );
+        // Setzt dei Stärke eines Farbübergangns, der für einen bestimmten Eintrag benutzt wird
+        //  i: Der Index des Eintrags
+        //  afSt: Die Stärke
+		__declspec( dllexport ) void setEintragAlphaFeldStärke( int i, int afSt );
+        // Setzt eienen Zeiger auf einen Rahmen, der bei dem ausgewählten Eintrag verwendet wird
+        //  rahmen: Der Rahmen
+		__declspec( dllexport ) void setAuswRahmenZ( LRahmen *rahmen );
+        // Setzt die Farbe eines Rahmens, der bei dem ausgewählten Eintrag verwendet wird
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setAuswRahmenFarbe( int f );
+        // Setzt die Breite eines Rahmens, der bei dem ausgewählten Eintrag verwendet wird
+        //  rbr: Die Breite in Pixeln
+		__declspec( dllexport ) void setAuswRahmenBreite( int rbr );
+        // Setzt die Hintergrund Farbe, die bei dem ausgewählten Eintrag verwendet wird
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setAuswHintergrundFarbe( int f );
+        // Setzt den Zeiger auf ein Hintergrund Bild, das bei dem ausgewählten Eintrag verwendet wird
+        //  bgB: Das Bild
+		__declspec( dllexport ) void setAuswHintergrundBildZ( Bild *bgB );
+        // Setzt ein Hintergrund Bild durch kopieren, das bei dem ausgewählten Eintrag verwendet wird
+        //  bgB: Das Bild
 		__declspec( dllexport ) void setAuswHintergrundBild( Bild *bgB );
-		__declspec( dllexport ) void setAuswAlphaFeldZ( AlphaFeld *af ); // Auswahl AlphaFeld setzen
-		__declspec( dllexport ) void setAuswAlphaFeldFarbe( int afF ); // Auswahl AlphaFeld Farbe setzen
-		__declspec( dllexport ) void setAuswAlphaFeldStärke( int afSt ); // Auswahl Alpha Feld stärke setzen
-		__declspec( dllexport ) void setMsAuswRahmenZ( int i, LRahmen *rahmen ); // Multistyle Auswahl Rahmen setzen
-		__declspec( dllexport ) void setMsAuswRahmenFarbe( int i, int f ); // Multistyle Auswahl Rahmen Farbe setzen
-		__declspec( dllexport ) void setMsAuswRahmenBreite( int i, int rbr ); // Multistyle Auswahl Breite setzen
-		__declspec( dllexport ) void setMsAuswHintergrundFarbe( int i, int f ); // Multistyle Auswahl Hintergrund Farbe setzen
-		__declspec( dllexport ) void setMsAuswHintergrundBildZ( int i, Bild *bgB ); // Multistyle Auswahl Hintergrund Bild setzen
+        // Setzt den Zeiger auf einen Farbübergang, der bei dem ausgewählten Eintrag verwendet wird
+        //  af: Der Farbübergang
+		__declspec( dllexport ) void setAuswAlphaFeldZ( AlphaFeld *af );
+        // Setzt die Farbe eines Farbübergangs, der bei dem ausgewählten Eintrag verwendet wird
+        //  afF: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setAuswAlphaFeldFarbe( int afF );
+        // Setzt die Stärke eines Farbübergangs, der bei dem ausgewählten Eintrag verwendet wird
+        //  afSt: Die Stärke
+		__declspec( dllexport ) void setAuswAlphaFeldStärke( int afSt );
+        // Setzt eienen Zeiger auf einen Rahmen, der bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
+        //  i: Der Index des Eintrags
+        //  rahmen: Der Rahmen
+		__declspec( dllexport ) void setMsAuswRahmenZ( int i, LRahmen *rahmen );
+        // Setzt die Farbe einens Rahmens, der bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
+        //  i: Der Index des Eintrags
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setMsAuswRahmenFarbe( int i, int f );
+        // Setzt die Breite einens Rahmens, der bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
+        //  i: Der Index des Eintrags
+        //  rbr: Die Breite in Pixeln
+		__declspec( dllexport ) void setMsAuswRahmenBreite( int i, int rbr );
+        // Setzt die Hintergrundfarbe, die bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
+        //  i: Der Index des Eintrags
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setMsAuswHintergrundFarbe( int i, int f );
+        // Setzt eienen Zeiger auf eine Hintergrund Bild, das bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
+        //  i: Der Index des Eintrags
+        //  bgB: Das Bild
+		__declspec( dllexport ) void setMsAuswHintergrundBildZ( int i, Bild *bgB );
+        // Setzt eien Hintergrund Bild durch kopieren, das bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
+        //  i: Der Index des Eintrags
+        //  bgB: Das Bild
 		__declspec( dllexport ) void setMsAuswHintergrundBild( int i, Bild *bgB );
+        // Setzt eienen Zeiger auf einen Farbverlauf, der bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
+        //  i: Der Index des Eintrags
+        //  af: Der Farbverlauf
 		__declspec( dllexport ) void setMsAuswAlphaFeldZ( int i, AlphaFeld *af ); // Multistyle Auswahl AlphaFeld setzen
 		__declspec( dllexport ) void setMsAuswAlphaFeldFarbe( int i, int afF ); // Multistyle Auswahl AlphaFeld Farbe setzen
 		__declspec( dllexport ) void setMsAuswAlphaFeldStärke( int i, int afSt ); // Multistyle Auswahl AlphaFeld stärke setzen

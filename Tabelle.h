@@ -238,115 +238,410 @@ namespace Framework
         //  spaltenName: Der Name der Spalte des Feldes
         //  zeilenName: Der Name der Zeile des Feldes
 		__declspec( dllexport ) void setAuswahl( Text *spaltenName, Text *zeilenName );
-		__declspec( dllexport ) void setRasterFarbe( int f ); // settzt die Farbe des Rasters
-		__declspec( dllexport ) void setRasterBreite( int br ); // setzt die Breite des Rasters
-		__declspec( dllexport ) void setARahmenZ( LRahmen *ram ); // setzt den auswahl Rahmen
-		__declspec( dllexport ) void setARFarbe( int f ); // setzt die auswahl Rahmen Farbe
-		__declspec( dllexport ) void setARBreite( int br ); // setzt die auswahl Rahmen Breite
-		__declspec( dllexport ) void setAAlphaFeldZ( AlphaFeld *af ); // setzt das auswahl AlphaFeld
-		__declspec( dllexport ) void setAAfFarbe( int f ); // setzt die Farbe des auswahl AlphaFeldes
-		__declspec( dllexport ) void setAAfStärke( int st ); // setzt die Stärke des auswahl AlphaFeldes
-		__declspec( dllexport ) void setARahmenZ( int sNum, int zNum, LRahmen *ram ); // setzt den auswahl Rahmen
+        // Setzt dei Farbe des zwischen den Kästchen angezeigten Rasters
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setRasterFarbe( int f );
+        // Setzt due Breite des zwischen den Kästchen angezeigten Raseter
+        //  br: Die Breite in Pixeln
+		__declspec( dllexport ) void setRasterBreite( int br );
+        // Setzte den Zeiger auf einen Rahmen, der um das ausgewählte Kästchen gezeichnet wird
+        //  ram: Der Rahmen
+		__declspec( dllexport ) void setARahmenZ( LRahmen *ram );
+        // Setzt die farbe des Rahmens, der um das ausgewählte Kästchen gezeichnet wird
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setARFarbe( int f ); 
+        // Setzt die Breite des Rahmens, der um das ausgewählte Kästchen gezeichnet wird
+        //  br: Die Breite in Pixeln
+		__declspec( dllexport ) void setARBreite( int br );
+        // Setzt einen Zeiger auf das AlphaFeld, das für das ausgewählte Kästchen verwendet wird
+        //  af: Das AlphaFeld
+		__declspec( dllexport ) void setAAlphaFeldZ( AlphaFeld *af );
+        // Setzt die Farbe des AlphaFeldes, das für das ausgewählte Kästchen verwendet wird
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setAAfFarbe( int f );
+        // Setzt die Stärke des AlphaFeldes, das für das ausgewählte Kästchen verwendet wird
+        //  st: Die Stärke
+		__declspec( dllexport ) void setAAfStärke( int st );
+        // Setzt einen Zeiger auf einen Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  ram: Der Rahmen
+		__declspec( dllexport ) void setARahmenZ( int sNum, int zNum, LRahmen *ram );
+        // Setzt einen Zeiger auf einen Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  ram: Der Rahmen
 		__declspec( dllexport ) void setARahmenZ( const char *spaltenName, const char *zeilenName, LRahmen *ram );
+        // Setzt einen Zeiger auf einen Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  ram: Der Rahmen
 		__declspec( dllexport ) void setARahmenZ( Text *spaltenName, Text *zeilenName, LRahmen *ram );
-		__declspec( dllexport ) void setARFarbe( int sNum, int zNum, int f ); // setzt die auswahl Rahmen Farbe
+        // Setzt die Farbe von einem Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setARFarbe( int sNum, int zNum, int f );
+        // Setzt die Farbe von einem Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  f: Die Farbe im A8R8G8B8 Format
 		__declspec( dllexport ) void setARFarbe( const char *spaltenName, const char *zeilenName, int f );
+        // Setzt die Farbe von einem Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  f: Die Farbe im A8R8G8B8 Format
 		__declspec( dllexport ) void setARFarbe( Text *spaltenName, Text *zeilenName, int f );
-		__declspec( dllexport ) void setARBreite( int sNum, int zNum, int br ); // setzt die auswahl Rahmen Breite
+        // Setzt die Breite von einem Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  br: Die Breite in Pixeln
+		__declspec( dllexport ) void setARBreite( int sNum, int zNum, int br );
+        // Setzt die Breite von einem Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  br: Die Breite in Pixeln
 		__declspec( dllexport ) void setARBreite( const char *spaltenName, const char *zeilenName, int br );
+        // Setzt die Breite von einem Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  br: Die Breite in Pixeln
 		__declspec( dllexport ) void setARBreite( Text *spaltenName, Text *zeilenName, int br );
-		__declspec( dllexport ) void setAAlphaFeldZ( int sNum, int zNum, AlphaFeld *af ); // setzt das auswahl AlphaFeld
+        // Setzt den Farbüergang, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  af: Der Farbübergang
+		__declspec( dllexport ) void setAAlphaFeldZ( int sNum, int zNum, AlphaFeld *af );
+        // Setzt den Farbüergang, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  af: Der Farbübergang
 		__declspec( dllexport ) void setAAlphaFeldZ( const char *spaltenName, const char *zeilenName, AlphaFeld *af );
+        // Setzt den Farbüergang, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  af: Der Farbübergang
 		__declspec( dllexport ) void setAAlphaFeldZ( Text *spaltenName, Text *zeilenName, AlphaFeld *af );
-		__declspec( dllexport ) void setAAfFarbe( int sNum, int zNum, int f ); // setzt die Farbe des auswahl AlphaFeldes
+        // Setzt die Farbe des Farbüergangs, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  f: Die Farbe im A8R8G8B8 Format
+		__declspec( dllexport ) void setAAfFarbe( int sNum, int zNum, int f );
+        // Setzt die Farbe des Farbüergangs, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  f: Die Farbe im A8R8G8B8 Format
 		__declspec( dllexport ) void setAAfFarbe( const char *spaltenName, const char *zeilenName, int f );
+        // Setzt die Farbe des Farbüergangs, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  f: Die Farbe im A8R8G8B8 Format
 		__declspec( dllexport ) void setAAfFarbe( Text *spaltenName, Text *zeilenName, int f );
-		__declspec( dllexport ) void setAAfStärke( int sNum, int zNum, int st ); // setzt die Stärke des auswahl AlphaFeldes
+        // Setzt die Stärke des Farbüergangs, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  st: Die Stärke
+		__declspec( dllexport ) void setAAfStärke( int sNum, int zNum, int st );
+        // Setzt die Stärke des Farbüergangs, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  st: Die Stärke
 		__declspec( dllexport ) void setAAfStärke( const char *spaltenName, const char *zeilenName, int st );
+        // Setzt die Stärke des Farbüergangs, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  st: Die Stärke
 		__declspec( dllexport ) void setAAfStärke( Text *spaltenName, Text *zeilenName, int st );
-		__declspec( dllexport ) void addMsStyle( int sNum, int zNum, __int64 style ); // setzt den Style wenn Multistyled
+        // Fügt Styles hinzu, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  style: der Style, der hinzugefügt werden soll
+		__declspec( dllexport ) void addMsStyle( int sNum, int zNum, __int64 style );
+        // Fügt Styles hinzu, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  style: der Style, der hinzugefügt werden soll
 		__declspec( dllexport ) void addMsStyle( const char *spaltenName, const char *zeilenName, __int64 style );
+        // Fügt Styles hinzu, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  style: der Style, der hinzugefügt werden soll
 		__declspec( dllexport ) void addMsStyle( Text *spaltenName, Text *zeilenName, __int64 style );
+        // Setzt die Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  style: der Style, der verwendet werden soll
 		__declspec( dllexport ) void setMsStyle( int sNum, int zNum, __int64 style );
+        // Setzt die Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  style: der Style, der verwendet werden soll
 		__declspec( dllexport ) void setMsStyle( const char *spaltenName, const char *zeilenName, __int64 style );
+        // Setzt die Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  style: der Style, der verwendet werden soll
 		__declspec( dllexport ) void setMsStyle( Text *spaltenName, Text *zeilenName, __int64 style );
+        // Setzt die Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  style: der Style, der verwendet werden soll
+        //  add_remove: 1, falls die übergebenen Styles hinzugefügt werden sollen. 0, fals sie entfernt werden sollen
 		__declspec( dllexport ) void setMsStyle( int sNum, int zNum, __int64 style, bool add_remove );
+        // Setzt die Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  style: der Style, der verwendet werden soll
+        //  add_remove: 1, falls die übergebenen Styles hinzugefügt werden sollen. 0, fals sie entfernt werden sollen
 		__declspec( dllexport ) void setMsStyle( const char *spaltenName, const char *zeilenName, __int64 style, bool add_remove );
+        // Setzt die Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  style: der Style, der verwendet werden soll
+        //  add_remove: 1, falls die übergebenen Styles hinzugefügt werden sollen. 0, fals sie entfernt werden sollen
 		__declspec( dllexport ) void setMsStyle( Text *spaltenName, Text *zeilenName, __int64 style, bool add_remove );
+        // Entfernt Styles von den Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  sNum: Der Index der Spalte des Kästchens
+        //  zNum: Der Index der Zeile des Kästchens
+        //  style: der Style, der entfernt werden soll
 		__declspec( dllexport ) void löscheMsStyle( int sNum, int zNum, __int64 style );
+        // Entfernt Styles von den Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  style: der Style, der entfernt werden soll
 		__declspec( dllexport ) void löscheMsStyle( const char *spaltenName, const char *zeilenName, __int64 style );
+        // Entfernt Styles von den Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
+        //  style: der Style, der entfernt werden soll
 		__declspec( dllexport ) void löscheMsStyle( Text *spaltenName, Text *zeilenName, __int64 style );
-		__declspec( dllexport ) bool tick( double tickVal ) override; // tick Message
-		__declspec( dllexport ) void doMausEreignis( MausEreignis &me ) override; // verarbeitet Nachrichten
+        // Aktualisiert das Objekt. Wird vom Framework aufgerufen
+        //  tickVal: Die Zeit in sekunden, die seit dem lezten Aufruf dieser Funktion vergangen ist
+        //  return: 1, wenn sich etwas verändert hat und das Bild neu gezeichnet werden muss. 0 sonst
+        __declspec( dllexport ) bool tick( double tickVal ) override;
+        // Verarbeitet Maus Nachrichten
+        //  me: Das Ereignis, was durch die Mauseingabe ausgelößt wurde
+		__declspec( dllexport ) void doMausEreignis( MausEreignis &me ) override;
+        // Verarbeitet Tastatur Nachrichten
+        //  me: Das Ereignis, was durch die Tastatureingabe ausgelößt wurde
 		__declspec( dllexport ) void doTastaturEreignis( TastaturEreignis &te ) override;
-		__declspec( dllexport ) void render( Bild &zRObj ) override; // zeichnet nach zRObj
-		// constant 
-		__declspec( dllexport ) int getSpaltenAnzahl() const; // gibt die Anzahl der Spalten zurück
-		__declspec( dllexport ) int getZeilenAnzahl() const; // gibt die Anzahl der Zeilen zurück
-		__declspec( dllexport ) int getSpaltenNummer( const char *name ) const; // gibt die Nummer der Spalte mit dem Namen name zurück
+        // Zeichnet das Objekt nach zRObj, falls er sichtbar ist
+        //  zRObj: Das Bild, in welches gezeichnet werden soll
+		__declspec( dllexport ) void render( Bild &zRObj ) override;
+		// Gibt die Anzahl der Spalten zurück
+		__declspec( dllexport ) int getSpaltenAnzahl() const;
+        // Gibt die Anzahl der Zeilen zurück
+		__declspec( dllexport ) int getZeilenAnzahl() const;
+        // Gibt den Index einer Spalte zurück
+        //  name: Der Name der Spalte
+		__declspec( dllexport ) int getSpaltenNummer( const char *name ) const;
+        // Gibt den Index einer Spalte zurück
+        //  name: Der Name der Spalte
 		__declspec( dllexport ) int getSpaltenNummer( Text *name ) const;
-		__declspec( dllexport ) Text *getSpaltenName( int num ) const; // gibt den Namen der Spalte mit Nummer num zurück
+        // Gibt den Namen einer Spalte zurück
+        //  num: Der Index der Splate
+		__declspec( dllexport ) Text *getSpaltenName( int num ) const;
+        // Gibt den Namen einer Spalte ohne erhöhten reference Counter zurück
+        //  num: Der Index der Splate
 		__declspec( dllexport ) Text *zSpaltenName( int num ) const;
-		__declspec( dllexport ) int getZeilenNummer( const char *name ) const; // gibt die Nummer der Zeile mit dem Namen name zurück
+        // Gibt den Index einer Zeile zurück
+        //  name: Der Name der Zeile
+		__declspec( dllexport ) int getZeilenNummer( const char *name ) const;
+        // Gibt den Index einer Zeile zurück
+        //  name: Der Name der Zeile
 		__declspec( dllexport ) int getZeilenNummer( Text *name ) const;
-		__declspec( dllexport ) Text *getZeilenName( int num ) const; // gibt den Namen der Zeile mit Nummer num zurück
+        // Gibt den Namen einer Zeile zurück
+        //  num: Der Index der Zeile
+		__declspec( dllexport ) Text *getZeilenName( int num ) const;
+        // Gibt den Namen einer Zeile ohne erhöhten Reference Counter zurück
+        //  num: Der Index der Zeile
 		__declspec( dllexport ) Text *zZeilenName( int num ) const;
-		__declspec( dllexport ) Punkt getZeichnungPosition( Zeichnung *zObj ) const; // gibt die Position eines Zeichnungs zurück
-		__declspec( dllexport ) Zeichnung *zZeichnung( int sNum, int zNum ) const; // gibt das Zeichnung auf der Position zurück
+        // Sucht eine Zeichnung in der Tabelle und gibt den Index der Spalte als x und den der Zeile als y zurück. (-1, -1) falls das Objekt nicht gefunden wurde
+        //  zObj: Die Zeichnung
+		__declspec( dllexport ) Punkt getZeichnungPosition( Zeichnung *zObj ) const;
+        // Gibt die Zeichnung zurück, die in einem bestimmten Kästchen der Tabelle ist
+        //  sNum: Der Index der Spalte
+        //  zNum: Der Index der Zeile
+		__declspec( dllexport ) Zeichnung *zZeichnung( int sNum, int zNum ) const;
+        // Gibt die Zeichnung zurück, die in einem bestimmten Kästchen der Tabelle ist
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
 		__declspec( dllexport ) Zeichnung *zZeichnung( const char *spaltenName, const char *zeilenName ) const;
+        // Gibt die Zeichnung zurück, die in einem bestimmten Kästchen der Tabelle ist
+        //  spaltenName: Der Name der Spalte des Kästchens
+        //  zeilenName: Der Name der Zeile des Kästchens
 		__declspec( dllexport ) Zeichnung *zZeichnung( Text *spaltenName, Text *zeilenName ) const;
-		__declspec( dllexport ) int getSpaltenBreite( int num ) const; // gibt die Breite der Spalte zurück
+        // Gibt die Breite einer Spalte in Pixeln zurück
+        //  num: Der Index der Spalte
+		__declspec( dllexport ) int getSpaltenBreite( int num ) const;
+        // Gibt die Breite einer Spalte in Pixeln zurück
+        //  name: Der Name der Spalte
 		__declspec( dllexport ) int getSpaltenBreite( const char *name ) const;
+        // Gibt die Breite einer Spalte in Pixeln zurück
+        //  name: Der Name der Spalte
 		__declspec( dllexport ) int getSpaltenBreite( Text *name ) const;
-		__declspec( dllexport ) int getZeilenHöhe( int num ) const; // gibt die Höhe der Zeile zurück
+        // Gibt die Höhe einer Zeile in Pixeln zurück
+        //  num: Der Index der Zeile
+		__declspec( dllexport ) int getZeilenHöhe( int num ) const;
+        // Gibt die Höhe einer Zeile in Pixeln zurück
+        //  name: Der Name der Zeile
 		__declspec( dllexport ) int getZeilenHöhe( const char *name ) const;
+        // Gibt die Höhe einer Zeile in Pixeln zurück
+        //  name: Der Name der Zeile
 		__declspec( dllexport ) int getZeilenHöhe( Text *name ) const;
-		__declspec( dllexport ) int getMinSpaltenBreite( int num ) const; // gibt die minimale Spaltengröße zurück
+        // Gibt die minimale Spalten breite in Pixeln zurück
+        //  num: Der Index der Spalte
+		__declspec( dllexport ) int getMinSpaltenBreite( int num ) const;
+        // Gibt die minimale Spalten breite in Pixeln zurück
+        //  name: Der Name der Spalte
 		__declspec( dllexport ) int getMinSpaltenBreite( const char *name ) const;
+        // Gibt die minimale Spalten breite in Pixeln zurück
+        //  name: Der Name der Spalte
 		__declspec( dllexport ) int getMinSpaltenBreite( Text *name ) const;
-		__declspec( dllexport ) int getMaxSpaltenBreite( int num ) const; // gibt die maximale Spaltengröße zurück
+        // Gibt die maximale Spalten breite in Pixeln zurück
+        //  num: Der Index der Spalte
+		__declspec( dllexport ) int getMaxSpaltenBreite( int num ) const;
+        // Gibt die maximale Spalten breite in Pixeln zurück
+        //  name: Der Name der Spalte
 		__declspec( dllexport ) int getMaxSpaltenBreite( const char *name ) const;
+        // Gibt die maximale Spalten breite in Pixeln zurück
+        //  name: Der Name der Spalte
 		__declspec( dllexport ) int getMaxSpaltenBreite( Text *name ) const;
-		__declspec( dllexport ) int getMinZeilenHöhe( int num ) const; // gibt die minimale Zeilenhöhe zurück
+        // Gibt die minimale Zeilen Höhe in Pixeln zurück
+        //  num: Der Index der Zeile
+		__declspec( dllexport ) int getMinZeilenHöhe( int num ) const;
+        // Gibt die minimale Zeilen Höhe in Pixeln zurück
+        //  name: Der Name der Zeile
 		__declspec( dllexport ) int getMinZeilenHöhe( const char *name ) const;
+        // Gibt die minimale Zeilen Höhe in Pixeln zurück
+        //  name: Der Name der Zeile
 		__declspec( dllexport ) int getMinZeilenHöhe( Text *name ) const;
-		__declspec( dllexport ) int getMaxZeilenHöhe( int num ) const; // gibt die maximale Zeilenhöhe zurück
+        // Gibt die maximale Zeilen Höhe in Pixeln zurück
+        //  num: Der Index der Zeile
+		__declspec( dllexport ) int getMaxZeilenHöhe( int num ) const;
+        // Gibt die maximale Zeilen Höhe in Pixeln zurück
+        //  name: Der Name der Zeile
 		__declspec( dllexport ) int getMaxZeilenHöhe( const char *name ) const;
+        // Gibt die maximale Zeilen Höhe in Pixeln zurück
+        //  name: Der Name der Zeile
 		__declspec( dllexport ) int getMaxZeilenHöhe( Text *name ) const;
-		__declspec( dllexport ) double getMausSpalte( int mx ) const; // ermittelt die Spalte unter der Maus
+        // Gibt den index der Splate zurück, auf die die Maus zeigt
+        //  mx: Die x Koordinate der Mausposition basierend zum linken Rand der Tabelle in Pixeln
+		__declspec( dllexport ) double getMausSpalte( int mx ) const;
+        // Gibt den Namen der Splate zurück, auf die die Maus zeigt
+        //  mx: Die x Koordinate der Mausposition basierend zum linken Rand der Tabelle in Pixeln
 		__declspec( dllexport ) Text *getMausSpaltenName( int mx ) const;
+        // Gibt den Namen der Splate ohne erhöhten Reference Counter zurück, auf die die Maus zeigt
+        //  mx: Die x Koordinate der Mausposition basierend zum linken Rand der Tabelle in Pixeln
 		__declspec( dllexport ) Text *zMausSpaltenName( int mx ) const;
-		__declspec( dllexport ) double getMausZeile( int my ) const; // ermittelt die Zeile unter der Maus
+        // Gibt den index der Zeile zurück, auf die die Maus zeigt
+        //  my: Die Y Koordinate der Mausposition basierend zum oberen Rand der Tabelle in Pixeln
+		__declspec( dllexport ) double getMausZeile( int my ) const;
+        // Gibt den Namen der Zeile zurück, auf die die Maus zeigt
+        //  my: Die Y Koordinate der Mausposition basierend zum oberen Rand der Tabelle in Pixeln
 		__declspec( dllexport ) Text *getMausZeilenName( int my ) const;
+        // Gibt den Namen der Zeile ohne erhöhten Reference Counter zurück, auf die die Maus zeigt
+        //  my: Die Y Koordinate der Mausposition basierend zum oberen Rand der Tabelle in Pixeln
 		__declspec( dllexport ) Text *zMausZeilenName( int my ) const;
-		__declspec( dllexport ) const Punkt &getAuswahlPosition() const; // gibt die Auswahl Position zurück
-		__declspec( dllexport ) int getRasterFarbe() const; // gibt die Farbe des Rasters zurück
-		__declspec( dllexport ) int getRasterBreite() const; // gibt die Breite des Rasters zurück
-		__declspec( dllexport ) LRahmen *getARahmen() const; // gibt den auswahl Rahmen zurück
+        // Gibt den Index der Spalte als x und den der Zeile als y des ausgewählten Feldes zurück
+		__declspec( dllexport ) const Punkt &getAuswahlPosition() const;
+        // Gibt die Farbe des Rasters im A8R8G8B8 Format zurück
+		__declspec( dllexport ) int getRasterFarbe() const;
+        // Gibt die Breite des Rasters in Pixeln zurück
+		__declspec( dllexport ) int getRasterBreite() const;
+        // Gibt einen Zeiger auf den Rahmen zurück, der bei dem ausgewählten Feld verwendet wird
+        __declspec( dllexport ) LRahmen *getARahmen() const;
+        // Gibt einen Zeiger auf den Rahmen ohne erhöhten Reference Counter zurück, der bei dem ausgewählten Feld verwendet wird
 		__declspec( dllexport ) LRahmen *zARahmen() const;
-		__declspec( dllexport ) AlphaFeld *getAAlphaFeld() const; // gibt das auswahl AlphaFeld zurück
+        // Gibt einen Zeiger auf den Farbübergang zurück, der bei dem ausgewählten Feld verwendet wird
+		__declspec( dllexport ) AlphaFeld *getAAlphaFeld() const;
+        // Gibt einen Zeiger auf den Farbübergang ohne erhöhten Reference Counter zurück, der bei dem ausgewählten Feld verwendet wird
 		__declspec( dllexport ) AlphaFeld *zAAlphaFeld() const;
-		__declspec( dllexport ) LRahmen *getARahmen( int sNum, int zNum ) const; // gibt den auswahl Rahmen zurück
+        // Gibt einen Zeiger auf den Rahmen zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  sNum: Der Index der Spalte
+        //  zNum: Der Index der Zeile
+		__declspec( dllexport ) LRahmen *getARahmen( int sNum, int zNum ) const;
+        // Gibt einen Zeiger auf den Rahmen ohne erhöhten Reference Couner zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  sNum: Der Index der Spalte
+        //  zNum: Der Index der Zeile
 		__declspec( dllexport ) LRahmen *zARahmen( int sNum, int zNum ) const;
-		__declspec( dllexport ) AlphaFeld *getAAlphaFeld( int sNum, int zNum ) const; // gibt das auswahl AlphaFeld zurück
+        // Gibt einen Zeiger auf den Farbübergang zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  sNum: Der Index der Spalte
+        //  zNum: Der Index der Zeile
+		__declspec( dllexport ) AlphaFeld *getAAlphaFeld( int sNum, int zNum ) const;
+        // Gibt einen Zeiger auf den Farbübergang ohne erhöhten Reference Couner zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  sNum: Der Index der Spalte
+        //  zNum: Der Index der Zeile
 		__declspec( dllexport ) AlphaFeld *zAAlphaFeld( int sNum, int zNum ) const;
-		__declspec( dllexport ) LRahmen *getARahmen( const char *spaltenName, const char *zeilenName ) const; // gibt den auswahl Rahmen zurück
+        // Gibt einen Zeiger auf den Rahmen zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
+		__declspec( dllexport ) LRahmen *getARahmen( const char *spaltenName, const char *zeilenName ) const;
+        // Gibt einen Zeiger auf den Rahmen ohne erhöhten Reference Coune zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
 		__declspec( dllexport ) LRahmen *zARahmen( const char *spaltenName, const char *zeilenName ) const;
-		__declspec( dllexport ) AlphaFeld *getAAlphaFeld( const char *spaltenName, const char *zeilenName ) const; // gibt das auswahl AlphaFeld zurück
+        // Gibt einen Zeiger auf den Farbübergang zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
+		__declspec( dllexport ) AlphaFeld *getAAlphaFeld( const char *spaltenName, const char *zeilenName ) const;
+        // Gibt einen Zeiger auf den Farbübergang ohne erhöhten Reference Coune zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
 		__declspec( dllexport ) AlphaFeld *zAAlphaFeld( const char *spaltenName, const char *zeilenName ) const;
-		__declspec( dllexport ) LRahmen *getARahmen( Text *spaltenName, Text *zeilenName ) const; // gibt den auswahl Rahmen zurück
+        // Gibt einen Zeiger auf den Rahmen zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
+		__declspec( dllexport ) LRahmen *getARahmen( Text *spaltenName, Text *zeilenName ) const;
+        // Gibt einen Zeiger auf den Rahmen ohne erhöhten Reference Coune zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
 		__declspec( dllexport ) LRahmen *zARahmen( Text *spaltenName, Text *zeilenName ) const;
-		__declspec( dllexport ) AlphaFeld *getAAlphaFeld( Text *spaltenName, Text *zeilenName ) const; // gibt das auswahl AlphaFeld zurück
+        // Gibt einen Zeiger auf den Farbübergang zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
+		__declspec( dllexport ) AlphaFeld *getAAlphaFeld( Text *spaltenName, Text *zeilenName ) const;
+        // Gibt einen Zeiger auf den Farbübergang ohne erhöhten Reference Coune zurück, der bei dem Flag AuswahlMultistyled bei der auswahl eines bestimmten Kästchens verwendet wird
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
 		__declspec( dllexport ) AlphaFeld *zAAlphaFeld( Text *spaltenName, Text *zeilenName ) const;
-		__declspec( dllexport ) inline bool hatMsStyle( int sNum, int zNum, __int64 style ) const; // prüft, ob style vorhanden ist
-		__declspec( dllexport ) inline bool hatMsStyleNicht( int sNum, int zNum, __int64 style ) const; // prüft, ob style nicht vorhanden ist
-		__declspec( dllexport ) inline bool hatMsStyle( const char *spaltenName, const char *zeilenName, __int64 style ) const; // prüft, ob style vorhanden ist
-		__declspec( dllexport ) inline bool hatMsStyleNicht( const char *spaltenName, const char *zeilenName, __int64 style ) const; // prüft, ob style nicht vorhanden ist
-		__declspec( dllexport ) inline bool hatMsStyle( Text *spaltenName, Text *zeilenName, __int64 style ) const; // prüft, ob style vorhanden ist
-		__declspec( dllexport ) inline bool hatMsStyleNicht( Text *spaltenName, Text *zeilenName, __int64 style ) const; // prüft, ob style nicht vorhanden ist
-		__declspec( dllexport ) Zeichnung *dublizieren() const override; // Erzeugt eine Kopie des Zeichnungs
-		// Reference Counting
+        // Prüft ob bei dem Flag AuswahlMultistyled für ein bestimmtes Kästchen ein bestimmter Style gesetzt ist
+        //  sNum: Der Index der Spalte
+        //  zNum: Der Index der Zeile
+        //  style: Der Style, der gepfüft werden soll
+		__declspec( dllexport ) inline bool hatMsStyle( int sNum, int zNum, __int64 style ) const;
+        // Prüft ob bei dem Flag AuswahlMultistyled für ein bestimmtes Kästchen ein bestimmter Style nicht gesetzt ist
+        //  sNum: Der Index der Spalte
+        //  zNum: Der Index der Zeile
+        //  style: Der Style, der gepfüft werden soll
+		__declspec( dllexport ) inline bool hatMsStyleNicht( int sNum, int zNum, __int64 style ) const;
+        // Prüft ob bei dem Flag AuswahlMultistyled für ein bestimmtes Kästchen ein bestimmter Style gesetzt ist
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
+        //  style: Der Style, der gepfüft werden soll
+		__declspec( dllexport ) inline bool hatMsStyle( const char *spaltenName, const char *zeilenName, __int64 style ) const;
+        // Prüft ob bei dem Flag AuswahlMultistyled für ein bestimmtes Kästchen ein bestimmter Style nicht gesetzt ist
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
+        //  style: Der Style, der gepfüft werden soll
+		__declspec( dllexport ) inline bool hatMsStyleNicht( const char *spaltenName, const char *zeilenName, __int64 style ) const;
+        // Prüft ob bei dem Flag AuswahlMultistyled für ein bestimmtes Kästchen ein bestimmter Style gesetzt ist
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
+        //  style: Der Style, der gepfüft werden soll
+		__declspec( dllexport ) inline bool hatMsStyle( Text *spaltenName, Text *zeilenName, __int64 style ) const;
+        // Prüft ob bei dem Flag AuswahlMultistyled für ein bestimmtes Kästchen ein bestimmter Style nicht gesetzt ist
+        //  spaltenName: Der Name der Spalte
+        //  zeilenName: Der Name der Zeile
+        //  style: Der Style, der gepfüft werden soll
+		__declspec( dllexport ) inline bool hatMsStyleNicht( Text *spaltenName, Text *zeilenName, __int64 style ) const;
+        // Erzeugt eine Kopie der Tabelle, die ohne auswirkungen auf das Original verändert werden kann
+		__declspec( dllexport ) Zeichnung *dublizieren() const override;
+        // Erhöht den Reference Counting Zähler.
+        //  return: this.
 		__declspec( dllexport ) ObjTabelle *getThis();
+        // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Objekt automatisch gelöscht.
+        //  return: 0.
 		__declspec( dllexport ) ObjTabelle *release();
 	};
 }

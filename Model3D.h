@@ -18,6 +18,7 @@ namespace Framework
     class Model3DTextur; // Model3D.h
     class Model3DList; // Model3DList.h
 
+    // Repräsentiert einen Knochen eines 3D Models. Kann annimiert werden
     class Knochen
     {
     private:
@@ -57,6 +58,7 @@ namespace Framework
         __declspec( dllexport ) int getId() const;
     };
 
+    // Repräsentiert alle Knochen eines Models, mit denen es Annimiert werden kann
     class Skelett
     {
     private:
@@ -92,18 +94,20 @@ namespace Framework
         __declspec( dllexport ) Skelett *release();
     };
 
+    // Eine struktor um für eine Ecke eines 3D Models die Raum Position, die Textur Koordinaten und den zugehörigen Knochen speichert
     struct Vertex3D
     {
-        Vec3< float > pos;
-        Vec2< float > tPos;
-        int knochenId;
+        Vec3< float > pos; // Die Position der Ecke basierend zur Position des Knochens
+        Vec2< float > tPos; // Die Textur Koordinaten der Ecke
+        int knochenId; // Die Id des Knochens, mit dem sich die Ecke bei einer Annimation mitbewegt
     };
 
+    // Eine Struktur, die alle Dreiecke eines 3D Polygons speichert
     struct Polygon3D
     {
-        int *indexList;
-        int indexAnz;
-        DXIndexBuffer *indexBuffer;
+        int *indexList; // Die Liste mit den IDs der Ecken
+        int indexAnz; // Die Länge der Liste mit den Ids der Ecken
+        DXIndexBuffer *indexBuffer; // Die DirectX11 Struktur, die die Liste mit IDs der Ecken verwaltet
 
         // Konstruktor
         __declspec( dllexport ) Polygon3D();
@@ -112,7 +116,7 @@ namespace Framework
     };
 
     // Speichert alle Geometrischen Daten eines Modells, also
-    // Raum - und Textur Koordinaten aller Eckpunkte
+    // Raum - und Textur Koordinaten und Knochenzugehörigkeit aller Eckpunkte
     class Model3DData
     {
     private:
@@ -209,6 +213,7 @@ namespace Framework
         __declspec( dllexport ) Model3DTextur *release();
     };
 
+    // Eine Zeichnung des 3D Frameworks, die ein 3D Model mit Textur und Animation darstellen kann
     class Model3D : public Zeichnung3D
     {
     protected:

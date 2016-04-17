@@ -230,7 +230,6 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClInclude Include="FrameworkMath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="InitDatei.h" />
-    <ClInclude Include="Kam2D.h" />
     <ClInclude Include="Kam3D.h" />
     <ClInclude Include="Knopf.h" />
     <ClInclude Include="KSGTDatei.h" />
@@ -252,7 +251,7 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClInclude Include="Textur.h" />
     <ClInclude Include="TexturList.h" />
     <ClInclude Include="TexturModel.h" />
-    <ClInclude Include="Vec4.h" />
+    <ClInclude Include="Ebene3D.h" />
     <ClInclude Include="Welt3D.h" />
     <ClInclude Include="Zeichnung.h" />
     <ClInclude Include="Prozess.h" />
@@ -271,7 +270,6 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClInclude Include="Betriebssystem.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vec3.h" />
-    <ClInclude Include="Welt2D.h" />
     <ClInclude Include="Zeichnung3D.h" />
     <ClInclude Include="Zeit.h" />
   </ItemGroup>
@@ -291,7 +289,6 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClCompile Include="Fortschritt.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="InitDatei.cpp" />
-    <ClCompile Include="Kam2D.cpp" />
     <ClCompile Include="Kam3D.cpp" />
     <ClCompile Include="Knopf.cpp" />
     <ClCompile Include="KSGTDatei.cpp" />
@@ -325,7 +322,6 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClCompile Include="TextFeld.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ToolTip.cpp" />
-    <ClCompile Include="Welt2D.cpp" />
     <ClCompile Include="Zeit.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -334,19 +330,6 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TestShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
-      <FileType>Document</FileType>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -873,8 +873,8 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
 		aufScroll = 1;
 	if( !außerhalb && horizontalScrollBar && hatStyle( Style::HScroll ) && me.my > pos.y + gr.y - 15 )
 		aufScroll = 1;
-	me.mx -= pos.x + ( ( horizontalScrollBar && hatStyle( Style::HScroll ) ) ? horizontalScrollBar->getScrollData()->anzeigeBeginn : 0 );
-	me.my -= pos.y + ( ( vertikalScrollBar && hatStyle( Style::VScroll ) ) ? vertikalScrollBar->getScrollData()->anzeigeBeginn : 0 );
+	me.mx -= pos.x + ( ( horizontalScrollBar && hatStyle( Style::HScroll ) ) ? horizontalScrollBar->getScroll() : 0 );
+	me.my -= pos.y + ( ( vertikalScrollBar && hatStyle( Style::VScroll ) ) ? vertikalScrollBar->getScroll() : 0 );
 	if( MakB )
 	{
 		lockZeichnung();
@@ -1054,13 +1054,13 @@ void ObjTabelle::render( Bild &zRObj ) // zeichnet nach zRObj
 	}
 	int xPos = 0;
 	if( horizontalScrollBar && hatStyle( Style::HScroll ) )
-		xPos -= horizontalScrollBar->getScrollData()->anzeigeBeginn;
+		xPos -= horizontalScrollBar->getScroll();
 	for( int s = 0; s < spaltenAnzahl; ++s )
 	{
 		int sBr = spaltenBreite->hat( s ) ? spaltenBreite->get( s ) : 0;
 		int yPos = 0;
 		if( vertikalScrollBar && hatStyle( Style::VScroll ) )
-			yPos -= vertikalScrollBar->getScrollData()->anzeigeBeginn;
+			yPos -= vertikalScrollBar->getScroll();
 		Array< Zeichnung* > *tmp_zZeichnungs = zZeichnungs->z( s );
 		if( !tmp_zZeichnungs )
 			continue;
@@ -1109,7 +1109,7 @@ void ObjTabelle::render( Bild &zRObj ) // zeichnet nach zRObj
 			}
 			yPos += zHö;
 			if( z == zeilenAnzahl - 1 && vertikalScrollBar && hatStyle( Style::VScroll ) )
-				vertikalScrollBar->getScrollData()->maxHöhe = yPos + vertikalScrollBar->getScrollData()->anzeigeBeginn;
+				vertikalScrollBar->getScrollData()->max = yPos + vertikalScrollBar->getScroll();
 		}
 		if( hatStyle( Style::Raster ) )
 		{
@@ -1119,7 +1119,7 @@ void ObjTabelle::render( Bild &zRObj ) // zeichnet nach zRObj
 		xPos += sBr;
 	}
 	if( horizontalScrollBar && hatStyle( Style::HScroll ) )
-        horizontalScrollBar->getScrollData()->maxBreite = xPos + horizontalScrollBar->getScrollData()->anzeigeBeginn;
+        horizontalScrollBar->getScrollData()->max = xPos + horizontalScrollBar->getScroll();
 	zRObj.releaseDrawOptions();
 	unlockZeichnung();
 }

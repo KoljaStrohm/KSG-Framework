@@ -1849,7 +1849,7 @@ void LDiag::render( Bild &zRObj )
                 int rpx = horizontalScrollBar && hatStyle( Style::HScroll ) ? -horizontalScrollBar->getScroll() : 0;
                 int rpy = vertikalScrollBar && hatStyle( Style::VScroll ) ? -vertikalScrollBar->getScroll() : 0;
                 rpy += dgy;
-                int dgmhö = vertikalScrollBar && hatStyle( Style::VScroll ) ? dgy + vertikalScrollBar->getScrollData()->maxHöhe + dgrbr : dgy + dghö - dgrbr;
+                int dgmhö = vertikalScrollBar && hatStyle( Style::VScroll ) ? dgy + vertikalScrollBar->getScrollData()->max + dgrbr : dgy + dghö - dgrbr;
                 if( hatWertStyle( i, DiagWert::Style::Hintergrund ) )
                 {
                     DiagPunkt *vorher = 0;

@@ -2,7 +2,7 @@
 
 #include "Array.h"
 #include "Mat4.h"
-#include "Vec4.h"
+#include "Ebene3D.h"
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -18,13 +18,14 @@ namespace Framework
     class Textur; // Textur.h
     class Model3D; // Model3D.h
 
+    // Verwaltet die Zeichenfunktionen der Grafikkarte und wird zum Zeichnen von 3D Modelen verwendet. Wird von Bildschirm3D automatisch erzeugt.
     class Render3D
     {
     private:
         Mat4< float > matrixBuffer[ 128 ];
         Mat4< float > view;
         Mat4< float > proj;
-        Vec4< float > frustrum[ 6 ];
+        Ebene3D< float > frustrum[ 6 ];
         Vec3< float > kamPos;
         ID3D11Device *device;
         ID3D11DeviceContext *context;

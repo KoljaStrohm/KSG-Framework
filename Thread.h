@@ -59,14 +59,21 @@ namespace Framework
 	void *threadStart( void *param ); // startet thread
 #endif
 
+    // Eine Klasse, die alle aktuell laufenden Thread Objekte speichert
     class ThreadRegister
     {
     private:
         Array< Thread* > threads;
 
     public:
+        // Fügt einen neuen Thread hinzu
+        //  t: Der Thread, der hinzugefügt werden soll
         void add( Thread *t );
+        // Entfernt einen neuen Thread
+        //  t: Der Thread, der entfernt werden soll
         void remove( Thread *t );
+        // Überprüft, ob ein Zeiger auf ein gültiges Thread Objekt zeigt, oder ob es schon gelöscht wurde
+        //  t: Der Zeiger, der geprüft werden soll
         bool isThread( Thread *t ) const;
     };
 }

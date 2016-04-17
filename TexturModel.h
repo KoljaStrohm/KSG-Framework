@@ -6,6 +6,7 @@ namespace Framework
 {
     class Bild; // Bild.h
 
+    // Ein 3D Modell, das zur Darstellung einer Textur im dreidimensionalen Raum verwendet werden kann
     class TexturModel : public Model3D
     {
     public:

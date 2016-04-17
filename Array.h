@@ -7,8 +7,8 @@
 
 namespace Framework
 {
-    // Ein Eintrag in einer Linked List
 	template< class TYP >
+    // Ein Eintrag in einer Linked List
 	struct ArrayEintrag
 	{
 		TYP var;
@@ -52,8 +52,8 @@ namespace Framework
 		}
 	};
 
-    // Eine Linked List von Klassen, die kein Reference Counting berteiben
 	template< class TYP >
+    // Eine Linked List von Klassen, die kein Reference Counting berteiben
 	class Array
 	{
 	private:
@@ -346,8 +346,8 @@ namespace Framework
 		}
 	};
 
-    // Eine Linked List von Zeigern auf Zeichnunge, die Reference Counting berteiben
 	template< class TYP >
+    // Eine Linked List von Zeigern auf Zeichnunge, die Reference Counting berteiben
 	class RCArray
 	{
 	private:

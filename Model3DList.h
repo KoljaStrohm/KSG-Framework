@@ -10,7 +10,7 @@ namespace Framework
 
     namespace Standart3DTypes
     {
-        const static char *würfel = "f_würfel";
+        const static char *würfel = "f_würfel"; // Die Modeldaten eines Würfels der 100 * 100 * 100 groß ist
     };
 
     // Verwaltet alle geladenen Modeldaten, so dass mehrere Zeichnungen die selben Daten benutzen können

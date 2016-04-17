@@ -9,6 +9,7 @@ namespace Framework
 {
     class Render3D;
 
+    // Eine Schnittstelle zwischen dem Arbeitsspeicher und dem Grafikspeicher
     class DXBuffer
     {
     private:
@@ -55,6 +56,7 @@ namespace Framework
         __declspec( dllexport ) virtual DXBuffer *release();
     };
 
+    // Ein Buffer von Eckpunkten eines 3D Models
     class DXVertexBuffer : public DXBuffer
     {
     public:
@@ -66,6 +68,7 @@ namespace Framework
         __declspec( dllexport ) virtual DXBuffer *release();
     };
 
+    // Ein Buffer von Indizes aus dem Buffer mit Eckpunkten, wovon immer drei ein Dreieck ergeben, das gezeichnet wird
     class DXIndexBuffer : public DXBuffer
     {
     public:

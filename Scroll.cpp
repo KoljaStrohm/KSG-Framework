@@ -6,8 +6,8 @@ using namespace Framework;
 
 // Inhalt der VScrollBar Klasse aus Scroll.h
 // Konstruktor 
-VScrollBar::VScrollBar()
-	: data(new VScrollData()),
+ScrollBar::ScrollBar()
+	: data(new ScrollData()),
 	  knopfdruck( 0 ),
 	  farbe( 0xFF808080),
 	  bgFarbe( 0xFF000000 ),
@@ -22,144 +22,82 @@ VScrollBar::VScrollBar()
 }
 
 // Destruktor 
-VScrollBar::~VScrollBar()
+ScrollBar::~ScrollBar()
 {
 	delete data;
 }
 
 // nicht constant
-void VScrollBar::setFarbe( int fc )
+void ScrollBar::setFarbe( int fc )
 {
 	farbe = fc;
 	rend = 1;
 }
 
-void VScrollBar::setBgFarbe( int fc, bool bgF )
+void ScrollBar::setBgFarbe( int fc, bool bgF )
 {
 	bgFarbe = fc;
 	bg = bgF;
 	rend = 1;
 }
 
-void VScrollBar::update( int maxHöhe, int anzeigeHöhe )
+void ScrollBar::update( int maxGr, int anzeigeGr )
 {
-	if( data->maxHöhe != maxHöhe || data->anzeigeHöhe != anzeigeHöhe )
+	if( data->max != maxGr || data->anzeige != anzeigeGr )
 	{
-		data->maxHöhe = maxHöhe, data->anzeigeHöhe = anzeigeHöhe;
+		data->max = maxGr, data->anzeige = anzeigeGr;
 		rend = 1;
 	}
-	if( data->anzeigeBeginn > data->maxHöhe - data->anzeigeHöhe && data->maxHöhe - data->anzeigeHöhe >= 0 )
+	if( data->scrollPos > data->max - data->anzeige && data->max - data->anzeige >= 0 )
 	{
-		data->anzeigeBeginn = data->maxHöhe - data->anzeigeHöhe;
+		data->scrollPos = data->max - data->anzeige;
 		rend = 1;
 	}
-	if( data->anzeigeBeginn < 0 )
+	if( data->scrollPos < 0 )
 	{
-		data->anzeigeBeginn = 0;
+		data->scrollPos = 0;
 		rend = 1;
 	}
 }
 
-void VScrollBar::setKlickScroll( int ks )
+void ScrollBar::setKlickScroll( int ks )
 {
 	klickScroll = ks;
 	rend = 1;
 }
 
-void VScrollBar::scroll( int höhe )
+void ScrollBar::scroll( int höhe )
 {
-	data->anzeigeBeginn = höhe;
-	if( data->anzeigeBeginn > data->maxHöhe - data->anzeigeHöhe )
-		data->anzeigeBeginn = data->maxHöhe - data->anzeigeHöhe;
-	if( data->anzeigeBeginn < 0 )
-		data->anzeigeBeginn = 0;
+	data->scrollPos = höhe;
+	if( data->scrollPos > data->max - data->anzeige )
+		data->scrollPos = data->max - data->anzeige;
+	if( data->scrollPos < 0 )
+		data->scrollPos = 0;
 	rend = 1;
 }
 
-bool VScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
-{
-    bool ret = me.mx >= x && me.mx <= x + br && me.my >= y && me.my <= y + hö;
-	knopfdruck = 0;
-	if( me.verarbeitet )
-	{
-		mx = -1, my = -1;
-		mp = 0;
-		return ret;
-	}
-	if( me.id == ME_UScroll )
-	{
-		data->anzeigeBeginn -= klickScroll;
-		if( data->anzeigeBeginn < 0 )
-			data->anzeigeBeginn = 0;
-		rend = 1;
-		return ret;
-	}
-	if( me.id == ME_DScroll )
-	{
-		data->anzeigeBeginn += klickScroll;
-		if( data->anzeigeBeginn > data->maxHöhe - data->anzeigeHöhe )
-			data->anzeigeBeginn = data->maxHöhe - data->anzeigeHöhe;
-		if( data->anzeigeBeginn < 0 )
-			data->anzeigeBeginn = 0;
-		rend = 1;
-		return ret;
-	}
-	if( ret )
-		mx = me.mx - x, my = me.my - y;
-	else
-		mx = -1, my = -1;
-	if( me.id == ME_PLinks )
-		mp = 1;
-	if( me.id == ME_RLinks )
-		mp = 0;
-	if( mp )
-	{
-		if( mx >= 0 && my >= 0 )
-		{
-			if( my < br )
-			{
-				knopfdruck = 1;
-				data->anzeigeBeginn -= klickScroll;
-			}
-			else if( my > hö - br )
-			{
-				knopfdruck = 2;
-				data->anzeigeBeginn += klickScroll;
-			}
-			else
-				data->anzeigeBeginn = (int)( ( data->maxHöhe / ( hö - 2.0 * br ) ) * ( my - br ) ) - data->anzeigeHöhe / 2;
-			if( data->anzeigeBeginn > data->maxHöhe - data->anzeigeHöhe )
-				data->anzeigeBeginn = data->maxHöhe - data->anzeigeHöhe;
-			if( data->anzeigeBeginn < 0 )
-				data->anzeigeBeginn = 0;
-			rend = 1;
-		}
-	}
-    return ret;
-}
-
-bool VScrollBar::getRend()
+bool ScrollBar::getRend()
 {
 	if( knopfdruck == 1 )
 	{
-		int tmp = data->anzeigeBeginn;
-		data->anzeigeBeginn -= klickScroll;
-		if( data->anzeigeBeginn > data->maxHöhe - data->anzeigeHöhe )
-			data->anzeigeBeginn = data->maxHöhe - data->anzeigeHöhe;
-		if( data->anzeigeBeginn < 0 )
-			data->anzeigeBeginn = 0;
-		if( tmp != data->anzeigeBeginn )
+		int tmp = data->scrollPos;
+		data->scrollPos -= klickScroll;
+		if( data->scrollPos > data->max - data->anzeige )
+			data->scrollPos = data->max - data->anzeige;
+		if( data->scrollPos < 0 )
+			data->scrollPos = 0;
+		if( tmp != data->scrollPos )
 			rend = 1;
 	}
 	if( knopfdruck == 2 )
 	{
-		int tmp = data->anzeigeBeginn;
-		data->anzeigeBeginn += klickScroll;
-		if( data->anzeigeBeginn > data->maxHöhe - data->anzeigeHöhe )
-			data->anzeigeBeginn = data->maxHöhe - data->anzeigeHöhe;
-		if( data->anzeigeBeginn < 0 )
-			data->anzeigeBeginn = 0;
-		if( tmp != data->anzeigeBeginn )
+		int tmp = data->scrollPos;
+		data->scrollPos += klickScroll;
+		if( data->scrollPos > data->max - data->anzeige )
+			data->scrollPos = data->max - data->anzeige;
+		if( data->scrollPos < 0 )
+			data->scrollPos = 0;
+		if( tmp != data->scrollPos )
 			rend = 1;
 	}
 	bool ret = rend;
@@ -168,65 +106,39 @@ bool VScrollBar::getRend()
 }
 
 // const 
-void VScrollBar::render( int x, int y, int br, int hö, Bild &zRObj ) const
-{
-	if( bg )
-		zRObj.alphaRegion( x, y, br, hö, bgFarbe );
-	--br;
-	--hö;
-	zRObj.drawLinieH( x, y, br + 1, farbe );
-	zRObj.drawLinieH( x, y + hö, br + 1, farbe );
-	zRObj.drawLinieV( x, y + 1, hö - 1, farbe );
-	zRObj.drawLinieV( x + br, y + 1, hö - 1, farbe );
-	zRObj.drawLinieH( x + 1, y + br, br - 1, farbe );
-	zRObj.drawLinieH( x + 1, y + hö - br, br - 1, farbe );
-	++br;
-	++hö;
-	int st = (int)( data->anzeigeBeginn / ( data->maxHöhe / ( hö - br * 2.0 ) ) );
-	int end = (int)( ( hö - 2.0 * br ) / ( (double)data->maxHöhe / data->anzeigeHöhe ) );
-	if( data->anzeigeBeginn > data->maxHöhe - data->anzeigeHöhe )
-		data->anzeigeBeginn = data->maxHöhe - data->anzeigeHöhe;
-	if( data->anzeigeBeginn < 0 )
-	{
-		data->anzeigeBeginn = 0;
-		end = hö - br * 2;
-	}
-	zRObj.füllRegion( x + 1, y + br + st, br - 1, end, farbe );
-}
-
-VScrollData *VScrollBar::getScrollData() const
+ScrollData *ScrollBar::getScrollData() const
 {
 	return data;
 }
 
-int VScrollBar::getKlickScroll() const
+int ScrollBar::getKlickScroll() const
 {
 	return klickScroll;
 }
 
-int VScrollBar::getFarbe() const
+int ScrollBar::getFarbe() const
 {
 	return farbe;
 }
 
-int VScrollBar::getBgFarbe() const
+int ScrollBar::getBgFarbe() const
 {
 	return bg ? bgFarbe : 0;
 }
 
-int VScrollBar::getScroll() const
+int ScrollBar::getScroll() const
 {
-    return data->anzeigeBeginn;
+    return data->scrollPos;
 }
 
 // Reference Counting
-VScrollBar *VScrollBar::getThis()
+ScrollBar *ScrollBar::getThis()
 {
 	++ref;
 	return this;
 }
 
-VScrollBar *VScrollBar::release()
+ScrollBar *ScrollBar::release()
 {
 	--ref;
 	if( ref == 0 )
@@ -234,78 +146,116 @@ VScrollBar *VScrollBar::release()
 	return 0;
 }
 
+// Inhalt der VScrollBar Klasse
+VScrollBar::VScrollBar()
+    : ScrollBar()
+{
+}
+
+bool VScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
+{
+    bool ret = me.mx >= x && me.mx <= x + br && me.my >= y && me.my <= y + hö;
+    knopfdruck = 0;
+    if( me.verarbeitet )
+    {
+        mx = -1, my = -1;
+        mp = 0;
+        return ret;
+    }
+    if( me.id == ME_UScroll )
+    {
+        data->scrollPos -= klickScroll;
+        if( data->scrollPos < 0 )
+            data->scrollPos = 0;
+        rend = 1;
+        return ret;
+    }
+    if( me.id == ME_DScroll )
+    {
+        data->scrollPos += klickScroll;
+        if( data->scrollPos > data->max - data->anzeige )
+            data->scrollPos = data->max - data->anzeige;
+        if( data->scrollPos < 0 )
+            data->scrollPos = 0;
+        rend = 1;
+        return ret;
+    }
+    if( ret )
+        mx = me.mx - x, my = me.my - y;
+    else
+        mx = -1, my = -1;
+    if( me.id == ME_PLinks )
+        mp = 1;
+    if( me.id == ME_RLinks )
+        mp = 0;
+    if( mp )
+    {
+        if( mx >= 0 && my >= 0 )
+        {
+            if( my < br )
+            {
+                knopfdruck = 1;
+                data->scrollPos -= klickScroll;
+            }
+            else if( my > hö - br )
+            {
+                knopfdruck = 2;
+                data->scrollPos += klickScroll;
+            }
+            else
+                data->scrollPos = (int)( ( data->max / ( hö - 2.0 * br ) ) * ( my - br ) ) - data->anzeige / 2;
+            if( data->scrollPos > data->max - data->anzeige )
+                data->scrollPos = data->max - data->anzeige;
+            if( data->scrollPos < 0 )
+                data->scrollPos = 0;
+            rend = 1;
+        }
+    }
+    return ret;
+}
+
+void VScrollBar::render( int x, int y, int br, int hö, Bild &zRObj ) const
+{
+    if( bg )
+        zRObj.alphaRegion( x, y, br, hö, bgFarbe );
+    --br;
+    --hö;
+    zRObj.drawLinieH( x, y, br + 1, farbe );
+    zRObj.drawLinieH( x, y + hö, br + 1, farbe );
+    zRObj.drawLinieV( x, y + 1, hö - 1, farbe );
+    zRObj.drawLinieV( x + br, y + 1, hö - 1, farbe );
+    zRObj.drawLinieH( x + 1, y + br, br - 1, farbe );
+    zRObj.drawLinieH( x + 1, y + hö - br, br - 1, farbe );
+    ++br;
+    ++hö;
+    int st = (int)( data->scrollPos / ( data->max / ( hö - br * 2.0 ) ) );
+    int end = (int)( ( hö - 2.0 * br ) / ( (double)data->max / data->anzeige ) );
+    if( data->scrollPos > data->max - data->anzeige )
+        data->scrollPos = data->max - data->anzeige;
+    if( data->scrollPos < 0 )
+    {
+        data->scrollPos = 0;
+        end = hö - br * 2;
+    }
+    zRObj.füllRegion( x + 1, y + br + st, br - 1, end, farbe );
+}
+
+ScrollBar *VScrollBar::release()
+{
+    --ref;
+    if( ref == 0 )
+        delete this;
+    return 0;
+}
+
 // Inhalt der HScrollBar Klasse aus Scroll.h
 // Konstruktor 
 HScrollBar::HScrollBar()
-	: data( new HScrollData() ),
-	  knopfdruck( 0 ),
-	  farbe( 0xFF808080),
-	  bgFarbe( 0 ),
-	  bg( 0 ),
-	  klickScroll( 10 ),
-	  mx( -1 ),
-	  my( -1 ),
-	  mp( 0 ),
-	  rend( 0 ),
-	  ref( 1 )
+	: ScrollBar()
 {
-}
-
-// Destruktor 
-HScrollBar::~HScrollBar()
-{
-	delete data;
 }
 
 // nicht constant
-void HScrollBar::setFarbe( int fc )
-{
-	farbe = fc;
-	rend = 1;
-}
-
-void HScrollBar::setBgFarbe( int fc, bool bgF )
-{
-	bgFarbe = fc;
-	bg = bgF;
-	rend = 1;
-}
-
-void HScrollBar::update( int maxBreite, int anzeigeBreite )
-{
-	if( data->maxBreite != maxBreite || data->anzeigeBreite != anzeigeBreite )
-	{
-		data->maxBreite = maxBreite, data->anzeigeBreite = anzeigeBreite;
-		rend = 1;
-	}
-	if( data->anzeigeBeginn > data->maxBreite - data->anzeigeBreite && data->maxBreite - data->anzeigeBreite >= 0 )
-	{
-		data->anzeigeBeginn = data->maxBreite - data->anzeigeBreite;
-		rend = 1;
-	}
-	if( data->anzeigeBeginn < 0 )
-	{
-		data->anzeigeBeginn = 0;
-		rend = 1;
-	}
-}
-
-void HScrollBar::setKlickScroll( int ks )
-{
-	klickScroll = ks;
-	rend = 1;
-}
-
-void HScrollBar::scroll( int breite )
-{
-	data->anzeigeBeginn = breite;
-	if( data->anzeigeBeginn > data->maxBreite - data->anzeigeBreite )
-		data->anzeigeBeginn = data->maxBreite - data->anzeigeBreite;
-	if( data->anzeigeBeginn < 0 )
-		data->anzeigeBeginn = 0;
-	rend = 1;
-}
-
 bool HScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
 {
     bool ret = me.mx >= x && me.mx <= x + br && me.my >= y && me.my <= y + hö;
@@ -318,19 +268,19 @@ bool HScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
 	}
 	if( me.id == ME_LScroll )
 	{
-		data->anzeigeBeginn -= klickScroll;
-		if( data->anzeigeBeginn < 0 )
-			data->anzeigeBeginn = 0;
+		data->scrollPos -= klickScroll;
+		if( data->scrollPos < 0 )
+			data->scrollPos = 0;
 		rend = 1;
 		return ret;
 	}
 	if( me.id == ME_RScroll )
 	{
-		data->anzeigeBeginn += klickScroll;
-		if( data->anzeigeBeginn > data->maxBreite - data->anzeigeBreite )
-			data->anzeigeBeginn = data->maxBreite - data->anzeigeBreite;
-		if( data->anzeigeBeginn < 0 )
-			data->anzeigeBeginn = 0;
+		data->scrollPos += klickScroll;
+		if( data->scrollPos > data->max - data->anzeige )
+			data->scrollPos = data->max - data->anzeige;
+		if( data->scrollPos < 0 )
+			data->scrollPos = 0;
 		rend = 1;
 		return ret;
 	}
@@ -349,55 +299,25 @@ bool HScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
 			if( mx < hö )
 			{
 				knopfdruck = 1;
-				data->anzeigeBeginn -= klickScroll;
+				data->scrollPos -= klickScroll;
 			}
 			else if( mx > br - hö )
 			{
 				knopfdruck = 2;
-				data->anzeigeBeginn += klickScroll;
+				data->scrollPos += klickScroll;
 			}
 			else
-				data->anzeigeBeginn = (int)( ( data->maxBreite / ( br - 2.0 * hö ) ) * ( mx - hö ) ) - data->anzeigeBreite / 2;
-			if( data->anzeigeBeginn > data->maxBreite - data->anzeigeBreite )
-				data->anzeigeBeginn = data->maxBreite - data->anzeigeBreite;
-			if( data->anzeigeBeginn < 0 )
-				data->anzeigeBeginn = 0;
+				data->scrollPos = (int)( ( data->max / ( br - 2.0 * hö ) ) * ( mx - hö ) ) - data->anzeige / 2;
+			if( data->scrollPos > data->max - data->anzeige )
+				data->scrollPos = data->max - data->anzeige;
+			if( data->scrollPos < 0 )
+				data->scrollPos = 0;
 			rend = 1;
 		}
 	}
     return ret;
 }
 
-bool HScrollBar::getRend()
-{
-	if( knopfdruck == 1 )
-	{
-		int tmp = data->anzeigeBeginn;
-		data->anzeigeBeginn -= klickScroll;
-		if( data->anzeigeBeginn > data->maxBreite - data->anzeigeBreite )
-			data->anzeigeBeginn = data->maxBreite - data->anzeigeBreite;
-		if( data->anzeigeBeginn < 0 )
-			data->anzeigeBeginn = 0;
-		if( tmp != data->anzeigeBeginn )
-			rend = 1;
-	}
-	if( knopfdruck == 2 )
-	{
-		int tmp = data->anzeigeBeginn;
-		data->anzeigeBeginn += klickScroll;
-		if( data->anzeigeBeginn > data->maxBreite - data->anzeigeBreite )
-			data->anzeigeBeginn = data->maxBreite - data->anzeigeBreite;
-		if( data->anzeigeBeginn < 0 )
-			data->anzeigeBeginn = 0;
-		if( tmp != data->anzeigeBeginn )
-			rend = 1;
-	}
-	bool ret = rend;
-	rend = 0;
-	return ret;
-}
-
-// const 
 void HScrollBar::render( int x, int y, int br, int hö, Bild &zRObj ) const
 {
 	if( bg )
@@ -412,51 +332,19 @@ void HScrollBar::render( int x, int y, int br, int hö, Bild &zRObj ) const
 	zRObj.drawLinieV( x + br - hö, y + 1, hö - 1, farbe );
 	++br;
 	++hö;
-	int st = (int)( data->anzeigeBeginn / ( data->maxBreite / ( br - hö * 2.0 ) ) );
-	int end = (int)( ( br - 2.0 * hö ) / ( (double)data->maxBreite / data->anzeigeBreite ) );
-	if( data->anzeigeBeginn > data->maxBreite - data->anzeigeBreite )
-		data->anzeigeBeginn = data->maxBreite - data->anzeigeBreite;
-	if( data->anzeigeBeginn < 0 )
+	int st = (int)( data->scrollPos / ( data->max / ( br - hö * 2.0 ) ) );
+	int end = (int)( ( br - 2.0 * hö ) / ( (double)data->max / data->anzeige ) );
+	if( data->scrollPos > data->max - data->anzeige )
+		data->scrollPos = data->max - data->anzeige;
+	if( data->scrollPos < 0 )
 	{
-		data->anzeigeBeginn = 0;
+		data->scrollPos = 0;
 		end = br - hö * 2;
 	}
 	zRObj.füllRegion( x + hö + st, y + 1, end, hö - 1, farbe );
 }
 
-HScrollData *HScrollBar::getScrollData() const
-{
-	return data;
-}
-
-int HScrollBar::getKlickScroll() const
-{
-	return klickScroll;
-}
-
-int HScrollBar::getFarbe() const
-{
-	return farbe;
-}
-
-int HScrollBar::getBgFarbe() const
-{
-	return bg ? bgFarbe : 0;
-}
-
-int HScrollBar::getScroll() const
-{
-    return data->anzeigeBeginn;
-}
-
-// Reference Counting
-HScrollBar *HScrollBar::getThis()
-{
-	++ref;
-	return this;
-}
-
-HScrollBar *HScrollBar::release()
+ScrollBar *HScrollBar::release()
 {
 	--ref;
 	if( ref == 0 )
