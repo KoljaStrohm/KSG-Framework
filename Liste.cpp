@@ -121,7 +121,7 @@ void AuswahlListe::addEintrag( Text *txt ) // fügt einen Eintrag hinzu
     tf->setLinienRahmenFarbe( 0xFFFFFFFF );
     tf->setTextZ( txt );
     tf->setGröße( 0, 20 );
-    addEintrag( tf );
+    addEintragZ( tf );
     rend = 1;
 }
 
@@ -152,7 +152,7 @@ void AuswahlListe::addEintrag( int pos, Text *txt ) // fügt einen Eintrag bei po
     tf->setLinienRahmenFarbe( 0xFFFFFFFF );
     tf->setTextZ( txt );
     tf->setGröße( 0, 20 );
-    addEintrag( pos, tf );
+    addEintragZ( pos, tf );
     rend = 1;
 }
 
@@ -188,7 +188,7 @@ void AuswahlListe::setEintrag( int pos, Text *txt ) // ändert den pos - ten Eint
         tf->setLinienRahmenBreite( 1 );
         tf->setTextZ( txt );
         tf->setGröße( 0, 20 );
-        setEintrag( pos, tf );
+        setEintragZ( pos, tf );
         rend = 1;
         return;
     }
