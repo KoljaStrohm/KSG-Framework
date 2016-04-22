@@ -465,7 +465,7 @@ void Bildschirm2D::render() // Zeichnet das Bild
         int *bgBuff = tmp->getBuffer();
         int tmpBr = sizeof( D3DCOLOR )* tmp->getBreite();
         for( int y = 0, pitch = 0, bry = 0; y < tmp->getHöhe(); ++y, pitch += backRect->Pitch, bry += tmp->getBreite() )
-            memcpy( &( (BYTE *)backRect->pBits )[ pitch ], (void*)&( bgBuff[ bry ] ), tmpBr );
+            memcpy( &( (BYTE *)backRect->pBits )[ pitch ], ( void* )&( bgBuff[ bry ] ), tmpBr );
         // Beende Bild 
         result = pBackBuffer->UnlockRect();
         tmp->release();

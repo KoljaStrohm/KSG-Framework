@@ -311,7 +311,6 @@ namespace Framework
         //  ff: Die Hintergrund Farbe des eingefärbten Textes
         //  f: Die Farbe, in der der Text gezeichnet werden soll
         __declspec( dllexport ) void renderText( Text *zTxt, Bild &zRObj, int cpos, int cf, int fbeg, int ff, int f );
-        
         // Gibt ein bestimmtes Alphabet mit erhöhtem Reference Counter zurück
         //  sg: Die Schriftgröße, dessen Alphabet gesucht werden soll
         //  return: (0), fals kein passendes Alphabet gefunden wurde

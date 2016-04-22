@@ -234,7 +234,6 @@ namespace Framework
         //  return: (true), wenn die gespeicherte Zeit größer als die übergebene Zeit ist. (false) sonst.
         // Beispiel: (5:30:00).istGrößer( "h:i:s", "10:40:29" ); return false
         __declspec( dllexport ) bool istGrößer( const char *format, Text *zeit ) const;
-        
         // Erhöht den Reference Counting Zähler
         //  return: this
         __declspec( dllexport ) Uhrzeit *getThis();
@@ -443,7 +442,6 @@ namespace Framework
         //  return: (true), wenn das gespeicherte Datum hinter dem übergebenen liegt. (false) sonnst.
         // Beispiel: ( 1.11.1995 ).istGrößer( "y, m, d", new Text( "2016, 1, 23" ) ) ); return true
         __declspec( dllexport ) bool istGrößer( const char *format, Text *datum ) const;
-
         // Erhöht den Reference Counting Zähler
         //  return: this
         __declspec( dllexport ) Datum *getThis();
@@ -465,7 +463,6 @@ namespace Framework
         __declspec( dllexport ) Zeit();
         // Löscht das aktuelle Zeichnung.
         __declspec( dllexport ) ~Zeit();
-        
         // Ändert die gespeicherte Zeit durch kopieren der Werte aus (zeit).
         //  zeit: Die neue Zeit.
         __declspec( dllexport ) void setZeit( Zeit *zeit );
@@ -579,7 +576,6 @@ namespace Framework
         // Zieht die übergebene Zeit ab und speichert das Ergebnis.
         //  sekunde: Die abzuziehende Sekunde.
         __declspec( dllexport ) void minusSekunde( int sekunde );
-        
         // Gibt die gespeicherte Zeit als Text zurück.
         //  format: Eine Zeichenkette, die angibt in welcher Form die neue Zeit zurückgegeben werden soll. y=Jahr, m=Monat, d=Tag, h=Stunde, i=Minute, s=Sekunde.
         __declspec( dllexport ) Text *getZeit( const char *format ) const;
@@ -660,7 +656,6 @@ namespace Framework
         //  zeit: Eine Text Zeichnung, welches die zu überprüfende Zeit enthält.
         //  return: (true) wenn die gespeicherte Zeit nach der übergebenen Zeit liegt. (false) sonnst.
         __declspec( dllexport ) bool istGrößer( const char *format, Text *zeit ) const;
-
         // Erhöht den Reference Counting Zähler
         //  return: this
         __declspec( dllexport ) Zeit *getThis();
@@ -683,19 +678,16 @@ namespace Framework
         __declspec( dllexport ) ZeitMesser();
         // Löscht das aktuelle Zeichnung
         __declspec( dllexport ) ~ZeitMesser();
-
         // legt den Startpunkt des zeitstoppens fest
         __declspec( dllexport ) void messungStart();
         // legt des Endpunkt der Zeitmessung fest
         __declspec( dllexport ) void messungEnde();
-        
         // gibt den Abstand zwischen start und ende der Messung in Sekunden zurück
         __declspec( dllexport ) double getSekunden() const;
         // gibt den Abstand zwischen start und ende der Messung in Minuten zurück
         __declspec( dllexport ) double getMinuten() const;
         // gibt den Abstand zwischen start und ende der Messung in Stunden zurück
         __declspec( dllexport ) double getStunden() const;
-        
         // Erhöht den Reference Counting Zähler.
         //  return: this.
         __declspec( dllexport ) ZeitMesser *getThis();

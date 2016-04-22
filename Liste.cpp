@@ -663,7 +663,7 @@ void AuswahlListe::render( Bild &zRObj ) // zeichnet nach zRObj
         for( int i = 0; i < einträge; ++i )
         {
             TextFeld *tf = tfListe->z( i );
-            if( dy + tf->getHöhe() > mdy && !(vertikalScrollBar && hatStyle( Style::VScroll ) ) )
+            if( dy + tf->getHöhe() > mdy && !( vertikalScrollBar && hatStyle( Style::VScroll ) ) )
                 break;
             tf->setPosition( dx, dy );
             tf->setGröße( innenGröße.x, tf->getHöhe() );

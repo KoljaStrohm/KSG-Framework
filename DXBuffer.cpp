@@ -132,8 +132,7 @@ DXBuffer *DXBuffer::release()
 // eSize: Die Länge eines Elementes in Bytes
 DXVertexBuffer::DXVertexBuffer( int eSize )
     : DXBuffer( D3D11_BIND_VERTEX_BUFFER, eSize )
-{
-}
+{}
 
 // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
 //  return: 0.
@@ -152,8 +151,7 @@ DXBuffer *DXVertexBuffer::release()
 // eSize: Die Länge eines Elementes in Bytes
 DXIndexBuffer::DXIndexBuffer( int eSize )
     : DXBuffer( D3D11_BIND_INDEX_BUFFER, eSize )
-{
-}
+{}
 
 // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
 //  return: 0.

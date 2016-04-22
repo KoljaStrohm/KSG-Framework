@@ -89,8 +89,7 @@ bool Shader::compile( ID3D11Device *zD3d11Device, const char *einstiegsFunktion,
 // Nach dem Aufruf dieser Funktion wird dieser Shader als Pixel Shader benutzt
 //  zD3d11Context: Das Context Objekt, mit dem der Shader verwendet werden soll
 void Shader::benutzeShader( ID3D11DeviceContext *zD3d11Context )
-{
-}
+{}
 
 // erstellt ein constanten Buffer, der constante daten an den Shader übergibt
 // es können maximal 14 Buffer erstellt werden

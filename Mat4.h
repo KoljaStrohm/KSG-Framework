@@ -123,7 +123,7 @@ namespace Framework
         static Mat4 projektion( float öffnungswinkel, float bildschirmXY, float minZ, float maxZ )
         {
             Mat4 p = { (float)( 1 / tan( öffnungswinkel / 2 ) ) / bildschirmXY, 0, 0, 0,
-                0, (float)( 1 / tan( öffnungswinkel / 2 ) ), 0, 0, 
+                0, (float)( 1 / tan( öffnungswinkel / 2 ) ), 0, 0,
                 0, 0, maxZ / ( maxZ - minZ ), -( minZ * maxZ ) / ( maxZ - minZ ),
                 0, 0, 1, 0 };
             return p;

@@ -5,8 +5,8 @@
 
 namespace Framework
 {
-	class Bild; // Bild.h
-	struct MausEreignis; // MausEreignis.h
+    class Bild; // Bild.h
+    struct MausEreignis; // MausEreignis.h
 
     struct ScrollData
     {
@@ -87,54 +87,54 @@ namespace Framework
     };
 
     // Eine vertikale Scrollbar, wie sie in manchen 2D GUI Zeichnungen des Frameworks verwendet wird
-	class VScrollBar : public ScrollBar
-	{
-	public:
-		// Konstruktor 
-		__declspec( dllexport ) VScrollBar();
+    class VScrollBar : public ScrollBar
+    {
+    public:
+        // Konstruktor 
+        __declspec( dllexport ) VScrollBar();
         // Verarbeitet ein Maus Ereignis
         //  x: Die X Position der Scroll Bar im Fenster
         //  y: Die Y Position der Scroll Bar im Fenster
         //  br: Die Breite der Scroll Bar
         //  hö: Die Höhe der Scroll Bar
         //  return: 1, falls die Nachricht verarbeitet wurde. Setzt dafür nicht den verarbeitet flag des Maus Ereignisses
-		__declspec( dllexport ) bool doMausMessage( int x, int y, int br, int hö, MausEreignis &me ) override;
+        __declspec( dllexport ) bool doMausMessage( int x, int y, int br, int hö, MausEreignis &me ) override;
         // Zeichnet die Scrollbar
         //  x: Die X Position der Scroll Bar
         //  y: Die Y Position der Scroll Bar
         //  br: Die Breite der Scroll Bar
         //  hö: Die Höhe der Scroll Bar
         //  zRObj: Das Bild, in das gezeichnet werden soll
-		__declspec( dllexport ) void render( int x, int y, int br, int hö, Bild &zRObj ) const override;
+        __declspec( dllexport ) void render( int x, int y, int br, int hö, Bild &zRObj ) const override;
         // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Objekt automatisch gelöscht.
         //  return: 0.
-		__declspec( dllexport ) ScrollBar *release() override;
-	};
+        __declspec( dllexport ) ScrollBar *release() override;
+    };
 
     // Eine horizontale Scrollbar, wie sie in manchen 2D GUI Zeichnungen des Frameworks verwendet wird
-	class HScrollBar : public ScrollBar
-	{
-	public:
-		// Konstruktor 
-		__declspec( dllexport ) HScrollBar();
+    class HScrollBar : public ScrollBar
+    {
+    public:
+        // Konstruktor 
+        __declspec( dllexport ) HScrollBar();
         // Verarbeitet ein Maus Ereignis
         //  x: Die X Position der Scroll Bar im Fenster
         //  y: Die Y Position der Scroll Bar im Fenster
         //  br: Die Breite der Scroll Bar
         //  hö: Die Höhe der Scroll Bar
         //  return: 1, falls die Nachricht verarbeitet wurde. Setzt dafür nicht den verarbeitet flag des Maus Ereignisses
-		__declspec( dllexport ) bool doMausMessage( int x, int y, int br, int hö, MausEreignis &me ) override;
+        __declspec( dllexport ) bool doMausMessage( int x, int y, int br, int hö, MausEreignis &me ) override;
         // Zeichnet die Scrollbar
         //  x: Die X Position der Scroll Bar
         //  y: Die Y Position der Scroll Bar
         //  br: Die Breite der Scroll Bar
         //  hö: Die Höhe der Scroll Bar
         //  zRObj: Das Bild, in das gezeichnet werden soll
-		__declspec( dllexport ) void render( int x, int y, int br, int hö, Bild &zRObj ) const override;
+        __declspec( dllexport ) void render( int x, int y, int br, int hö, Bild &zRObj ) const override;
         // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Objekt automatisch gelöscht.
         //  return: 0.
-		__declspec( dllexport ) ScrollBar *release() override;
-	};
+        __declspec( dllexport ) ScrollBar *release() override;
+    };
 }
 
 #endif

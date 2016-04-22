@@ -12,7 +12,7 @@
 //  b: Eine der beiden Zahlen
 inline int maxInt( int a, int b )
 {
-	return ( ( ( a - b ) >> 16 ) & b ) | ( ~( ( a - b ) >> 16 ) & a );
+    return ( ( ( a - b ) >> 16 ) & b ) | ( ~( ( a - b ) >> 16 ) & a );
 }
 
 // Gibt die kleinere Zahl zurück ohne if zu verwenden
@@ -21,7 +21,7 @@ inline int maxInt( int a, int b )
 //  b: Eine der beiden Zahlen
 inline int minInt( int a, int b )
 {
-	return ( ( ( a - b ) >> 16 ) & a ) | ( ~( ( a - b ) >> 16 ) & b );
+    return ( ( ( a - b ) >> 16 ) & a ) | ( ~( ( a - b ) >> 16 ) & b );
 }
 
 // Gibt den positiven Wert eines Zeichnunges zurück.

@@ -20,50 +20,50 @@ void Framework::initFramework()
     Gdiplus::GdiplusStartupInput gdiplusStartupInput;
     ULONG_PTR gdiplusToken;
     Gdiplus::GdiplusStartup( &gdiplusToken, &gdiplusStartupInput, 0 );
-	msgExit = 0;
-	MausTrack = 1;
-	for( int i = 0; i < 255; ++i )
-		TastenStand[ i ] = 0;
-	for( int i = 0; i < 3; ++i )
-		MausStand[ i ] = 0;
+    msgExit = 0;
+    MausTrack = 1;
+    for( int i = 0; i < 255; ++i )
+        TastenStand[ i ] = 0;
+    for( int i = 0; i < 3; ++i )
+        MausStand[ i ] = 0;
     thRegister = new ThreadRegister();
     Model3DList::init();
     m3dRegister = new Model3DList();
     TexturList::init();
     texturRegister = new TexturList();
-	istInitialisiert = 1;
+    istInitialisiert = 1;
 }
 
 void Framework::releaseFramework()
 {
-	if( !istInitialisiert )
-		return;
+    if( !istInitialisiert )
+        return;
     delete thRegister;
     m3dRegister->release();
     Model3DList::destroy();
     texturRegister->release();
     TexturList::destroy();
-	istInitialisiert = 0;
+    istInitialisiert = 0;
 }
 
 const Framework::Punkt &Framework::getMausPos()
 {
-	return mausPos;
+    return mausPos;
 }
 
 bool Framework::getMausStand( int taste )
 {
-	return MausStand[ taste ];
+    return MausStand[ taste ];
 }
 
 void Framework::setTastenStand( unsigned char taste, bool st )
 {
-	TastenStand[ taste ] = st;
+    TastenStand[ taste ] = st;
 }
 
 bool Framework::getTastenStand( unsigned char taste )
 {
-	return TastenStand[ taste ];
+    return TastenStand[ taste ];
 }
 
 bool Framework::istThreadOk( Thread *t )

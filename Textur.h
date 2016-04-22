@@ -45,7 +45,7 @@ namespace Framework
         // Gibt die Id der Textur zurück, wenn sie in einer TexturList registriert wurde. (siehe Framework::zTexturRegister())
         __declspec( dllexport ) int getId() const;
         // Gibt die verwendtete Shader Resource View zurück
-        __declspec( dllexport ) operator ID3D11ShaderResourceView*() const;
+        __declspec( dllexport ) operator ID3D11ShaderResourceView*( ) const;
         // Erhöht den Reference Counting Zähler.
         //  return: this.
         __declspec( dllexport ) Textur *getThis();

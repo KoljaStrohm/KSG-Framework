@@ -76,7 +76,7 @@ namespace Framework
         __declspec( dllexport ) virtual bool tick( double tickval );
         // Zeichnet das Objekt
         //  zRObj: Ein Zeiger auf das Objekt, das zum Zeichnen verwendet werden soll (ohne erhöhten Reference Counter)
-		__declspec( dllexport ) virtual void render( Render3D *zRObj );
+        __declspec( dllexport ) virtual void render( Render3D *zRObj );
         // Gibt zurück, ob das Objekt teilweise oder ganz transparente stellen enthält
         __declspec( dllexport ) bool hatAlpha() const;
         // Gibt den radius einer Kugel zurück, die das gesammte Model umschließt

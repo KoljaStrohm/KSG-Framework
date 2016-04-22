@@ -142,7 +142,7 @@ void Welt3D::render( Render3D *zRObj )
     int index = 0;
     for( Zeichnung3D **i = members; index < arraySize; i++, index++ )
     {
-        if( *i && zRObj->isInFrustrum( (*i)->getPos(), (*i)->getRadius() ) )
+        if( *i && zRObj->isInFrustrum( ( *i )->getPos(), ( *i )->getRadius() ) )
             ( *i )->render( zRObj );
     }
     memset( used, 0, arraySizeAlpha * sizeof( bool ) );
@@ -176,8 +176,7 @@ void Welt3D::render( Render3D *zRObj )
             alphaVS[ ind ]->render( zRObj );
             used[ ind ] = 1;
         }
-    }
-    while( ind >= 0 );
+    } while( ind >= 0 );
 }
 
 // Erhöht den Reference Counting Zähler.

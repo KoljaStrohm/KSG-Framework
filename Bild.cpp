@@ -74,7 +74,7 @@ inline void Bild::alphaPixelP( int &fc, int colorb )
     int alpha = ( ( colorb >> 24 ) & 0xFF );
     int na = ( 0x100 - alpha );
     fc = ( ( ( ( ( na * ( fc & 0xFF00FF ) ) >> 8 ) + ( ( alpha * ( colorb & 0xFF00FF ) ) >> 8 ) ) & 0xFF00FF ) |
-           ( ( ( ( na * ( fc & 0x00FF00 ) ) >> 8 ) + ( ( alpha * ( colorb & 0x00FF00 ) ) >> 8 ) ) & 0x00FF00 ) |
+        ( ( ( ( na * ( fc & 0x00FF00 ) ) >> 8 ) + ( ( alpha * ( colorb & 0x00FF00 ) ) >> 8 ) ) & 0x00FF00 ) |
            ( ( fc & 0xFF000000 ) ) ) * ( fc != 0 || !alpha3D ) | ( fc == 0 && alpha3D ) * colorb;
     //unsigned char *fc1 = (unsigned char*)&fc[ i ];
     //unsigned char *fc2 = (unsigned char*)&colorb;
@@ -396,7 +396,7 @@ void Bild::alphaRegion( int x, int y, int b, int h, int ff )
         for( ; pixel < rowEnd; ++pixel )
         {
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( ( *pixel & 0xFF000000 ) ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * ff;
         }
     }
@@ -602,7 +602,7 @@ void Bild::drawLinieHAlpha( int x, int y, int län, int f ) // zeichnet eine hori
     for( int i = x + y * br; end < län; ++end, i += pval )
     {
         fc[ i ] = ( ( ( ( ( na * ( fc[ i ] & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                    ( ( ( ( na * ( fc[ i ] & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+            ( ( ( ( na * ( fc[ i ] & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                     ( ( fc[ i ] & 0xFF000000 ) ) ) * ( fc[ i ] != 0 || !alpha3D ) | ( fc[ i ] == 0 && alpha3D ) * f;
     }
     rend = 1;
@@ -649,7 +649,7 @@ void Bild::drawLinieVAlpha( int x, int y, int län, int f ) // zeichnet eine vert
     for( int i = x + y * br; end < län; ++end, i += pval )
     {
         fc[ i ] = ( ( ( ( ( na * ( fc[ i ] & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                    ( ( ( ( na * ( fc[ i ] & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+            ( ( ( ( na * ( fc[ i ] & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                     ( fc[ i ] & 0xFF000000 ) ) * ( fc[ i ] != 0 || !alpha3D ) | ( fc[ i ] == 0 && alpha3D ) * f;
     }
     rend = 1;
@@ -826,7 +826,7 @@ void Bild::drawLinieAlpha( Punkt a, Punkt b, int fc )
             ++count;
             int &pixel = this->fc[ (int)( x + 0.5 ) + (int)( y + 0.5 ) * größe.x ];
             pixel = ( ( ( ( ( na * ( pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                      ( ( ( ( na * ( pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                       ( pixel & 0xFF000000 ) ) * ( pixel != 0 || !alpha3D ) | ( pixel == 0 && alpha3D ) * fc;
             x += xf, y += yf;
         }
@@ -911,56 +911,56 @@ void Bild::drawKreisAlpha( int xOff, int yOff, int r, int fc )
         {
             pixel = &this->fc[ xOff + a + ( yOff + b ) * größe.x ];
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( *pixel & 0xFF000000 ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * fc;
         }
         if( xOff - a < dgx && xOff - a > dpx && yOff + b < dgy && yOff + b > dpy )
         {
             pixel = &this->fc[ xOff - a + ( yOff + b ) * größe.x ];
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( *pixel & 0xFF000000 ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * fc;
         }
         if( xOff + a < dgx && xOff + a > dpx && yOff - b < dgy && yOff - b > dpy )
         {
             pixel = &this->fc[ xOff + a + ( yOff - b ) * größe.x ];
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( *pixel & 0xFF000000 ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * fc;
         }
         if( xOff - a < dgx && xOff - a > dpx && yOff - b < dgy && yOff - b > dpy )
         {
             pixel = &this->fc[ xOff - a + ( yOff - b ) * größe.x ];
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( *pixel & 0xFF000000 ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * fc;
         }
         if( xOff + b < dgx && xOff + b > dpx && yOff + a < dgy && yOff + a > dpy )
         {
             pixel = &this->fc[ xOff + b + ( yOff + a ) * größe.x ];
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( *pixel & 0xFF000000 ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * fc;
         }
         if( xOff - b < dgx && xOff - b > dpx && yOff + a < dgy && yOff + a > dpy )
         {
             pixel = &this->fc[ xOff - b + ( yOff + a ) * größe.x ];
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( *pixel & 0xFF000000 ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * fc;
         }
         if( xOff + b < dgx && xOff + b > dpx && yOff - a < dgy && yOff - a > dpy )
         {
             pixel = &this->fc[ xOff + b + ( yOff - a ) * größe.x ];
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( *pixel & 0xFF000000 ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * fc;
         }
         if( xOff - b < dgx && xOff - b > dpx && yOff - a < dgy && yOff - a > dpy )
         {
             pixel = &this->fc[ xOff - b + ( yOff - a ) * größe.x ];
             *pixel = ( ( ( ( ( na * ( *pixel & 0xFF00FF ) ) >> 8 ) + i1 ) & 0xFF00FF ) |
-                       ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
+                ( ( ( ( na * ( *pixel & 0x00FF00 ) ) >> 8 ) + i2 ) & 0x00FF00 ) |
                        ( *pixel & 0xFF000000 ) ) * ( *pixel != 0 || !alpha3D ) | ( *pixel == 0 && alpha3D ) * fc;
         }
     }

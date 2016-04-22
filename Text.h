@@ -31,7 +31,6 @@ namespace Framework
         __declspec( dllexport ) Text( int zahl );
         // Löscht den Text
         __declspec( dllexport ) ~Text();
-
         // Legt die Suchgrenzen fest, die von den Suchfunktionen verwendet werden.
         //  gBeg: Das Zeichen, bei dem die Suche beginnen soll
         //  gEnd: Das Zeichen, bei dem die Suche enden soll
@@ -178,7 +177,6 @@ namespace Framework
         // Setzt die Anzahl der Nachkommastellen beim Anhängen von Kommazahlen
         //  p: Die Anzahl der Stellen nach dem Komma
         __declspec( dllexport ) void setPräzision( int p );
-
         // Gibt die Länge des Textes zurück
         __declspec( dllexport ) int getLänge() const;
         // Ermittelt die neue Curserposition nachdem Drücken der 'Links' Pfeiltaste
@@ -261,14 +259,12 @@ namespace Framework
         // Gibt einen Text zurück, der eine Kopie eines bestimmten Textabschnittes enthält
         //  p1: Die Startposition des Textabschnittes (Der Textabschnitt geht bis ans Ende des Textes)
         __declspec( dllexport ) Text *getTeilText( int p ) const;
-
         // Erhöht den Reference Counting Zähler.
         //  return: this.
         __declspec( dllexport ) Text *getThis();
         // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
         //  return: 0.
         __declspec( dllexport ) Text *release();
-
         // Hängt eine Zahl ans Ende des Textes an
         __declspec( dllexport ) Text &operator+=( const int num );
         // Hängt eine Kommazahl ans Ende des Textes an

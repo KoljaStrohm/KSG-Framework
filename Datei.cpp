@@ -331,15 +331,15 @@ int Datei::getUnterdateiAnzahl() const // gibt die Anzahl der unterdateien an
 #else
     if( !pfad )
         return 0;
-    if( !DateiIstVerzeichnis( pfad->getThis( ) ) )
+    if( !DateiIstVerzeichnis( pfad->getThis() ) )
         return 0;
     int ret = 0;
-    Text stxt = pfad->getText( );
+    Text stxt = pfad->getText();
     stxt.ersetzen( '\\', '/' );
-    if( stxt.positionVon( '/' ) == stxt.getLaenge( ) - 1 )
-        stxt.loeschen( stxt.getLaenge( ) - 1 );
+    if( stxt.positionVon( '/' ) == stxt.getLaenge() - 1 )
+        stxt.loeschen( stxt.getLaenge() - 1 );
     DIR *hdir;
-    hdir = opendir( stxt.getText( ) );
+    hdir = opendir( stxt.getText() );
     for( dirent *entry = readdir( hdir ); entry; entry = readdir( hdir ) )
     {
         if( entry && entry->d_name[ 0 ] != '.' )
@@ -461,8 +461,8 @@ Zeit *Datei::getLetzteÄnderung() const // gibt das Datum der letzten Änderung
     return ret;
 #else
     struct stat attrib;
-    stat(pfad->getText(), &attrib);
-    tm *clock = gmtime(&(attrib.st_mtime));
+    stat( pfad->getText(), &attrib );
+    tm *clock = gmtime( &( attrib.st_mtime ) );
     Zeit *ret = new Zeit();
     ret->setZeit( clock->tm_year + 1900, clock->tm_mon + 1, clock->tm_mday, clock->tm_hour, clock->tm_min, clock->tm_sec );
     return ret;
@@ -782,7 +782,7 @@ bool Framework::DateiExistiert( const char *pfad ) // Prüft, ob Datei existiert
         return 1;
     return 0;
 #endif
-        }
+}
 
 bool Framework::DateiIstVerzeichnis( const char *pfad ) // prüft, ob pfad ein Verzeichnis ist
 {

@@ -10,6 +10,6 @@ namespace Framework
 
     class ObjectRegister
     {
-        
+
     };
 }

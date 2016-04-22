@@ -77,7 +77,7 @@ bool Textur::updateTextur( Render3D *zRObj )
         bufferDesc.MipLevels = 1;
         bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         HRESULT r = zRObj->zDevice()->CreateTexture2D( &bufferDesc, 0, &txt );
-        if( r != S_OK  )
+        if( r != S_OK )
             return 0;
     }
     D3D11_MAPPED_SUBRESOURCE buffer;
@@ -85,7 +85,7 @@ bool Textur::updateTextur( Render3D *zRObj )
     int *bgBuff = bild->getBuffer();
     int tmpBr = 4 * bild->getBreite();
     for( int y = 0, pitch = 0, bry = 0; y < bild->getHöhe(); ++y, pitch += buffer.RowPitch, bry += bild->getBreite() )
-        memcpy( &( (BYTE *)buffer.pData )[ pitch ], (void*)&( bgBuff[ bry ] ), tmpBr );
+        memcpy( &( (BYTE *)buffer.pData )[ pitch ], ( void* )&( bgBuff[ bry ] ), tmpBr );
     zRObj->zContext()->Unmap( txt, 0 );
     if( !view || lastGr != bild->getGröße() )
     {

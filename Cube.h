@@ -8,11 +8,11 @@ namespace Framework
 
     enum CubeSeite
     {
-        VORNE, 
-        HINTEN, 
-        RECHTS, 
-        LINKS, 
-        OBEN, 
+        VORNE,
+        HINTEN,
+        RECHTS,
+        LINKS,
+        OBEN,
         UNTEN
     };
 
