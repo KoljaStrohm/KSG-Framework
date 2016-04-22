@@ -132,7 +132,7 @@ void AuswahlListe::addEintrag( const char *txt )
     rend = 1;
 }
 
-void AuswahlListe::addEintrag( TextFeld *tf )
+void AuswahlListe::addEintragZ( TextFeld *tf )
 {
     if( !tfListe )
         tfListe = new RCArray< TextFeld >();
@@ -163,7 +163,7 @@ void AuswahlListe::addEintrag( int pos, const char *txt )
     rend = 1;
 }
 
-void AuswahlListe::addEintrag( int pos, TextFeld *tf )
+void AuswahlListe::addEintragZ( int pos, TextFeld *tf )
 {
     if( !tfListe )
         tfListe = new RCArray< TextFeld >();
@@ -203,7 +203,7 @@ void AuswahlListe::setEintrag( int pos, unsigned char *txt )
     rend = 1;
 }
 
-void AuswahlListe::setEintrag( int pos, TextFeld *tf )
+void AuswahlListe::setEintragZ( int pos, TextFeld *tf )
 {
     if( !tfListe )
         tfListe = new RCArray< TextFeld >();
@@ -213,7 +213,7 @@ void AuswahlListe::setEintrag( int pos, TextFeld *tf )
     rend = 1;
 }
 
-void AuswahlListe::setEintragPos( int vpos, int npos ) // taucht den Eintrag vpos mit dem Eintrag npos
+void AuswahlListe::tauschEintragPos( int vpos, int npos ) // taucht den Eintrag vpos mit dem Eintrag npos
 {
     if( tfListe )
     {

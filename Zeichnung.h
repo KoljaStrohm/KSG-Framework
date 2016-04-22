@@ -28,7 +28,7 @@ namespace Framework
         public:
             const static __int64 Sichtbar = 0x00001; // Wenn dieser Style gesetzt ist, wird die Zeichnung beim Zeichnen angezeigt
             const static __int64 Erlaubt = 0x00002; // Wenn dieser Style gesetzt ist, kann der Benutzer mit der Zeichnung interagieren
-            const static __int64 Fokus = 0x00040; // Wenn dieser Style gesetzt ist, werden die Tastatur Ereignisse von der Zeichnung verarbeitet
+            const static __int64 Fokus = 0x00004; // Wenn dieser Style gesetzt ist, werden die Tastatur Ereignisse von der Zeichnung verarbeitet
         };
 	protected:
 		Punkt pos;

@@ -438,8 +438,8 @@ WFenster::~WFenster()
 	{
 		WFensterA.del();
 	}
-	if( hWnd )
-		DestroyWindow( hWnd );
+    if( hWnd )
+        zerstören();
 	if( screen )
 		screen->release();
 }
@@ -588,12 +588,16 @@ void WFenster::setBildschirm( Bildschirm *screen )
 void WFenster::zerstören()
 {
 	DestroyWindow( hWnd );
+    hWnd = 0;
 	if( rahmen )
 		DestroyWindow( rahmen );
+    rahmen = 0;
 	if( bitmap )
 		DeleteObject( bitmap );
+    bitmap = 0;
 	if( hdc )
 		DeleteDC( hdc );
+    hdc = 0;
 }
 
 void WFenster::doMausAktion( MausEreignis &me )
@@ -835,13 +839,6 @@ Punkt WFenster::getPosition() const // gibt die Position zurück
 {
 	RECT r;
 	GetWindowRect( hWnd, &r ); // Position herausfinden
-	return{ r.left, r.top };
-}
-
-Punkt WFenster::getKörperPosition() const // gibt die Fenster Körperposition zurück
-{
-	RECT r;
-	GetClientRect( hWnd, &r ); // Position herausfinden
 	return{ r.left, r.top };
 }
 

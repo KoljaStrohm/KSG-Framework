@@ -49,14 +49,6 @@ void FBalken::setAktionAnzahl( __int64 ak ) // setzt die anzahl der Aktionen
 	rend = 1;
 }
 
-void FBalken::aktionPlus() // eine Aktion ist fertig
-{
-	++ak;
-	if( ak > maxAk )
-		ak = maxAk;
-	rend = 1;
-}
-
 void FBalken::aktionPlus( __int64 aktionen ) // mehrere Aktionen sind fertig
 {
 	ak += aktionen;
