@@ -10,20 +10,18 @@ namespace Framework
     // Ein neuer Thread wie die Thread Klasse aus Java
     class Thread
     {
+    private:
+        pthread_t *threadHandleSys;
     protected:
-#ifdef WIN32
-        void *threadHandle;
         unsigned long threadId;
-#else
         pthread_t threadHandle;
-#endif
         bool run;
 
     public:
         // Konstruktor 
         __declspec( dllexport ) Thread();
         // Destruktor 
-        __declspec( dllexport ) ~Thread();
+        __declspec( dllexport ) virtual ~Thread();
         // Startet den neuen Thread 
         __declspec( dllexport ) void start();
 #ifdef WIN32
@@ -43,12 +41,13 @@ namespace Framework
         //         false, wenn der Thread beendet, pausiert oder noch nicht gestartet wurde.
         __declspec( dllexport ) bool läuft() const;
         // wartet zeit lang auf den Thread
-        // zeit: Die Zeit, die auf den Thread gewartet werden soll. 1000 = 1 Sekunde
-        __declspec( dllexport ) int warteAufThread( int zeit ) const;
-#ifdef WIN32
-        // Gibt ein Handle auf den Thread zurück (Nur für Windows)
-        __declspec( dllexport ) void *getThreadHandle() const;
-#endif
+        //  zeit: Die Zeit, die auf den Thread gewartet werden soll. 1000 = 1 Sekunde
+        __declspec( dllexport ) int warteAufThread( int zeit );
+        // Legt einen Frameworkpointer auf ein Threadhandle fest, der auf 0 gesetzt wird, falls die Ressourcen des Threads bereits follstänfig aufgeräumt wurden
+        //  ths: Ein Zeiger auf ein Threadhandle, das verändert werden soll
+        void setSystemHandlePointer( pthread_t *ths );
+        // Gibt ein Handle auf den Thread zurück
+        __declspec( dllexport ) pthread_t getThreadHandle() const;
     };
 
 #ifdef WIN32
@@ -64,8 +63,14 @@ namespace Framework
     {
     private:
         Array< Thread* > threads;
+        CRITICAL_SECTION cs;
+        Array< pthread_t > closedThreads;
 
     public:
+        // Konstruktor
+        ThreadRegister();
+        // Destruktor
+        ~ThreadRegister();
         // Fügt einen neuen Thread hinzu
         //  t: Der Thread, der hinzugefügt werden soll
         void add( Thread *t );
@@ -74,7 +79,12 @@ namespace Framework
         void remove( Thread *t );
         // Überprüft, ob ein Zeiger auf ein gültiges Thread Objekt zeigt, oder ob es schon gelöscht wurde
         //  t: Der Zeiger, der geprüft werden soll
-        bool isThread( Thread *t ) const;
+        bool isThread( Thread *t );
+        // Setzt Wird automatisch aufgerufen, wenn ein Thread beendet wird. Die Reccourcen werden daraufhin in cleanUpClosedThreads freigegeben.
+        //  handle: Das Handle des Threads
+        void addClosedThread( pthread_t handle );
+        // Löscht die bereits beendetetn Threads und gibt ihre Reccourcen wieder frei
+        __declspec( dllexport ) void cleanUpClosedThreads();
     };
 }
 

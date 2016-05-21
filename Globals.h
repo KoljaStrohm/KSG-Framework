@@ -9,10 +9,11 @@
 
 namespace Framework
 {
+    class ThreadRegister; // Thread.h
+    class Thread; // Thread.h
+#ifdef WIN32
     class Maus; // Maus.h
     class WFensterArray; // Fenster.h
-    class Thread; // Thread.h
-    class ThreadRegister; // Thread.h
     class Model3DList; // Model3DList.h
     class TexturList; // TexturList.h
 
@@ -21,13 +22,15 @@ namespace Framework
     Global bool MausStand[ 3 ];
     Global bool TastenStand[ 255 ];
     Global Maus MausZeiger;
-    Global bool istInitialisiert;
     Global bool msgExit;
     Global Punkt mausPos;
-    Global ThreadRegister *thRegister;
     Global Model3DList *m3dRegister;
     Global TexturList *texturRegister;
+#endif
+    Global bool istInitialisiert;
+    Global ThreadRegister *thRegister;
 
+#ifdef WIN32
     // Gibt die Koordinaten der Maus auf dem Bildschirm zurück
     __declspec( dllexport ) const Punkt &getMausPos();
     // Gibt zurück, ob eine Taste der Maus momentan gedrückt wird
@@ -43,6 +46,11 @@ namespace Framework
     //  taste: Die Taste, deren Status gesetzt werden soll
     //  st: Ob die Taste momentan gedrückt wird. (true), wenn ja. (false) sonnst.
     __declspec( dllexport ) void setTastenStand( unsigned char taste, bool st );
+    // Gibt das Model3DData Register des Frameworks ohne erhöhten reference Counter zurück
+    __declspec( dllexport ) Model3DList *zM3DRegister();
+    // Gibt das Textur Register des Frameworks ohne erhöhten reference Counter zurück
+    __declspec( dllexport ) TexturList *zTexturRegister();
+#endif
     // Initialisiert das Framework
     // Wird in der (WinMain) des Frameworks automatisch aufgerufen
     __declspec( dllexport ) void initFramework();
@@ -53,10 +61,8 @@ namespace Framework
     //  t: Der zeiger, der überprüft werden soll
     //  return: 1, falls der Zeiger in Ordnung ist. 0, falls der Zeiger auf kein existentes Thread Objekt zeigt
     __declspec( dllexport ) bool istThreadOk( Thread *t );
-    // Gibt das Model3DData Register des Frameworks ohne erhöhten reference Counter zurück
-    __declspec( dllexport ) Model3DList *zM3DRegister();
-    // Gibt das Textur Register des Frameworks ohne erhöhten reference Counter zurück
-    __declspec( dllexport ) TexturList *zTexturRegister();
+    // Gibt das Thread Register des Frameworks zurück
+    __declspec( dllexport ) ThreadRegister *getThreadRegister();
 }
 
 #endif

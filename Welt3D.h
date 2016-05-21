@@ -7,6 +7,7 @@ namespace Framework
     class Zeichnung3DArray; // Zeichnung3D.h
     class Zeichnung3D; // Zeichnung.h
     class Render3D; // Render3D.h
+    struct MausEreignis3D; // MausEreignis.h
 
     // Speichert alle 3D Zeichnungen einer Szene ab
     class Welt3D
@@ -14,11 +15,15 @@ namespace Framework
     private:
         Zeichnung3D **members;
         Zeichnung3D **membersAlpha;
-        bool *used;
         float *distSq;
+        float *distSqSort;
         Zeichnung3D **alphaVS;
+        Zeichnung3D **elementsSort;
         int arraySize;
         int arraySizeAlpha;
+        bool rend;
+        bool upd;
+        CRITICAL_SECTION cs;
         int ref;
 
     public:
@@ -32,6 +37,9 @@ namespace Framework
         // Entfernt ein Objekt aus der Welt
         //  obj: Das Objekt, das entwernt werden soll
         __declspec( dllexport ) void removeZeichnung( Zeichnung3D *obj );
+        // Verarbeitet ein Mausereignis
+        //  me: Das Mausereignis, das verarbeitet werden soll
+        __declspec( dllexport ) void doMausEreignis( MausEreignis3D &me );
         // Verarbeitet die vergangene Zeit
         //  tickval: Die zeit in sekunden, die seit dem letzten Aufruf der Funktion vergangen ist
         //  return: true, wenn sich das Objekt verändert hat, false sonnst.

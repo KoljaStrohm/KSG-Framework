@@ -4,7 +4,7 @@
 
 namespace Framework
 {
-    struct MausEreignis;
+    struct MausEreignis3D;
     struct TastaturEreignis;
     class Render3D; // Render3D.h
 
@@ -66,7 +66,7 @@ namespace Framework
         __declspec( dllexport ) virtual int errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer );
         // Verarbeitet ein Mausereignis
         //  me: Das Mausereignis, das verarbeitet werden soll
-        __declspec( dllexport ) virtual void doMausEreignis( MausEreignis &me );
+        __declspec( dllexport ) virtual void doMausEreignis( MausEreignis3D &me );
         // Verarbeitet ein Tastaturereignis
         //  te: das Tastaturereignis, das verarbeitet werden soll
         __declspec( dllexport ) virtual void doTastaturEreignis( TastaturEreignis &te );

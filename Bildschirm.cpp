@@ -935,9 +935,12 @@ void Bildschirm3D::render() // Zeichnet das Bild
         // Clear the back buffer.
         if( rend3D || !testRend || rend )
         {
-            d3d11Context->ClearRenderTargetView( rtview, color );
-            // Clear the depth buffer.
-            d3d11Context->ClearDepthStencilView( dsView, D3D11_CLEAR_DEPTH, 1, 0 );
+            if( füll )
+            {
+                d3d11Context->ClearRenderTargetView( rtview, color );
+                // Clear the depth buffer.
+                d3d11Context->ClearDepthStencilView( dsView, D3D11_CLEAR_DEPTH, 1, 0 );
+            }
             // Bind the render target view and depth stencil buffer to the output render pipeline.
             d3d11Context->OMSetRenderTargets( 1, &rtview, dsView );
 
@@ -946,6 +949,7 @@ void Bildschirm3D::render() // Zeichnet das Bild
 
             for( auto i = kameras->getArray(); i.set; i++ )
                 i.var->render( renderObj );
+            rend3D = 0;
         }
         // Set the depth stencil state.
         d3d11Context->OMSetDepthStencilState( depthDisabledStencilState, 1 );

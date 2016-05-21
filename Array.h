@@ -282,7 +282,7 @@ namespace Framework
                 err += __LINE__;
                 err += " Index: ";
                 err += i;
-                throw std::out_of_range( err );
+                throw std::out_of_range( (char*)err );
             }
             ArrayEintrag< TYP > *e = einträge;
             for( int a = 0; a < i && e; ++a )
@@ -295,7 +295,7 @@ namespace Framework
             err += __LINE__;
             err += " Index: ";
             err += i;
-            throw std::out_of_range( err );
+            throw std::out_of_range( (char*)err );
         }
 
         // Überprüft, ob ein Element in der Liste enthalten ist

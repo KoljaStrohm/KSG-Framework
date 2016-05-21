@@ -1,6 +1,7 @@
 #include "Welt3D.h"
 #include "Zeichnung3D.h"
 #include "Render3D.h"
+#include "MausEreignis.h"
 
 using namespace Framework;
 
@@ -8,18 +9,22 @@ using namespace Framework;
 // Konstructor
 Welt3D::Welt3D()
 {
+    InitializeCriticalSection( &cs );
     arraySize = 100;
     arraySizeAlpha = 100;
     members = new Zeichnung3D*[ arraySize ];
     membersAlpha = new Zeichnung3D*[ arraySizeAlpha ];
-    used = new bool[ arraySizeAlpha ];
-    distSq = new float[ arraySizeAlpha ];
-    alphaVS = new Zeichnung3D*[ arraySizeAlpha ];
+    distSq = new float[ arraySizeAlpha + arraySize ];
+    distSqSort = new float[ arraySizeAlpha + arraySize ];
+    alphaVS = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
+    elementsSort = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
     for( int i = 0; i < arraySize; i++ )
         members[ i ] = 0;
     for( int i = 0; i < arraySizeAlpha; i++ )
         membersAlpha[ i ] = 0;
     ref = 1;
+    rend = 0;
+    upd = 1;
 }
 
 // Destruktor
@@ -27,15 +32,18 @@ Welt3D::~Welt3D()
 {
     delete[] members;
     delete[] membersAlpha;
-    delete[] used;
     delete[] distSq;
+    delete[] distSqSort;
     delete[] alphaVS;
+    delete[] elementsSort;
+    DeleteCriticalSection( &cs );
 }
 
 // Fügt der Welt ein Objekt hinzu
 //  obj: Das Objekt, was hinzugefügt werden soll
 void Welt3D::addZeichnung( Zeichnung3D *obj )
 {
+    EnterCriticalSection( &cs );
     Zeichnung3D **tmp = members;
     int max = arraySize;
     if( obj->hatAlpha() )
@@ -48,10 +56,12 @@ void Welt3D::addZeichnung( Zeichnung3D *obj )
         if( !*tmp )
         {
             *tmp = obj;
+            LeaveCriticalSection( &cs );
             return;
         }
         tmp++;
     }
+    rend = 1;
     if( obj->hatAlpha() )
     {
         arraySizeAlpha += 100;
@@ -61,12 +71,15 @@ void Welt3D::addZeichnung( Zeichnung3D *obj )
         delete[] membersAlpha;
         membersAlpha = nm;
         membersAlpha[ arraySizeAlpha - 100 ] = obj;
-        delete[] used;
         delete[] distSq;
+        delete[] distSqSort;
         delete[] alphaVS;
-        used = new bool[ arraySizeAlpha ];
-        distSq = new float[ arraySizeAlpha ];
-        alphaVS = new Zeichnung3D*[ arraySizeAlpha ];
+        delete[] elementsSort;
+        distSq = new float[ arraySizeAlpha + arraySize ];
+        distSqSort= new float[ arraySizeAlpha + arraySize ];
+        alphaVS = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
+        elementsSort = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
+        LeaveCriticalSection( &cs );
         return;
     }
     arraySize += 100;
@@ -76,12 +89,22 @@ void Welt3D::addZeichnung( Zeichnung3D *obj )
     delete[] members;
     members = nm;
     members[ arraySize - 100 ] = obj;
+    delete[] distSq;
+    delete[] distSqSort;
+    delete[] alphaVS;
+    delete[] elementsSort;
+    distSq = new float[ arraySizeAlpha + arraySize ];
+    distSqSort = new float[ arraySizeAlpha + arraySize ];
+    alphaVS = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
+    elementsSort = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
+    LeaveCriticalSection( &cs );
 }
 
 // Entfernt ein Objekt aus der Welt
 //  obj: Das Objekt, das entwernt werden soll
 void Welt3D::removeZeichnung( Zeichnung3D *obj )
 {
+    EnterCriticalSection( &cs );
     int index = 0;
     if( !obj->hatAlpha() )
     {
@@ -90,9 +113,12 @@ void Welt3D::removeZeichnung( Zeichnung3D *obj )
             if( *i == obj )
             {
                 *i = 0;
+                rend = 1;
+                LeaveCriticalSection( &cs );
                 return;
             }
         }
+        LeaveCriticalSection( &cs );
         return;
     }
     for( Zeichnung3D **i = membersAlpha; index < arraySizeAlpha; i++, index++ )
@@ -100,17 +126,79 @@ void Welt3D::removeZeichnung( Zeichnung3D *obj )
         if( *i == obj )
         {
             *i = 0;
+            rend = 1;
+            LeaveCriticalSection( &cs );
             return;
         }
     }
+    LeaveCriticalSection( &cs );
 }
+
+// Verarbeitet ein Mausereignis
+//  me: Das Mausereignis, das verarbeitet werden soll
+void Welt3D::doMausEreignis( MausEreignis3D &me )
+{
+    //EnterCriticalSection( &cs );
+    //int anz = 0;
+    //int index = 0;
+    //for( Zeichnung3D **i = members; index < arraySize; i++, index++ )
+    //{
+    //    if( *i )
+    //    {
+    //        distSq[ anz ] = me.pos.abstandSq( ( *i )->getPos() );
+    //        alphaVS[ anz ] = *i;
+    //        anz++;
+    //    }
+    //}
+    //index = 0;
+    //for( Zeichnung3D **i = membersAlpha; index < arraySizeAlpha; i++, index++ )
+    //{
+    //    if( *i )
+    //    {
+    //        distSq[ anz ] = me.pos.abstandSq( ( *i )->getPos() );
+    //        alphaVS[ anz ] = *i;
+    //        anz++;
+    //    }
+    //}
+    //float maxEntf;
+    //int ind;
+    //do
+    //{
+    //    maxEntf = -1;
+    //    ind = -1;
+    //    for( int i = 0; i < anz; i++ )
+    //    {
+    //        if( !used[ i ] && distSq[ i ] > maxEntf )
+    //        {
+    //            maxEntf = distSq[ i ];
+    //            ind = i;
+    //        }
+    //    }
+    //    if( ind >= 0 )
+    //    {
+    //        alphaVS[ ind ]->doMausEreignis( me );
+    //        if( me.verarbeitet )
+    //        {
+    //            LeaveCriticalSection( &cs );
+    //            return;
+    //        }
+    //        used[ ind ] = 1;
+    //    }
+    //} while( ind >= 0 );
+    //LeaveCriticalSection( &cs );
+}
+
 // Verarbeitet die vergangene Zeit
 //  tickval: Die zeit in sekunden, die seit dem letzten Aufruf der Funktion vergangen ist
 //  return: true, wenn sich das Objekt verändert hat, false sonnst.
 bool Welt3D::tick( double tickval )
 {
+    if( !upd )
+        return rend;
+    rend = 0;
+    upd = 0;
     int index = 0;
-    bool ret = 0;
+    EnterCriticalSection( &cs );
     for( Zeichnung3D **i = members; index < arraySize; i++, index++ )
     {
         if( *i && ( *i )->hatAlpha() )
@@ -119,12 +207,12 @@ bool Welt3D::tick( double tickval )
             *i = 0;
             continue;
         }
-        ret |= *i ? ( *i )->tick( tickval ) : 0;
+        rend |= *i ? ( *i )->tick( tickval ) : 0;
     }
     index = 0;
     for( Zeichnung3D **i = membersAlpha; index < arraySizeAlpha; i++, index++ )
     {
-        ret |= *i ? ( *i )->tick( tickval ) : 0;
+        rend |= *i ? ( *i )->tick( tickval ) : 0;
         if( *i && !( *i )->hatAlpha() )
         {
             addZeichnung( *i );
@@ -132,21 +220,22 @@ bool Welt3D::tick( double tickval )
             continue;
         }
     }
-    return ret;
+    LeaveCriticalSection( &cs );
+    return rend;
 }
 
 // Zeichnet einen ausschnitt der Welt
 //  zRObj: Enthällt alle Werkzeuge, die zum Zeichnen verwendet werden
 void Welt3D::render( Render3D *zRObj )
 {
+    upd = 1;
     int index = 0;
+    EnterCriticalSection( &cs );
     for( Zeichnung3D **i = members; index < arraySize; i++, index++ )
     {
         if( *i && zRObj->isInFrustrum( ( *i )->getPos(), ( *i )->getRadius() ) )
             ( *i )->render( zRObj );
     }
-    memset( used, 0, arraySizeAlpha * sizeof( bool ) );
-    memset( alphaVS, 0, arraySizeAlpha * sizeof( Zeichnung3D * ) );
     index = 0;
     int index2 = 0;
     for( Zeichnung3D **i = membersAlpha; index < arraySizeAlpha; i++, index++ )
@@ -154,29 +243,74 @@ void Welt3D::render( Render3D *zRObj )
         if( *i && zRObj->isInFrustrum( ( *i )->getPos(), ( *i )->getRadius(), &distSq[ index2 ] ) )
         {
             alphaVS[ index2 ] = *i;
+            elementsSort[ index2 ] = *i;
+            distSqSort[ index2 ] = distSq[ index2 ];
             index2++;
         }
     }
-    float maxEntf;
-    int ind;
-    do
+    int K;
+    int L = 1;
+    while( L < index2 )
     {
-        maxEntf = -1;
-        ind = -1;
-        for( int i = 0; i < index2; i++ )
+        K = 0;
+        while( K + 2 * L - 1 < index2 )
         {
-            if( !used[ i ] && distSq[ i ] > maxEntf )
+            //merge
+            int I = K;
+            int J = K + L;
+            int N = K;
+            while( I < K + L || J < K + 2 * L )
             {
-                maxEntf = distSq[ i ];
-                ind = i;
+                if( J == K + 2 * L || ( I < K + L && distSq[ I ] < distSq[ J ] ) )
+                {
+                    distSqSort[ N ] = distSq[ I ];
+                    elementsSort[ N ] = alphaVS[ I ];
+                    I++;
+                }
+                else
+                {
+                    distSqSort[ N ] = distSq[ J ];
+                    elementsSort[ N ] = alphaVS[ J ];
+                    J++;
+                }
+                N++;
+            }
+            K += 2 * L;
+        }
+        if( K + L - 1 < index2 - 1 )
+        {
+            //merge
+            int I = K;
+            int J = K + L;
+            int N = K;
+            while( I < K + L || J < index2 - 1 )
+            {
+                if( J == index2 || ( I < K + L && distSq[ I ] < distSq[ J ] ) )
+                {
+                    distSqSort[ N ] = distSqSort[ I ];
+                    elementsSort[ N ] = alphaVS[ I ];
+                    I++;
+                }
+                else
+                {
+                    distSqSort[ N ] = distSq[ J ];
+                    elementsSort[ N ] = alphaVS[ J ];
+                    J++;
+                }
+                N++;
             }
         }
-        if( ind >= 0 )
-        {
-            alphaVS[ ind ]->render( zRObj );
-            used[ ind ] = 1;
-        }
-    } while( ind >= 0 );
+        float *tmpF = distSq;
+        distSq = distSqSort;
+        distSqSort = tmpF;
+        Zeichnung3D **tmpZ = alphaVS;
+        alphaVS = elementsSort;
+        elementsSort = tmpZ;
+        L *= 2;
+    }
+    for( int i = index2 - 1; i >= 0; i-- )
+        alphaVS[ i ]->render( zRObj );
+    LeaveCriticalSection( &cs );
 }
 
 // Erhöht den Reference Counting Zähler.

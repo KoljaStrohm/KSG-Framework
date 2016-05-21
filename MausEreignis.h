@@ -1,7 +1,7 @@
 #ifndef MausEreignis_H
 #define MausEreignis_H
 
-#include "Betriebssystem.h"
+#include "Vec3.h"
 
 namespace Framework
 {
@@ -38,6 +38,19 @@ namespace Framework
         int rmx;
         // Y Koordinate auf dem Bildschirm zur linken oberen Ecke
         int rmy;
+        // Speichert, ob die Eingabe bereits verarbeitet wurde
+        bool verarbeitet;
+    };
+
+    // Speichert eine bestimmte Mauseingabe des Nutzers
+    struct MausEreignis3D
+    {
+        // Art der Eingabe
+        int id;
+        // Die Position der Maus in der Welt
+        Vec3< float > pos;
+        // Die Richtung, in die die Kamera zeigt
+        Vec3< float > dir;
         // Speichert, ob die Eingabe bereits verarbeitet wurde
         bool verarbeitet;
     };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec3.h"
+#include <iostream>
 
 namespace Framework
 {
@@ -64,6 +65,152 @@ namespace Framework
             result.y = elements[ 1 ][ 0 ] * r.x + elements[ 1 ][ 1 ] * r.y + elements[ 1 ][ 2 ] * r.z + elements[ 1 ][ 3 ];
             result.z = elements[ 2 ][ 0 ] * r.x + elements[ 2 ][ 1 ] * r.y + elements[ 2 ][ 2 ] * r.z + elements[ 2 ][ 3 ];
             return  result;
+        }
+        // Berechnet die inverse Matrix
+        Mat4 getInverse()
+        {
+            Mat4 ret;
+            ret.elements[ 0 ][ 0 ] = 
+                elements[ 1 ][ 1 ] * elements[ 2 ][ 2 ] * elements[ 3 ][ 3 ] -
+                elements[ 1 ][ 1 ] * elements[ 2 ][ 3 ] * elements[ 3 ][ 2 ] -
+                elements[ 2 ][ 1 ] * elements[ 1 ][ 2 ] * elements[ 3 ][ 3 ] +
+                elements[ 2 ][ 1 ] * elements[ 1 ][ 3 ] * elements[ 3 ][ 2 ] +
+                elements[ 3 ][ 1 ] * elements[ 1 ][ 2 ] * elements[ 2 ][ 3 ] -
+                elements[ 3 ][ 1 ] * elements[ 1 ][ 3 ] * elements[ 2 ][ 2 ];
+
+            ret.elements[ 1 ][ 0 ] = 
+                -elements[ 1 ][ 0 ] * elements[ 2 ][ 2 ] * elements[ 3 ][ 3 ] +
+                elements[ 1 ][ 0 ] * elements[ 2 ][ 3 ] * elements[ 3 ][ 2 ] +
+                elements[ 2 ][ 0 ] * elements[ 1 ][ 2 ] * elements[ 3 ][ 3 ] -
+                elements[ 2 ][ 0 ] * elements[ 1 ][ 3 ] * elements[ 3 ][ 2 ] -
+                elements[ 3 ][ 0 ] * elements[ 1 ][ 2 ] * elements[ 2 ][ 3 ] +
+                elements[ 3 ][ 0 ] * elements[ 1 ][ 3 ] * elements[ 2 ][ 2 ];
+
+            ret.elements[ 2 ][ 0 ] = 
+                elements[ 1 ][ 0 ] * elements[ 2 ][ 1 ] * elements[ 3 ][ 3 ] -
+                elements[ 1 ][ 0 ] * elements[ 2 ][ 3 ] * elements[ 3 ][ 1 ] -
+                elements[ 2 ][ 0 ] * elements[ 1 ][ 1 ] * elements[ 3 ][ 3 ] +
+                elements[ 2 ][ 0 ] * elements[ 1 ][ 3 ] * elements[ 3 ][ 1 ] +
+                elements[ 3 ][ 0 ] * elements[ 1 ][ 1 ] * elements[ 2 ][ 3 ] -
+                elements[ 3 ][ 0 ] * elements[ 1 ][ 3 ] * elements[ 2 ][ 1 ];
+
+            ret.elements[ 3 ][ 0 ] = 
+                -elements[ 1 ][ 0 ] * elements[ 2 ][ 1 ] * elements[ 3 ][ 2 ] +
+                elements[ 1 ][ 0 ] * elements[ 2 ][ 2 ] * elements[ 3 ][ 1 ] +
+                elements[ 2 ][ 0 ] * elements[ 1 ][ 1 ] * elements[ 3 ][ 2 ] -
+                elements[ 2 ][ 0 ] * elements[ 1 ][ 2 ] * elements[ 3 ][ 1 ] -
+                elements[ 3 ][ 0 ] * elements[ 1 ][ 1 ] * elements[ 2 ][ 2 ] +
+                elements[ 3 ][ 0 ] * elements[ 1 ][ 2 ] * elements[ 2 ][ 1 ];
+
+            ret.elements[ 0 ][ 1 ] = 
+                -elements[ 0 ][ 1 ] * elements[ 2 ][ 2 ] * elements[ 3 ][ 3 ] +
+                elements[ 0 ][ 1 ] * elements[ 2 ][ 3 ] * elements[ 3 ][ 2 ] +
+                elements[ 2 ][ 1 ] * elements[ 0 ][ 2 ] * elements[ 3 ][ 3 ] -
+                elements[ 2 ][ 1 ] * elements[ 0 ][ 3 ] * elements[ 3 ][ 2 ] -
+                elements[ 3 ][ 1 ] * elements[ 0 ][ 2 ] * elements[ 2 ][ 3 ] +
+                elements[ 3 ][ 1 ] * elements[ 0 ][ 3 ] * elements[ 2 ][ 2 ];
+
+            ret.elements[ 1 ][ 1 ] = 
+                elements[ 0 ][ 0 ] * elements[ 2 ][ 2 ] * elements[ 3 ][ 3 ] -
+                elements[ 0 ][ 0 ] * elements[ 2 ][ 3 ] * elements[ 3 ][ 2 ] -
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 3 ][ 3 ] +
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 3 ][ 2 ] +
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 2 ][ 3 ] -
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 2 ][ 2 ];
+
+            ret.elements[ 2 ][ 1 ] = 
+                -elements[ 0 ][ 0 ] * elements[ 2 ][ 1 ] * elements[ 3 ][ 3 ] +
+                elements[ 0 ][ 0 ] * elements[ 2 ][ 3 ] * elements[ 3 ][ 1 ] +
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 3 ][ 3 ] -
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 3 ][ 1 ] -
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 2 ][ 3 ] +
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 2 ][ 1 ];
+
+            ret.elements[ 3 ][ 1 ] = 
+                elements[ 0 ][ 0 ] * elements[ 2 ][ 1 ] * elements[ 3 ][ 2 ] -
+                elements[ 0 ][ 0 ] * elements[ 2 ][ 2 ] * elements[ 3 ][ 1 ] -
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 3 ][ 2 ] +
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 3 ][ 1 ] +
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 2 ][ 2 ] -
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 2 ][ 1 ];
+
+            ret.elements[ 0 ][ 2 ] = 
+                elements[ 0 ][ 1 ] * elements[ 1 ][ 2 ] * elements[ 3 ][ 3 ] -
+                elements[ 0 ][ 1 ] * elements[ 1 ][ 3 ] * elements[ 3 ][ 2 ] -
+                elements[ 1 ][ 1 ] * elements[ 0 ][ 2 ] * elements[ 3 ][ 3 ] +
+                elements[ 1 ][ 1 ] * elements[ 0 ][ 3 ] * elements[ 3 ][ 2 ] +
+                elements[ 3 ][ 1 ] * elements[ 0 ][ 2 ] * elements[ 1 ][ 3 ] -
+                elements[ 3 ][ 1 ] * elements[ 0 ][ 3 ] * elements[ 1 ][ 2 ];
+
+            ret.elements[ 1 ][ 2 ] = 
+                -elements[ 0 ][ 0 ] * elements[ 1 ][ 2 ] * elements[ 3 ][ 3 ] +
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 3 ] * elements[ 3 ][ 2 ] +
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 3 ][ 3 ] -
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 3 ][ 2 ] -
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 1 ][ 3 ] +
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 1 ][ 2 ];
+
+            ret.elements[ 2 ][ 2 ] = 
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 1 ] * elements[ 3 ][ 3 ] -
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 3 ] * elements[ 3 ][ 1 ] -
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 3 ][ 3 ] +
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 3 ][ 1 ] +
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 1 ][ 3 ] -
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 1 ][ 1 ];
+
+            ret.elements[ 3 ][ 2 ] = 
+                -elements[ 0 ][ 0 ] * elements[ 1 ][ 1 ] * elements[ 3 ][ 2 ] +
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 2 ] * elements[ 3 ][ 1 ] +
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 3 ][ 2 ] -
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 3 ][ 1 ] -
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 1 ][ 2 ] +
+                elements[ 3 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 1 ][ 1 ];
+
+            ret.elements[ 0 ][ 3 ] = 
+                -elements[ 0 ][ 1 ] * elements[ 1 ][ 2 ] * elements[ 2 ][ 3 ] +
+                elements[ 0 ][ 1 ] * elements[ 1 ][ 3 ] * elements[ 2 ][ 2 ] +
+                elements[ 1 ][ 1 ] * elements[ 0 ][ 2 ] * elements[ 2 ][ 3 ] -
+                elements[ 1 ][ 1 ] * elements[ 0 ][ 3 ] * elements[ 2 ][ 2 ] -
+                elements[ 2 ][ 1 ] * elements[ 0 ][ 2 ] * elements[ 1 ][ 3 ] +
+                elements[ 2 ][ 1 ] * elements[ 0 ][ 3 ] * elements[ 1 ][ 2 ];
+
+            ret.elements[ 1 ][ 3 ] = 
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 2 ] * elements[ 2 ][ 3 ] -
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 3 ] * elements[ 2 ][ 2 ] -
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 2 ][ 3 ] +
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 2 ][ 2 ] +
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 1 ][ 3 ] -
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 1 ][ 2 ];
+
+            ret.elements[ 2 ][ 3 ] = 
+                -elements[ 0 ][ 0 ] * elements[ 1 ][ 1 ] * elements[ 2 ][ 3 ] +
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 3 ] * elements[ 2 ][ 1 ] +
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 2 ][ 3 ] -
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 2 ][ 1 ] -
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 1 ][ 3 ] +
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 3 ] * elements[ 1 ][ 1 ];
+
+            ret.elements[ 3 ][ 3 ] = 
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 1 ] * elements[ 2 ][ 2 ] -
+                elements[ 0 ][ 0 ] * elements[ 1 ][ 2 ] * elements[ 2 ][ 1 ] -
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 2 ][ 2 ] +
+                elements[ 1 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 2 ][ 1 ] +
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 1 ] * elements[ 1 ][ 2 ] -
+                elements[ 2 ][ 0 ] * elements[ 0 ][ 2 ] * elements[ 1 ][ 1 ];
+
+            T det = elements[ 0 ][ 0 ] * ret.elements[ 0 ][ 0 ] + elements[ 0 ][ 1 ] * ret.elements[ 1 ][ 0 ] + elements[ 0 ][ 2 ] * ret.elements[ 2 ][ 0 ] + elements[ 0 ][ 3 ] * ret.elements[ 3 ][ 0 ];
+
+            if( det == 0 )
+            {
+                std::cout << "Fehler beim erstellen der Inversen Matrix";
+                return ret;
+            }
+            det = 1.0f / det;
+
+            for( int i = 0; i < 16; i++ )
+                ret.elements[ i / 4 ][ i % 4 ] = ret.elements[ i / 4 ][ i % 4 ] * det;
+
+            return ret;
         }
         // Erzeugt eine Matrix, die einen Vektor um die Z Achse dreht, wenn sie mit ihm multipliziert wird
         //  radian: Der Winkel in Bogenmas

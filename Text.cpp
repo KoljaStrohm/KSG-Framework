@@ -1,9 +1,6 @@
 //---Include---
 #include "Text.h"
 #include <sstream>
-#include <string>
-#include <stdlib.h>
-#include <stdio.h>
 #include <iomanip>
 #ifndef WIN32
 #include <string.h>

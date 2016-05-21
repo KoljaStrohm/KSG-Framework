@@ -10,6 +10,7 @@ struct D3D11_VIEWPORT;
 
 namespace Framework
 {
+    struct MausEreignis; // MausEreignis.h
     class Render3D; // Render3D.h
     class Welt3D; // Welt3D.h
 

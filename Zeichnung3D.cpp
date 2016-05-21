@@ -122,7 +122,7 @@ int Zeichnung3D::errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBu
 
 // Verarbeitet ein Mausereignis
 //  me: Das Mausereignis, das verarbeitet werden soll
-void Zeichnung3D::doMausEreignis( MausEreignis &me )
+void Zeichnung3D::doMausEreignis( MausEreignis3D &me )
 {}
 
 // Verarbeitet ein Tastaturereignis

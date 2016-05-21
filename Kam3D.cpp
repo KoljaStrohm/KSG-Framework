@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "TastaturEreignis.h"
 #include "Globals.h"
+#include "MausEreignis.h"
 #include <d3d11.h>
 #include <DirectXMath.h>
 
@@ -177,7 +178,23 @@ bool Kam3D::tick( double tv )
 //  me: Das Mausereignis, das verarbeitet werden soll
 void Kam3D::doMausEreignis( MausEreignis &me )
 {
-
+    if( me.verarbeitet )
+        return;
+    if( me.mx > viewport->TopLeftX && me.my > viewport->TopLeftY && me.mx < viewport->TopLeftX + viewport->Width && me.my < viewport->TopLeftY + viewport->Height )
+    {
+        MausEreignis3D me3d;
+        me3d.id = me.id;
+        me3d.verarbeitet = me.verarbeitet;
+        Vec3< float > mausP = Vec3< float >( ( me.mx - viewport->TopLeftX ) / ( 0.5f * viewport->Width ) - 1, ( me.my - viewport->TopLeftY ) / ( 0.5f * viewport->Height ) - 1, 0 );
+        Vec3< float > mausT = Vec3< float >( mausP.x, mausP.y, 1 );
+        Mat4< float > mat = proj * view;
+        mat = mat.getInverse();
+        mausP = mat * mausP;
+        mausT = mat * mausT;
+        me3d.pos = mausP;
+        me3d.dir = mausT - mausP;
+        me.verarbeitet = 1;
+    }
 }
 
 // Verarbeitet ein Tastaturereignis

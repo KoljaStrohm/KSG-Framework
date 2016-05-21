@@ -7,11 +7,10 @@ using namespace Framework;
 // Konstruktor 
 Thread::Thread()
 {
-    thRegister->add( this );
-#ifdef WIN32
+    threadHandleSys = 0;
     threadHandle = 0;
     threadId = 0;
-#endif
+    thRegister->add( this );
     run = 0;
 }
 
@@ -68,6 +67,11 @@ void Thread::ende() // beendet den Thread
 #pragma warning(suppress: 6258)
         TerminateThread( threadHandle, 0 );
 #else
+        if( pthread_self() == threadHandle )
+        {
+            thRegister->addClosedThread( threadHandle );
+            run = 0;
+        }
         pthread_cancel( threadHandle );
 #endif
     }
@@ -88,7 +92,7 @@ bool Thread::läuft() const // prüft, ob der Thrad aktiv ist
     return run;
 }
 
-int Thread::warteAufThread( int zeit ) const // wartet zeit lang auf den Thread
+int Thread::warteAufThread( int zeit ) // wartet zeit lang auf den Thread
 {
 #ifdef WIN32
     if( !run )
@@ -99,16 +103,28 @@ int Thread::warteAufThread( int zeit ) const // wartet zeit lang auf den Thread
 #else
     if( !run )
         return 0;
-    return pthread_join( threadHandle, 0 );
+    if( pthread_self() == threadHandle )
+        return 0;
+    if( threadHandleSys )
+        *threadHandleSys = threadHandle;
+    int ret = pthread_join( threadHandle, 0 );
+    threadHandle = 0;
+    return ret;
 #endif
 }
 
-#ifdef WIN32
-void *Thread::getThreadHandle() const
+// Legt einen Frameworkpointer auf ein Threadhandle fest, der auf 0 gesetzt wird, falls die Ressourcen des Threads bereits follstänfig aufgeräumt wurden
+//  ths: Ein Zeiger auf ein Threadhandle, das verändert werden soll
+void Thread::setSystemHandlePointer( pthread_t *ths )
+{
+    threadHandleSys = ths;
+    *threadHandleSys = threadHandle;
+}
+
+pthread_t Thread::getThreadHandle() const
 {
     return threadHandle;
 }
-#endif
 
 // funktionen 
 #ifdef WIN32
@@ -123,26 +139,74 @@ unsigned long __stdcall Framework::threadStart( void *param )
 #else
 void *Framework::threadStart( void *param )
 {
+    pthread_t handle = 0;
     pthread_setcanceltype( PTHREAD_CANCEL_ASYNCHRONOUS, 0 );
-    ( (Thread *)param )->thread();
-    ( (Thread *)param )->threadEnd();
+    if( istThreadOk( (Thread *)param ) )
+    {
+        ( (Thread *)param )->setSystemHandlePointer( &handle );
+        ( (Thread *)param )->thread();
+    }
+    if( istThreadOk( (Thread *)param ) )
+        ( (Thread *)param )->threadEnd();
+    thRegister->addClosedThread( handle );
     pthread_exit( 0 );
     return 0;
 }
 #endif
 
+// Konstruktor
+ThreadRegister::ThreadRegister()
+{
+    InitializeCriticalSection( &cs );
+}
+
+// Destruktor
+ThreadRegister::~ThreadRegister()
+{
+    DeleteCriticalSection( &cs );
+}
+
 // Inhalt der ThreadRegister Klasse aus Thread.h
 void ThreadRegister::add( Thread *t )
 {
+    EnterCriticalSection( &cs );
     threads.add( t );
+    LeaveCriticalSection( &cs );
 }
 
 void ThreadRegister::remove( Thread *t )
 {
+    EnterCriticalSection( &cs );
     threads.lösche( threads.getWertIndex( t ) );
+    LeaveCriticalSection( &cs );
 }
 
-bool ThreadRegister::isThread( Thread *t ) const
+bool ThreadRegister::isThread( Thread *t )
 {
-    return threads.hat( threads.getWertIndex( t ) );
+    EnterCriticalSection( &cs );
+    bool ret = threads.hat( threads.getWertIndex( t ) );
+    LeaveCriticalSection( &cs );
+    return ret;
+}
+
+void ThreadRegister::addClosedThread( pthread_t handle )
+{
+    EnterCriticalSection( &cs );
+    if( handle )
+        closedThreads.add( handle );
+    LeaveCriticalSection( &cs );
+}
+
+// Löscht die bereits beendetetn Threads und gibt ihre Reccourcen wieder frei
+void ThreadRegister::cleanUpClosedThreads()
+{
+    EnterCriticalSection( &cs );
+    while( closedThreads.getEintragAnzahl() > 0 )
+    {
+#ifndef WIN32
+        pthread_join( closedThreads.get( 0 ), 0 );
+#endif
+        closedThreads.lösche( 0 );
+    }
+    LeaveCriticalSection( &cs );
 }
