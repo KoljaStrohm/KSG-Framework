@@ -171,7 +171,7 @@ void Schlüssel::setPos( int p )
 {
     if( p < 0 )
         p = 0;
-    pos = p > län ? 0 : p;
+    pos = p % län;
 }
 
 void Schlüssel::setSchlüssel( const char *s, int län )

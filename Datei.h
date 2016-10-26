@@ -8,6 +8,10 @@ namespace Framework
 {
     class Text; // Text.h
     class Zeit; // Zeit.h
+	namespace Verschlüsselung
+	{
+		class Schlüssel; // Schlüssel.h
+	}
     class Datei; // aus dieser Datei
 
     // Ließt und schreibt in eine Datei
@@ -30,6 +34,7 @@ namespace Framework
         char tmpLBPos;
         char tmpSByte;
         char tmpSBPos;
+		Verschlüsselung::Schlüssel *key;
 
     public:
         // Konstruktor 
@@ -81,6 +86,8 @@ namespace Framework
         __declspec( dllexport ) Text *leseZeile();
         // Schließt die datei
         __declspec( dllexport ) void schließen();
+		// Setzt den Schlüssel für die Datei
+		__declspec( dllexport ) void setSchlüssel( char *s, int l );
 #ifdef WIN32
         // Setzt den Zeitpunkt der letzten Änderung der Datei (nur für Windows)
         //  zeit: den Zeitpunkt der letzten Änderung

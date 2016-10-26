@@ -1,6 +1,7 @@
 #include "Datei.h"
 #include "Text.h"
 #include "Zeit.h"
+#include "Schluessel.h"
 #ifdef WIN32
 #include <direct.h>
 #include <Shlwapi.h>
@@ -12,6 +13,7 @@
 #endif
 
 using namespace Framework;
+using namespace Verschlüsselung;
 
 // Inhalt der Datei Klasse aus Datei.h
 // Konstruktor 
@@ -23,12 +25,15 @@ Datei::Datei()
     tmpLByte( 0 ),
     tmpLBPos( 7 ),
     tmpSByte( 0 ),
-    tmpSBPos( -1 )
+    tmpSBPos( -1 ),
+	key( 0 )
 {}
 
 // Destruktor 
 Datei::~Datei()
 {
+	if( key )
+		key->release();
     if( stream )
         delete stream;
     if( pfad )
@@ -167,15 +172,34 @@ void Datei::schreibe( char *bytes, int län ) // schreibt bytes in datei
         stream->write( &tmpSByte, 1 );
         tmpSByte = 0;
     }
-    stream->write( bytes, län );
+	if( key )
+	{
+		key->setPos( getSPosition() );
+		Bytes *n = new Bytes( bytes, län );
+		key->codieren( n->getThis() );
+		stream->write( n->getBytes(), län );
+		n->release();
+	}
+	else
+		stream->write( bytes, län );
 }
 
 void Datei::lese( char *bytes, int län ) // ließt bytes aus datei
 {
     if( !pfad )
         return;
-    if( stream )
-        stream->read( bytes, län );
+	if( stream )
+	{
+		int tmp = getLPosition();
+		stream->read( bytes, län );
+		if( key )
+		{
+			key->setPos( tmp );
+			Bytes *n = new Bytes();
+			n->setBytesZ( bytes, län );
+			key->decodieren( n );
+		}
+	}
     tmpLBPos = 7;
     tmpSBPos = -1;
 }
@@ -190,7 +214,15 @@ Text *Datei::leseZeile() // ließt eine zeile
     __int64 län = getGröße();
     for( char c = 0; c != '\n' && stream->tellg() < län; )
     {
+		int tmp = getLPosition();
         stream->read( &c, 1 );
+		if( key )
+		{
+			key->setPos( tmp );
+			Bytes *n = new Bytes();
+			n->setBytesZ( &c, 1 );
+			key->decodieren( n );
+		}
         if( c )
             ret->anhängen( (const char*)&c, 1 );
     }
@@ -203,8 +235,19 @@ void Datei::schließen() // schließt die Datei
 {
     if( !pfad || !stream )
         return;
-    if( tmpSBPos >= 0 )
-        stream->write( &tmpSByte, 1 );
+	if( tmpSBPos >= 0 )
+	{
+		if( key )
+		{
+			key->setPos( getSPosition() );
+			Bytes *n = new Bytes( &tmpSByte, 1 );
+			key->codieren( n->getThis() );
+			stream->write( n->getBytes(), 1 );
+			n->release();
+		}
+		else
+			stream->write( &tmpSByte, 1 );
+	}
     stream->close();
     delete stream;
     stream = 0;
@@ -267,7 +310,15 @@ bool Datei::getNextBit( bool &bit ) // Datei Bitweise auslesen
     if( tmpLBPos == 7 )
     {
         tmpLBPos = -1;
+		int tmp = getLPosition();
         stream->read( &tmpLByte, 1 );
+		if( key )
+		{
+			key->setPos( tmp );
+			Bytes *n = new Bytes();
+			n->setBytesZ( &tmpLByte, 1 );
+			key->decodieren( n );
+		}
     }
     tmpLBPos++;
     bit = ( tmpLByte >> ( 7 - tmpLBPos ) ) & 1;
@@ -283,10 +334,33 @@ bool Datei::setNextBit( bool bit ) // Datei Bitweise speichern
     if( tmpSBPos == 7 )
     {
         tmpSBPos = -1;
-        stream->write( &tmpSByte, 1 );
+		if( key )
+		{
+			key->setPos( getSPosition() );
+			Bytes *n = new Bytes( &tmpSByte, 1 );
+			key->codieren( n->getThis() );
+			stream->write( n->getBytes(), 1 );
+			n->release();
+		}
+		else
+			stream->write( &tmpSByte, 1 );
         tmpSByte = 0;
     }
     return 1;
+}
+
+// Setzt den Schlüssel für die Datei
+void Datei::setSchlüssel( char *s, int l )
+{
+	if( l == 0 )
+	{
+		key = key->release();
+		return;
+	}
+	if( key )
+		key->setSchlüssel( s, l );
+	else
+		key = new Schlüssel( s, l );
 }
 
 // constant 
