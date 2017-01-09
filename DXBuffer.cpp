@@ -1,7 +1,9 @@
 #include "DXBuffer.h"
-#include "Render3D.h"
 #include <iostream>
+#ifdef WIN32
+#include "Render3D.h"
 #include <d3d11.h>
+#endif
 
 using namespace Framework;
 
@@ -10,37 +12,41 @@ using namespace Framework;
 // Konstruktor
 //  bind: Der verwendungszweck des Buffers. Beispiel: D3D11_BIND_INDEX_BUFFER, D3D11_BIND_VERTEX_BUFFER.
 //  eLän: Länge eines einzelnen Elements in Bytes
-DXBuffer::DXBuffer( D3D11_BIND_FLAG bind, int eLän )
+DXBuffer::DXBuffer( D3D11_BIND_FLAG bind, int eLen )
 {
+#ifdef WIN32
     buffer = 0;
     bf = bind;
+#endif
     data = 0;
-    geändert = 0;
-    län = 0;
-    altLän = 0;
-    elLän = eLän;
+    changed = 0;
+    len = 0;
+    altLen = 0;
+    elLem = eLen;
     ref = 1;
 }
 
 // Destruktor
 DXBuffer::~DXBuffer()
 {
+#ifdef WIN32
     if( buffer )
         buffer->Release();
+#endif
 }
 
 // Setzt den geändert fläg, so das beim nächsten auruf von 'kopieren' die daten neu kopiert werden
-void DXBuffer::setGeändert()
+void DXBuffer::setChanged()
 {
-    geändert = 1;
+    changed = 1;
 }
 
 // Ändert die länge des Buffers beim nächsten aufruf von 'kopieren'
 //  län: Die Länge in Bytes
-void DXBuffer::setLänge( int län )
+void DXBuffer::setLength( int len )
 {
-    this->län = län;
-    geändert = 1;
+    this->len = len;
+    changed = 1;
 }
 
 // Legt fest, was beim nächsten aufruf von 'kopieren' kopiert wird
@@ -48,16 +54,17 @@ void DXBuffer::setLänge( int län )
 void DXBuffer::setData( void *data )
 {
     this->data = data;
-    geändert = 1;
+    changed = 1;
 }
 
 // Kopiert die Daten in den Buffer, fals sie sich verändert haben
 //  zRObj: Das Objekt, mit dem die Grafikkarte angesprochen wird
 void DXBuffer::copieren( Render3D *zRObj )
 {
-    if( !geändert || !län || !data )
+#ifdef WIN32
+    if( !changed || !len || !data )
         return;
-    if( län != altLän )
+    if( len != altLen )
     {
         if( buffer )
             buffer->Release();
@@ -68,7 +75,7 @@ void DXBuffer::copieren( Render3D *zRObj )
         D3D11_BUFFER_DESC desk;
         memset( &desk, 0, sizeof( desk ) );
         desk.Usage = D3D11_USAGE_DYNAMIC;
-        desk.ByteWidth = län;
+        desk.ByteWidth = len;
         desk.BindFlags = bf;
         desk.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
@@ -77,34 +84,35 @@ void DXBuffer::copieren( Render3D *zRObj )
         ini.pSysMem = data;
 
         zRObj->zDevice()->CreateBuffer( &desk, &ini, &buffer );
-        altLän = län;
+        altLen = len;
     }
-    else if( geändert )
+    else if( changed )
     {
         D3D11_MAPPED_SUBRESOURCE map;
         zRObj->zContext()->Map( buffer, 0, D3D11_MAP::D3D11_MAP_WRITE_DISCARD, 0, &map );
-        memcpy( map.pData, data, län );
+        memcpy( map.pData, data, len );
         zRObj->zContext()->Unmap( buffer, 0 );
-        geändert = 0;
+        changed = 0;
     }
+#endif
 }
 
 // Gibt die Länge eines Elementes in bytes zurück
-int DXBuffer::getElementLänge() const
+int DXBuffer::getElementLength() const
 {
-    return elLän;
+    return elLem;
 }
-
+#ifdef WIN32
 // Gibt den Buffer zurück
 ID3D11Buffer *DXBuffer::zBuffer() const
 {
     return buffer;
 }
-
+#endif
 // Gibt die Anzahl der Elemente im Buffer zurück
 int DXBuffer::getElementAnzahl() const
 {
-    return altLän / elLän;
+    return altLen / elLem;
 }
 
 // Erhöht den Reference Counting Zähler.
@@ -131,7 +139,15 @@ DXBuffer *DXBuffer::release()
 // Konstruktor
 // eSize: Die Länge eines Elementes in Bytes
 DXVertexBuffer::DXVertexBuffer( int eSize )
+#ifdef WIN32
     : DXBuffer( D3D11_BIND_VERTEX_BUFFER, eSize )
+#else
+	: DXBuffer( 0, eSize )
+#endif
+{}
+
+// Destruktor
+DXVertexBuffer::~DXVertexBuffer()
 {}
 
 // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
@@ -150,7 +166,15 @@ DXBuffer *DXVertexBuffer::release()
 // Konstruktor
 // eSize: Die Länge eines Elementes in Bytes
 DXIndexBuffer::DXIndexBuffer( int eSize )
+#ifdef WIN32
     : DXBuffer( D3D11_BIND_INDEX_BUFFER, eSize )
+#else
+: DXBuffer( 0, eSize )
+#endif
+{}
+
+// Destruktor
+DXIndexBuffer::~DXIndexBuffer()
 {}
 
 // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.

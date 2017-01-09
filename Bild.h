@@ -27,11 +27,11 @@ namespace Framework
     private:
         int *fc;
         bool delFc;
-        Punkt größe;
+        Punkt size;
         int ref;
         Punkt *drawOff;
         Punkt *dPosA;
-        Punkt *dGrößeA;
+        Punkt *dSizeA;
         int doa;
         unsigned char *alpha;
         int alphaAnzahl;
@@ -41,15 +41,15 @@ namespace Framework
         // privat
         inline void alphaPixelP( int x, int y, int f );
         inline void alphaPixelP( int &fc, int f );
-        inline char getOutCode( Punkt& p ) const;
+        inline char getOutCode( Punkt p ) const;
         void drawFlatDreieck( int y1, int y2, float m1, float b1, float m2, float b2, int farbe );
         void drawFlatDreieckTextur( int y1, int y2, double m1, double b1, double m2, double b2, double tx1, double ty1, double tx2, double ty2,
                                     double tx_1o, double ty_1o, double tx_2o, double ty_2o, double txf, double tyf, Bild &textur );
         void drawFlatDreieckAlpha( int y1, int y2, float m1, float b1, float m2, float b2, int farbe );
         void drawFlatDreieckTexturAlpha( int y1, int y2, double m1, double b1, double m2, double b2, double tx1, double ty1, double tx2, double ty2,
                                          double tx_1o, double ty_1o, double tx_2o, double ty_2o, double txf, double tyf, Bild &textur );
-        void drawLinieHTextur( Vec2< double > p, double län, Vec2< double > ta, Vec2< double > tb, double txo, double tyo, Bild &textur );
-        void drawLinieHTexturAlpha( Vec2< double > p, double län, Vec2< double > ta, Vec2< double > tb, double txo, double tyo, Bild &textur );
+        void drawLinieHTextur( Vec2< double > p, double length, Vec2< double > ta, Vec2< double > tb, double txo, double tyo, Bild &textur );
+        void drawLinieHTexturAlpha( Vec2< double > p, double length, Vec2< double > ta, Vec2< double > tb, double txo, double tyo, Bild &textur );
 
     public:
         // Konstruktor
@@ -70,13 +70,13 @@ namespace Framework
         //  buffer: Ein Array mit den A8R8G8B8 Farbwerten
         //  deleteBuffer: 1, fals der Array vom Bild gelöscht werden soll
         //  breite: Die Breite in Pixeln
-        //  höhe: Die Höhe in Pixeln
-        __declspec( dllexport ) void setPixelBuffer( int *buffer, bool deleteBuffer, int breite, int höhe );
+        //  height: Die Höhe in Pixeln
+        __declspec( dllexport ) void setPixelBuffer( int *buffer, bool deleteBuffer, int breite, int height );
         // Erstellt ein neues Bild
         //  breite: Die Breite des Bildes in Pixeln
         //  höhe: Die Höhe des Bildes in Pixeln
-        //  füllFarbe: Die startfarbe, auf die alle Pixel gesetzt werden
-        __declspec( dllexport ) void neuBild( int breite, int höhe, int füllFarbe );
+        //  fillColor: Die startfarbe, auf die alle Pixel gesetzt werden
+        __declspec( dllexport ) void neuBild( int breite, int height, int fillColor );
         // Blendet mittels Alphablending eine Farbe auf einen bestimmten Pixel
         // Beachtet nicht die begrenzung der Zeichnenfläche und das Skroll Offset
         //  x: Die X Koordinate des Pixels
@@ -115,7 +115,7 @@ namespace Framework
         //  b: Die Breite des Rechtecks
         //  h: Die Höhe des Rechtecks
         //  fc: Die Farbe im A8R8G8B8 Format
-        __declspec( dllexport ) void füllRegion( int x, int y, int b, int h, int fc );
+        __declspec( dllexport ) void fillRegion( int x, int y, int b, int h, int fc );
         // Blendet eine Farbe mit Alphablending in einem Rechteck
         //  x: Die X Koordinate
         //  y: Die Y Koordinate
@@ -126,27 +126,27 @@ namespace Framework
         // Zeichnet eine horizontale Linie
         //  x: Die X Koordinate des Startpunktes der Linie
         //  y: Die Y Koordinate des Startpunktes der Linie
-        //  län: Die Länge der Linie
+        //  length: Die Länge der Linie
         //  fc: Die Farbe im A8R8G8B8 Format
-        __declspec( dllexport ) void drawLinieH( int x, int y, int län, int fc );
+        __declspec( dllexport ) void drawLinieH( int x, int y, int length, int fc );
         // Zeichnet eine vertikale Linie
         //  x: Die X Koordinate des Startpunktes der Linie
         //  y: Die Y Koordinate des Startpunktes der Linie
-        //  län: Die Länge der Linie
+        //  length: Die Länge der Linie
         //  fc: Die Farbe im A8R8G8B8 Format
-        __declspec( dllexport ) void drawLinieV( int x, int y, int län, int fc );
+        __declspec( dllexport ) void drawLinieV( int x, int y, int length, int fc );
         // Zeichnet eine horizontale Linie mit Alpha blending
         //  x: Die X Koordinate des Startpunktes der Linie
         //  y: Die Y Koordinate des Startpunktes der Linie
-        //  län: Die Länge der Linie
+        //  length: Die Länge der Linie
         //  fc: Die Farbe im A8R8G8B8 Format
-        __declspec( dllexport ) void drawLinieHAlpha( int x, int y, int län, int fc );
+        __declspec( dllexport ) void drawLinieHAlpha( int x, int y, int length, int fc );
         // Zeichnet eine vertikale Linie mit Alpha Blending
         //  x: Die X Koordinate des Startpunktes der Linie
         //  y: Die Y Koordinate des Startpunktes der Linie
-        //  län: Die Länge der Linie
+        //  length: Die Länge der Linie
         //  fc: Die Farbe im A8R8G8B8 Format
-        __declspec( dllexport ) void drawLinieVAlpha( int x, int y, int län, int fc );
+        __declspec( dllexport ) void drawLinieVAlpha( int x, int y, int length, int fc );
         // Zeichnet eine Linie
         //  a: Der Startpunkt der Linie
         //  b: der Endpunkt der Linie
@@ -162,7 +162,7 @@ namespace Framework
         //  yOff: Die Y Koordinate des Kreismittelpunktes
         //  r: Der Radius des Kreises in Pixeln
         //  fc: Die Farbe im A8R8G8B8 Format
-        __declspec( dllexport ) void füllKreis( int xOff, int yOff, int r, int fc );
+        __declspec( dllexport ) void fillCircle( int xOff, int yOff, int r, int fc );
         // Zeichnet den Umriss eines Kreises
         //  xOff: Die X Koordinate des Kreismittelpunktes
         //  yOff: Die Y Koordinate des Kreismittelpunktes
@@ -179,72 +179,72 @@ namespace Framework
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void drawBild( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void drawBild( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild in ein bestimmtes Feld ohne Skallierung mit alpha blending
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void alphaBild( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void alphaBild( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild um 90 grad nach rechts gedreht in ein bestimmtes Feld ohne Skallierung
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void drawBild90( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void drawBild90( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild um 90 grad nach rechts gedreht in ein bestimmtes Feld ohne Skallierung mit alpha Blending
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void alphaBild90( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void alphaBild90( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild um 180 grad nach rechts gedreht in ein bestimmtes Feld ohne Skallierung
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void drawBild180( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void drawBild180( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild um 180 grad nach rechts gedreht in ein bestimmtes Feld ohne Skallierung mit alpha Blending
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void alphaBild180( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void alphaBild180( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild um 270 grad nach rechts gedreht in ein bestimmtes Feld ohne Skallierung
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void drawBild270( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void drawBild270( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild um 270 grad nach rechts gedreht in ein bestimmtes Feld ohne Skallierung mit alpha Blending
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void alphaBild270( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void alphaBild270( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild in ein bestimmtes Feld mit Skallierung
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void drawBildSkall( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void drawBildSkall( int x, int y, int br, int hi, Bild &zBild );
         // Zeichnet ein Bild in ein bestimmtes Feld mit Skallierung mit Alpha Blending
         //  x: Die X Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  y: Die Y Koordinate der linken oberen Ecke des Rechtecks in dem das Bild gezeichnet werden soll
         //  br: Die Breite des Rechecks in dem das Bild gezeichnet werden soll
-        //  hö: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
+        //  hi: Die Höhe des Rechecks in dem das Bild gezeichnet werden soll
         //  zBild: Das Bild, was gezeichnet werden soll
-        __declspec( dllexport ) void alphaBildSkall( int x, int y, int br, int hö, Bild &zBild );
+        __declspec( dllexport ) void alphaBildSkall( int x, int y, int br, int hi, Bild &zBild );
         // Füllt ein Dreieck mit einer bestimmten Farbe
         //  a: Eine Ecke des Dreiecks
         //  b: Eine Ecke des Dreiecks
@@ -286,9 +286,9 @@ namespace Framework
         //  x: Die X Koordinate der linken oberen Ecke der Zeichenfläche
         //  y: Die X Koordinate der linken oberen Ecke der Zeichenfläche
         //  br: Die Breite der Zeichenfläche
-        //  hö: Die Höhe der Zeichenfläche
+        //  hi: Die Höhe der Zeichenfläche
         //  return: 1, falls die neue Zeichenfläche ganz oder teilweise innerhalb der bestehenden Zeichenfläche ligt. Wenn 0 zurückgegeben wird, wurde die Zeichenfläche nicht gesetzt und es braucht nicht releaseDrawOptions() aufgerufen werden
-        __declspec( dllexport ) bool setDrawOptions( int x, int y, int br, int hö );
+        __declspec( dllexport ) bool setDrawOptions( int x, int y, int br, int hi );
         // Begrenzt die Zeichenfläche in die bis zum nächsten aufruf von releaseDrawOptions() gezeichnet werden kann. Alles außerhalb der Fläche wird automatisch ignoriert.
         // Wenn die Zeichenfläche darf über den Rand einer bestehenden Zeichenfläche hinausragen
         //  pos: Die Koordinaten der linken oberen Ecke der Zeichenfläche
@@ -300,9 +300,9 @@ namespace Framework
         //  x: Die X Koordinate der linken oberen Ecke der Zeichenfläche
         //  y: Die X Koordinate der linken oberen Ecke der Zeichenfläche
         //  br: Die Breite der Zeichenfläche
-        //  hö: Die Höhe der Zeichenfläche
+        //  hi: Die Höhe der Zeichenfläche
         //  return: 1, falls die neue Zeichenfläche ganz oder teilweise innerhalb des Bildes ligt. Wenn 0 zurückgegeben wird, wurde die Zeichenfläche nicht gesetzt und es braucht nicht releaseDrawOptions() aufgerufen werden
-        __declspec( dllexport ) bool setDrawOptionsErzwingen( int x, int y, int br, int hö );
+        __declspec( dllexport ) bool setDrawOptionsErzwingen( int x, int y, int br, int hi );
         // Setzt Koordinaten, die bei den Zeichenfunktionen von den Positionen abgezogen werden
         // Vorher sollte eine Zeichenfläche mit SetDrawOptions gesetzt worden sein. Die Werte werden mit dem aufruf von releaseDrawOptions() wieder zurückgesetzt.
         //  xOff: Ein Wert, der von allen X Koordinaten abgezogen wird
@@ -321,11 +321,11 @@ namespace Framework
         //  y: Die Y Koordinate des Pixels
         __declspec( dllexport ) int getPixel( int x, int y ) const;
         // Gibt die Größe des Bildes zurück
-        __declspec( dllexport ) const Punkt &getGröße() const;
+        __declspec( dllexport ) const Punkt &getSize() const;
         // Gibt die Breite des Bildes zurück
         __declspec( dllexport ) int getBreite() const;
         // Gibt die Höhe des Bildes zurück
-        __declspec( dllexport ) int getHöhe() const;
+        __declspec( dllexport ) int getHeight() const;
         // Gibt den aktuellen mindest Transparenz Wert zurück
         __declspec( dllexport ) unsigned char getAlpha() const;
         // Gibt die Koordinaten der linken oberen Ecke der aktuellen Zeichenfläche zurück

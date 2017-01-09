@@ -29,7 +29,7 @@ TexturModel::TexturModel()
     Polygon3D *p = new Polygon3D();
     p->indexAnz = 6;
     p->indexList = new int[ p->indexAnz ];
-    p->indexBuffer->setLänge( p->indexAnz * 4 );
+    p->indexBuffer->setLength( p->indexAnz * 4 );
     p->indexBuffer->setData( p->indexList );
     p->indexList[ 0 ] = 0;
     p->indexList[ 1 ] = 3;
@@ -65,7 +65,7 @@ void TexturModel::setTextur( int id )
 
 // Setzt die Größe, in der Die Textur angezeigt wird
 //  gr: Ein Vektor, der für x und y die breite und höhe beinhaltet
-void TexturModel::setGröße( Vec2< float > gr )
+void TexturModel::setSize( Vec2< float > gr )
 {
     gr /= 2;
     Vertex3D *vertecies = new Vertex3D[ 4 ];
@@ -85,7 +85,7 @@ void TexturModel::setGröße( Vec2< float > gr )
 // Setzt die Größe, in der die Textur angezeigt wird
 //  b: Die Breite, in der die Textur angezeigt wird
 //  h: Die Höhe, in der die Textur angezeigt wird
-void TexturModel::setGröße( float b, float h )
+void TexturModel::setSize( float b, float h )
 {
     b /= 2;
     h /= 2;

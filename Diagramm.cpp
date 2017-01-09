@@ -50,7 +50,7 @@ void SLDiag::setSchriftZ( Schrift *schrift ) // setzt die Schrift
     rend = 1;
 }
 
-void SLDiag::setGGröße( Punkt &gr ) // setzt die Größe des Gitters
+void SLDiag::setGSize( Punkt &gr ) // setzt die Größe des Gitters
 {
     gitterGr = gr;
     rend = 1;
@@ -98,8 +98,8 @@ void SLDiag::addPunkt( int lNum, int x, int h ) // fügt einen Punkt hinzu
             pb_tmp->set( i, 0 );
         while( i < 0 )
         {
-            ph_tmp->lösche( 0 );
-            pb_tmp->lösche( 0 );
+            ph_tmp->remove( 0 );
+            pb_tmp->remove( 0 );
             if( !pb_tmp->getEintragAnzahl() || !ph_tmp->getEintragAnzahl() )
                 break;
             int ii = -i;
@@ -116,10 +116,10 @@ void SLDiag::addPunkt( int lNum, int x, int h ) // fügt einen Punkt hinzu
 
 void SLDiag::removeLinie( int lNum ) // entfernt eine Linie
 {
-    lFarbe->lösche( lNum );
-    lName->lösche( lNum );
-    ph->lösche( lNum );
-    pb->lösche( lNum );
+    lFarbe->remove( lNum );
+    lName->remove( lNum );
+    ph->remove( lNum );
+    pb->remove( lNum );
     --lines;
     rend = 1;
 }
@@ -129,36 +129,36 @@ void SLDiag::render( Bild &zRObj ) // zeichnet nach zRObj
     if( hatStyle( Style::Sichtbar ) )
     {
         lockZeichnung();
-        löscheStyle( Style::VScroll | Style::HScroll );
-        __super::render( zRObj );
-        if( !zRObj.setDrawOptions( innenPosition, innenGröße ) )
+        removeStyle( Style::VScroll | Style::HScroll );
+		ZeichnungHintergrund::render( zRObj );
+        if( !zRObj.setDrawOptions( innenPosition, innenSize ) )
         {
             unlockZeichnung();
             return;
         }
-        int hv = getHöchstValue();
+        int hv = getHighestValue();
         hv = hv ? hv : 1;
-        double yFaktor = innenGröße.y / hv;
+        double yFaktor = innenSize.y / hv;
         if( hatStyle( Style::Gitter ) )
         {
-            double ghö = gitterGr.y * yFaktor;
-            int yo = innenGröße.y - 1;
-            int bo = innenGröße.x, ho = innenGröße.y;
-            int maxBr = (int)( (double)innenGröße.x / gitterGr.x + 0.5 );
-            int maxHö = ghö ? (int)( innenGröße.y / ghö + 0.5 ) : 0;
+            double ghi = gitterGr.y * yFaktor;
+            int yo = innenSize.y - 1;
+            int bo = innenSize.x, ho = innenSize.y;
+            int maxBr = (int)( (double)innenSize.x / gitterGr.x + 0.5 );
+            int maxHi = ghi ? (int)( innenSize.y / ghi + 0.5 ) : 0;
             if( hatStyle( Style::HAlpha ) )
             {
                 for( int i = 0; i < maxBr; ++i )
                     zRObj.drawLinieVAlpha( gitterGr.x * i, 0, ho, gF );
-                for( int i = 0; i < maxHö; ++i )
-                    zRObj.drawLinieHAlpha( 0, (int)( yo - ghö * i + 0.5 ), bo, gF );
+                for( int i = 0; i < maxHi; ++i )
+                    zRObj.drawLinieHAlpha( 0, (int)( yo - ghi * i + 0.5 ), bo, gF );
             }
             else
             {
                 for( int i = 0; i < maxBr; ++i )
                     zRObj.drawLinieV( gitterGr.x * i, 0, ho, gF );
-                for( int i = 0; i < maxHö; ++i )
-                    zRObj.drawLinieH( 0, (int)( yo - ghö * i + 0.5 ), bo, gF );
+                for( int i = 0; i < maxHi; ++i )
+                    zRObj.drawLinieH( 0, (int)( yo - ghi * i + 0.5 ), bo, gF );
             }
         }
         for( int i = 0; i < lines; ++i )
@@ -169,7 +169,7 @@ void SLDiag::render( Bild &zRObj ) // zeichnet nach zRObj
             Array< int > *pb_tmp = pb->z( i );
             if( hatStyle( Style::LinienName ) && schrift && n_tmp )
             {
-                schrift->setSchriftGröße( 12 );
+                schrift->setSchriftSize( 12 );
                 schrift->setDrawPosition( 5, 5 + 15 * i );
                 Text rtxt = n_tmp->getText();
                 rtxt += ": ";
@@ -179,7 +179,7 @@ void SLDiag::render( Bild &zRObj ) // zeichnet nach zRObj
             if( ph_tmp && pb_tmp )
             {
                 int lastX = 0;
-                int lastY = innenGröße.y - 1;
+                int lastY = innenSize.y - 1;
                 int ph_anz = ph_tmp->getEintragAnzahl();
                 int pb_anz = pb_tmp->getEintragAnzahl();
                 for( int ii = 0; ii < ph_anz && ii < pb_anz; ++ii )
@@ -187,7 +187,7 @@ void SLDiag::render( Bild &zRObj ) // zeichnet nach zRObj
                     if( !ph_tmp || !pb_tmp )
                         break;
                     int xpos = lastX + pb_tmp->get( ii );
-                    int ypos = innenGröße.y - (int)( ph_tmp->get( ii ) * yFaktor + 0.5 ) - 1;
+                    int ypos = innenSize.y - (int)( ph_tmp->get( ii ) * yFaktor + 0.5 ) - 1;
                     if( ypos == -1 )
                         ++ypos;
                     if( ypos < 0 || xpos < 0 )
@@ -219,7 +219,7 @@ Schrift *SLDiag::zSchrift() const
     return schrift;
 }
 
-const Punkt &SLDiag::getGGröße() const // gibt die Gitter Größe zurück
+const Punkt &SLDiag::getGSize() const // gibt die Gitter Größe zurück
 {
     return gitterGr;
 }
@@ -263,18 +263,18 @@ Text *SLDiag::zLinienNamen( int lNum ) const
     return lName->z( lNum );
 }
 
-int SLDiag::getHöchstValue() const // gibt den Höchsten Wert zurück
+int SLDiag::getHighestValue() const // gibt den Höchsten Wert zurück
 {
     int ret = 0;
     for( int i = 0; i < lines; ++i )
     {
-        int tmp = getHöchstValue( i );
+        int tmp = getHighestValue( i );
         ret = ret >= tmp ? ret : tmp;
     }
     return ret;
 }
 
-int SLDiag::getHöchstValue( int lNum ) const
+int SLDiag::getHighestValue( int lNum ) const
 {
     int ret = 0;
     Array< int > *tmp = ph->z( lNum );
@@ -367,7 +367,7 @@ DiagDaten::DiagDaten()
     : style( 0 ),
     rasterDicke( 0 ),
     rasterBreite( 0 ),
-    rasterHöhe( 0 ),
+    rasterHeight( 0 ),
     rasterFarbe( 0 ),
     hIntervallFarbe( 0xFFFFFFFF ),
     vIntervallFarbe( 0xFFFFFFFF ),
@@ -378,7 +378,7 @@ DiagDaten::DiagDaten()
     hIntervallWerte( new Array< double > ),
     vIntervallWerte( new Array< double > ),
     hIntervallBreite( 0 ),
-    vIntervallHöhe( 0 ),
+    vIntervallHeight( 0 ),
     werte( new RCArray< DiagWert >() ),
     ref( 1 )
 {}
@@ -415,9 +415,9 @@ DiagDaten *DiagDaten::release()
 // Konstruktor
 BaseDiag::BaseDiag( CRITICAL_SECTION *lock )
     : daten( new DiagDaten() ),
-    ref( 1 ),
     changed( 0 ),
-    lock( lock )
+    lock( lock ),
+	ref( 1 )
 {}
 
 // Destruktor
@@ -445,7 +445,7 @@ void BaseDiag::setDiagDaten( DiagDaten *dd ) // Kopiert die Daten eines Diagramm
         daten = new DiagDaten();
     daten->style = dd->style;
     daten->rasterBreite = dd->rasterBreite;
-    daten->rasterHöhe = dd->rasterHöhe;
+    daten->rasterHeight = dd->rasterHeight;
     daten->rasterFarbe = dd->rasterFarbe;
     daten->hIntervallFarbe = dd->hIntervallFarbe;
     daten->vIntervallFarbe = dd->vIntervallFarbe;
@@ -464,7 +464,7 @@ void BaseDiag::setDiagDaten( DiagDaten *dd ) // Kopiert die Daten eines Diagramm
             daten->vIntervallWerte->set( dd->vIntervallWerte->get( i ), i );
     }
     daten->hIntervallBreite = dd->hIntervallBreite;
-    daten->vIntervallHöhe = dd->vIntervallHöhe;
+    daten->vIntervallHeight = dd->vIntervallHeight;
     anz = dd->werte->getEintragAnzahl();
     for( int i = 0; i < anz; ++i )
     {
@@ -517,14 +517,14 @@ void BaseDiag::setRasterBreite( int br ) // Rasterbreite setzen
     LeaveCriticalSection( lock );
 }
 
-void BaseDiag::setRasterHöhe( int hö ) // Rasterhöhe setzen
+void BaseDiag::setRasterHeight( int hi ) // Rasterhöhe setzen
 {
     EnterCriticalSection( lock );
     if( !daten )
         daten = new DiagDaten();
-    if( daten->rasterHöhe != hö )
+    if( daten->rasterHeight != hi )
         changed = 1;
-    daten->rasterHöhe = hö;
+    daten->rasterHeight = hi;
     LeaveCriticalSection( lock );
 }
 
@@ -548,12 +548,12 @@ void BaseDiag::setHIntervallBreite( double br ) // Intervall Breite
     LeaveCriticalSection( lock );
 }
 
-void BaseDiag::setVIntervallHöhe( double hö ) // Intervall Höhe
+void BaseDiag::setVIntervallHeight( double hi ) // Intervall Höhe
 {
     EnterCriticalSection( lock );
     if( !daten )
         daten = new DiagDaten();
-    daten->vIntervallHöhe = hö;
+    daten->vIntervallHeight = hi;
     LeaveCriticalSection( lock );
 }
 
@@ -703,7 +703,7 @@ void BaseDiag::setHIntervallText( double hIntervall, char *text )
     changed = 1;
 }
 
-void BaseDiag::löscheHIntervallText( double hIntervall ) // Text eines Horizontalen Intervalls entfernen
+void BaseDiag::removeHIntervallText( double hIntervall ) // Text eines Horizontalen Intervalls entfernen
 {
     EnterCriticalSection( lock );
     if( !daten )
@@ -717,8 +717,8 @@ void BaseDiag::löscheHIntervallText( double hIntervall ) // Text eines Horizonta
     {
         if( daten->hIntervallWerte->hat( i ) && daten->hIntervallWerte->get( i ) == hIntervall )
         {
-            daten->hIntervallTexte->lösche( i );
-            daten->hIntervallWerte->lösche( i );
+            daten->hIntervallTexte->remove( i );
+            daten->hIntervallWerte->remove( i );
             LeaveCriticalSection( lock );
             changed = 1;
             return;
@@ -799,7 +799,7 @@ void BaseDiag::setVIntervallText( double vIntervall, char *text )
     changed = 1;
 }
 
-void BaseDiag::löscheVIntervallText( double vIntervall ) // Text eines Vertikalen Intervalls entfernen
+void BaseDiag::removeVIntervallText( double vIntervall ) // Text eines Vertikalen Intervalls entfernen
 {
     EnterCriticalSection( lock );
     if( !daten )
@@ -813,8 +813,8 @@ void BaseDiag::löscheVIntervallText( double vIntervall ) // Text eines Vertikale
     {
         if( daten->vIntervallWerte->hat( i ) && daten->vIntervallWerte->get( i ) == vIntervall )
         {
-            daten->vIntervallTexte->lösche( i );
-            daten->vIntervallWerte->lösche( i );
+            daten->vIntervallTexte->remove( i );
+            daten->vIntervallWerte->remove( i );
             LeaveCriticalSection( lock );
             changed = 1;
             return;
@@ -1021,7 +1021,7 @@ void BaseDiag::setPunkt( int wNum, int pNum, double h, double v )
 }
 
 // Löscht einen vorhandenen Punkt
-void BaseDiag::löschePunkt( int wNum, double hI )
+void BaseDiag::removePunkt( int wNum, double hI )
 {
     EnterCriticalSection( lock );
     if( !daten )
@@ -1038,7 +1038,7 @@ void BaseDiag::löschePunkt( int wNum, double hI )
         if( daten->werte->z( wNum )->punkte->hat( i ) && daten->werte->z( wNum )->punkte->get( i )->hIntervall == hI )
         {
             delete daten->werte->z( wNum )->punkte->get( i );
-            daten->werte->z( wNum )->punkte->lösche( i );
+            daten->werte->z( wNum )->punkte->remove( i );
             LeaveCriticalSection( lock );
             changed = 1;
             return;
@@ -1047,7 +1047,7 @@ void BaseDiag::löschePunkt( int wNum, double hI )
     LeaveCriticalSection( lock );
 }
 
-void BaseDiag::löschePunkt( int wNum, int pNum )
+void BaseDiag::removePunkt( int wNum, int pNum )
 {
     EnterCriticalSection( lock );
     if( !daten )
@@ -1061,7 +1061,7 @@ void BaseDiag::löschePunkt( int wNum, int pNum )
     if( daten->werte->z( wNum )->punkte->hat( pNum ) )
     {
         delete daten->werte->z( wNum )->punkte->get( pNum );
-        daten->werte->z( wNum )->punkte->lösche( pNum );
+        daten->werte->z( wNum )->punkte->remove( pNum );
         changed = 1;
     }
     LeaveCriticalSection( lock );
@@ -1074,7 +1074,7 @@ void BaseDiag::removeWert( int wNum ) // entfernt einen Wert
         daten = new DiagDaten();
     if( !daten->werte )
         daten->werte = new RCArray< DiagWert >();
-    daten->werte->lösche( wNum );
+    daten->werte->remove( wNum );
     LeaveCriticalSection( lock );
     changed = 1;
 }
@@ -1092,7 +1092,7 @@ void BaseDiag::removeWert( char *name )
         DiagWert *tmp = daten->werte->z( i );
         if( tmp && tmp->name && tmp->name->istGleich( name ) )
         {
-            daten->werte->lösche( i );
+            daten->werte->remove( i );
             LeaveCriticalSection( lock );
             changed = 1;
             return;
@@ -1130,10 +1130,10 @@ void BaseDiag::setDatenStyle( int style, bool addRemove )
     if( addRemove )
         addDatenStyle( style );
     else
-        löscheDatenStyle( style );
+        removeDatenStyle( style );
 }
 
-void BaseDiag::löscheDatenStyle( int style )
+void BaseDiag::removeDatenStyle( int style )
 {
     if( !daten )
         daten = new DiagDaten();
@@ -1175,10 +1175,10 @@ void BaseDiag::setWertStyle( int wNum, int style, bool addRemove )
     if( addRemove )
         addWertStyle( wNum, style );
     else
-        löscheWertStyle( wNum, style );
+        removeWertStyle( wNum, style );
 }
 
-void BaseDiag::löscheWertStyle( int wNum, int style )
+void BaseDiag::removeWertStyle( int wNum, int style )
 {
     if( wNum < 0 )
         return;
@@ -1342,7 +1342,7 @@ void LDiag::setSchriftZ( Schrift *schrift ) // Setzt die Schrift
     unlockZeichnung();
 }
 
-void LDiag::setSchriftGröße( int gr )
+void LDiag::setSchriftSize( int gr )
 {
     lockZeichnung();
     if( schriftGr != gr )
@@ -1416,8 +1416,8 @@ void LDiag::setDatenHintergrundBild( Bild *b )
     lockZeichnung();
     if( !dBgB )
         dBgB = new Bild();
-    dBgB->neuBild( b->getBreite(), b->getHöhe(), 0 );
-    dBgB->drawBild( 0, 0, b->getBreite(), b->getHöhe(), *b );
+    dBgB->neuBild( b->getBreite(), b->getHeight(), 0 );
+    dBgB->drawBild( 0, 0, b->getBreite(), b->getHeight(), *b );
     unlockZeichnung();
     b->release();
     rend = 1;
@@ -1439,7 +1439,7 @@ void LDiag::setDatenAlphaFeld( AlphaFeld *af )
     if( !dAf )
         dAf = new AlphaFeld();
     dAf->setFarbe( af->getFarbe() );
-    dAf->setStärke( af->getStärke() );
+    dAf->setStrength( af->getStrength() );
     unlockZeichnung();
     af->release();
     rend = 1;
@@ -1455,14 +1455,14 @@ void LDiag::setDatenAlphaFeldFarbe( int f )
     rend = 1;
 }
 
-void LDiag::setDatenAlphaFeldStärke( int st )
+void LDiag::setDatenAlphaFeldStrength( int st )
 {
     lockZeichnung();
     if( !dAf )
         dAf = new AlphaFeld();
-    if( dAf->getStärke() != st )
+    if( dAf->getStrength() != st )
         rend = 1;
-    dAf->setStärke( st );
+    dAf->setStrength( st );
     unlockZeichnung();
 }
 
@@ -1477,7 +1477,7 @@ void LDiag::doMausEreignis( MausEreignis &me )
             if( toolTip )
                 toolTip->setMausIn( 0 );
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -1485,13 +1485,13 @@ void LDiag::doMausEreignis( MausEreignis &me )
             return;
         }
     }
-    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Verlässt )
+    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves )
     {
         if( toolTip )
             toolTip->setMausIn( 0 );
         return;
     }
-    if( !mausIn && me.id != ME_Verlässt )
+    if( !mausIn && me.id != ME_Leaves )
     {
         if( toolTip )
             toolTip->setMausIn( 1 );
@@ -1509,7 +1509,7 @@ void LDiag::doMausEreignis( MausEreignis &me )
     {
         if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
         {
-            if( me.id != ME_Betritt && me.id != ME_Verlässt )
+            if( me.id != ME_Betritt && me.id != ME_Leaves )
             {
                 lockZeichnung();
                 int rbr = 0;
@@ -1540,20 +1540,20 @@ void LDiag::render( Bild &zRObj )
 {
     if( !hatDatenStyle( DiagDaten::Style::Sichtbar ) )
         return;
-    __super::render( zRObj );
-    if( !zRObj.setDrawOptions( innenPosition, innenGröße ) )
+	ZeichnungHintergrund::render( zRObj );
+    if( !zRObj.setDrawOptions( innenPosition, innenSize ) )
         return;
     lockZeichnung();
     int dgy = 0;
-    int dgbr = innenGröße.x;
-    int dghö = innenGröße.y;
+    int dgbr = innenSize.x;
+    int dghi = innenSize.y;
     int vIAnz = 0;
     int hIAnz = 0;
     if( daten )
     { // Auto werte berechnen
         vIAnz = daten->vIntervallWerte ? daten->vIntervallWerte->getEintragAnzahl() : 0;
         hIAnz = daten->hIntervallWerte ? daten->hIntervallWerte->getEintragAnzahl() : 0;
-        if( daten->vIntervallWerte && hatDatenStyle( DiagDaten::Style::AutoIntervallHöhe ) )
+        if( daten->vIntervallWerte && hatDatenStyle( DiagDaten::Style::AutoIntervallHeight ) )
         {
             double maxW = 0;
             for( int i = 0; i < vIAnz; ++i )
@@ -1562,12 +1562,12 @@ void LDiag::render( Bild &zRObj )
                     maxW = daten->vIntervallWerte->get( i );
             }
             if( vertikalScrollBar && hatStyle( Style::VScroll ) )
-                daten->vIntervallHöhe = maxW ? ( vertikalScrollBar->getScroll() / maxW ) : 0;
+                daten->vIntervallHeight = maxW ? ( vertikalScrollBar->getScroll() / maxW ) : 0;
             else
-                daten->vIntervallHöhe = maxW ? ( vIntervallRB->getBreite() / maxW ) : 0;
+                daten->vIntervallHeight = maxW ? ( vIntervallRB->getBreite() / maxW ) : 0;
         }
-        if( hatDatenStyle( DiagDaten::Style::AutoRasterHöhe ) )
-            daten->rasterHöhe = daten->vIntervallHöhe;
+        if( hatDatenStyle( DiagDaten::Style::AutoRasterHeight ) )
+            daten->rasterHeight = daten->vIntervallHeight;
         if( daten->hIntervallWerte && hatDatenStyle( DiagDaten::Style::AutoIntervallBreite ) )
         {
             double maxW = 0;
@@ -1586,17 +1586,17 @@ void LDiag::render( Bild &zRObj )
     }
     if( hatDatenStyle( DiagDaten::Style::VIntervall ) && schrift && schriftGr && daten )
     { // Rendern des vertikalen Intervalls
-        int vIRBbr = innenGröße.y;
+        int vIRBbr = innenSize.y;
         if( hatDatenStyle( DiagDaten::Style::HIntervall ) && daten->hIntervallFarbe )
             vIRBbr -= schriftGr + 2;
         if( vIRBbr > 0 )
         {
-            if( vIntervallRB->getBreite() != vIRBbr || vIntervallRB->getHöhe() != schriftGr + 2 )
+            if( vIntervallRB->getBreite() != vIRBbr || vIntervallRB->getHeight() != schriftGr + 2 )
                 vIntervallRB->neuBild( vIRBbr, schriftGr + 2, 0 );
             else
-                vIntervallRB->füllRegion( 0, 0, vIRBbr, schriftGr + 2, 0 );
+                vIntervallRB->fillRegion( 0, 0, vIRBbr, schriftGr + 2, 0 );
             schrift->lock();
-            schrift->setSchriftGröße( schriftGr );
+            schrift->setSchriftSize( schriftGr );
             if( daten->vIntervallWerte )
             {
                 int *rf = new int[ vIAnz ];
@@ -1634,7 +1634,7 @@ void LDiag::render( Bild &zRObj )
                         txt = daten->vIntervallTexte->z( rf[ i ] )->getText();
                     else if( hatDatenStyleNicht( DiagDaten::Style::VIntervallTexte ) || !daten->vIntervallWerte )
                         txt = daten->vIntervallWerte->get( rf[ i ] );
-                    xPos = (int)( daten->vIntervallWerte->get( rf[ i ] ) * daten->vIntervallHöhe );
+                    xPos = (int)( daten->vIntervallWerte->get( rf[ i ] ) * daten->vIntervallHeight );
                     xPos = ( vertikalScrollBar && hatStyle( Style::VScroll ) ? vertikalScrollBar->getScroll() : vIntervallRB->getBreite() ) - xPos;
                     if( vertikalScrollBar && hatStyle( Style::VScroll ) )
                         xPos -= vertikalScrollBar->getScroll();
@@ -1654,31 +1654,31 @@ void LDiag::render( Bild &zRObj )
             {
                 int vinbr = schrift->getTextBreite( daten->vIntervallName );
                 int vinx = vIntervallRB->getBreite() / 2 - vinbr / 2;
-                vIntervallRB->füllRegion( vinx - 5, 1, vinbr + 10, schriftGr, 0 );
+                vIntervallRB->fillRegion( vinx - 5, 1, vinbr + 10, schriftGr, 0 );
                 schrift->setDrawPosition( vinx, 1 );
                 schrift->renderText( daten->vIntervallName, *vIntervallRB, daten->vIntervallFarbe );
             }
             schrift->unlock();
             if( hatDatenStyle( DiagDaten::Style::HIntervall ) && daten->hIntervallFarbe )
-                zRObj.alphaBild90( innenGröße.x - vIntervallRB->getHöhe(), schriftGr + 2, vIntervallRB->getBreite(), vIntervallRB->getHöhe(), *vIntervallRB );
+                zRObj.alphaBild90( innenSize.x - vIntervallRB->getHeight(), schriftGr + 2, vIntervallRB->getBreite(), vIntervallRB->getHeight(), *vIntervallRB );
             else
-                zRObj.alphaBild90( innenGröße.x - vIntervallRB->getHöhe(), 0, vIntervallRB->getBreite(), vIntervallRB->getHöhe(), *vIntervallRB );
-            dgbr -= vIntervallRB->getHöhe();
+                zRObj.alphaBild90( innenSize.x - vIntervallRB->getHeight(), 0, vIntervallRB->getBreite(), vIntervallRB->getHeight(), *vIntervallRB );
+            dgbr -= vIntervallRB->getHeight();
         }
     }
     if( hatDatenStyle( DiagDaten::Style::HIntervall ) && schrift && schriftGr && daten )
     { // Rendern des horizontalen Intervalls
-        int hIRBbr = innenGröße.x;
+        int hIRBbr = innenSize.x;
         if( hatDatenStyle( DiagDaten::Style::VIntervall ) && daten->vIntervallFarbe )
             hIRBbr -= schriftGr + 2;
         if( hIRBbr > 0 )
         {
-            if( hIntervallRB->getBreite() != hIRBbr || hIntervallRB->getHöhe() != schriftGr + 2 )
+            if( hIntervallRB->getBreite() != hIRBbr || hIntervallRB->getHeight() != schriftGr + 2 )
                 hIntervallRB->neuBild( hIRBbr, schriftGr + 2, 0 );
             else
-                hIntervallRB->füllRegion( 0, 0, hIRBbr, schriftGr + 2, 0 );
+                hIntervallRB->fillRegion( 0, 0, hIRBbr, schriftGr + 2, 0 );
             schrift->lock();
-            schrift->setSchriftGröße( schriftGr );
+            schrift->setSchriftSize( schriftGr );
             if( daten->hIntervallWerte )
             {
                 int *rf = new int[ hIAnz ];
@@ -1735,17 +1735,17 @@ void LDiag::render( Bild &zRObj )
             {
                 int hinbr = schrift->getTextBreite( daten->hIntervallName );
                 int hinx = hIntervallRB->getBreite() / 2 - hinbr / 2;
-                hIntervallRB->füllRegion( hinx - 5, 1, hinbr + 10, schriftGr, 0 );
+                hIntervallRB->fillRegion( hinx - 5, 1, hinbr + 10, schriftGr, 0 );
                 schrift->setDrawPosition( hinx, 1 );
                 schrift->renderText( daten->hIntervallName, *hIntervallRB, daten->hIntervallFarbe );
             }
             schrift->unlock();
-            zRObj.alphaBild( 0, 0, hIntervallRB->getBreite(), hIntervallRB->getHöhe(), *hIntervallRB );
-            dghö -= hIntervallRB->getHöhe();
-            dgy += hIntervallRB->getHöhe();
+            zRObj.alphaBild( 0, 0, hIntervallRB->getBreite(), hIntervallRB->getHeight(), *hIntervallRB );
+            dghi -= hIntervallRB->getHeight();
+            dgy += hIntervallRB->getHeight();
         }
     }
-    if( !zRObj.setDrawOptions( 0, dgy, dgbr, dghö ) )
+    if( !zRObj.setDrawOptions( 0, dgy, dgbr, dghi ) )
     {
         zRObj.releaseDrawOptions();
         unlockZeichnung();
@@ -1755,11 +1755,11 @@ void LDiag::render( Bild &zRObj )
     int dgrbr = 0;
     if( hatStyle( Style::DatenRahmen ) && dRam )
     {
-        dRam->setGröße( dgbr, dghö );
+        dRam->setSize( dgbr, dghi );
         dRam->render( zRObj );
         dgrbr = dRam->getRBreite();
     }
-    if( !zRObj.setDrawOptions( dgrbr, dgrbr, dgbr - dgrbr * 2, dghö - dgrbr * 2 ) )
+    if( !zRObj.setDrawOptions( dgrbr, dgrbr, dgbr - dgrbr * 2, dghi - dgrbr * 2 ) )
     {
         zRObj.releaseDrawOptions();
         zRObj.releaseDrawOptions();
@@ -1769,41 +1769,41 @@ void LDiag::render( Bild &zRObj )
     if( hatStyle( Style::DatenHintergrund ) )
     {
         if( hatStyle( Style::DatenHAlpha ) )
-            zRObj.alphaRegion( 0, 0, dgbr - dgrbr * 2, dghö - dgrbr * 2, dBgF );
+            zRObj.alphaRegion( 0, 0, dgbr - dgrbr * 2, dghi - dgrbr * 2, dBgF );
         else
-            zRObj.füllRegion( 0, 0, dgbr - dgrbr * 2, dghö - dgrbr * 2, dBgF );
+            zRObj.fillRegion( 0, 0, dgbr - dgrbr * 2, dghi - dgrbr * 2, dBgF );
         if( hatStyle( Style::DatenHBild ) && dBgB )
         {
             if( hatStyle( Style::DatenHAlpha ) )
-                zRObj.alphaBild( 0, 0, dgbr - dgrbr * 2, dghö - dgrbr * 2, *dBgB );
+                zRObj.alphaBild( 0, 0, dgbr - dgrbr * 2, dghi - dgrbr * 2, *dBgB );
             else
-                zRObj.drawBild( 0, 0, dgbr - dgrbr * 2, dghö - dgrbr * 2, *dBgB );
+                zRObj.drawBild( 0, 0, dgbr - dgrbr * 2, dghi - dgrbr * 2, *dBgB );
         }
     }
     if( hatStyle( Style::DatenBuffered ) && dAf )
     {
-        dAf->setGröße( dgbr - dgrbr * 2, dghö - dgrbr * 2 );
+        dAf->setSize( dgbr - dgrbr * 2, dghi - dgrbr * 2 );
         dAf->render( zRObj );
     }
-    if( hatDatenStyle( DiagDaten::Style::Raster ) && daten && daten->rasterDicke && daten->rasterBreite && daten->rasterHöhe )
+    if( hatDatenStyle( DiagDaten::Style::Raster ) && daten && daten->rasterDicke && daten->rasterBreite && daten->rasterHeight )
     { // Raster
         int maxBr = dgbr;
         if( horizontalScrollBar && hatStyle( Style::HScroll ) )
             maxBr = horizontalScrollBar->getScroll();
-        int maxHö = dghö;
+        int maxHi = dghi;
         if( vertikalScrollBar && hatStyle( Style::VScroll ) )
-            maxHö = vertikalScrollBar->getScroll();
+            maxHi = vertikalScrollBar->getScroll();
         for( double x = horizontalScrollBar && hatStyle( Style::HScroll ) ? -horizontalScrollBar->getScroll() : 0; x < maxBr; x += daten->rasterBreite )
         {
             for( int i = 0; i < daten->rasterDicke; ++i )
             {
                 if( hatDatenStyle( DiagDaten::Style::RasterAlpha ) )
-                    zRObj.drawLinieVAlpha( (int)( x + i ), dgy + dgrbr, dghö - dgrbr * 2, daten->rasterFarbe );
+                    zRObj.drawLinieVAlpha( (int)( x + i ), dgy + dgrbr, dghi - dgrbr * 2, daten->rasterFarbe );
                 else
-                    zRObj.drawLinieV( (int)( x + i ), dgy + dgrbr, dghö - dgrbr * 2, daten->rasterFarbe );
+                    zRObj.drawLinieV( (int)( x + i ), dgy + dgrbr, dghi - dgrbr * 2, daten->rasterFarbe );
             }
         }
-        for( double y = maxHö; y > ( vertikalScrollBar && hatStyle( Style::VScroll ) ? -vertikalScrollBar->getScroll() : 0 ); y -= daten->rasterHöhe )
+        for( double y = maxHi; y > ( vertikalScrollBar && hatStyle( Style::VScroll ) ? -vertikalScrollBar->getScroll() : 0 ); y -= daten->rasterHeight )
         {
             for( int i = 0; i < daten->rasterDicke; ++i )
             {
@@ -1814,7 +1814,7 @@ void LDiag::render( Bild &zRObj )
             }
         }
     }
-    if( daten && daten->werte && daten->werte->getEintragAnzahl() && daten->hIntervallBreite && daten->vIntervallHöhe )
+    if( daten && daten->werte && daten->werte->getEintragAnzahl() && daten->hIntervallBreite && daten->vIntervallHeight )
     { // Werte
         int wAnz = daten->werte->getEintragAnzahl();
         for( int i = 0; i < wAnz; ++i )
@@ -1849,7 +1849,7 @@ void LDiag::render( Bild &zRObj )
                 int rpx = horizontalScrollBar && hatStyle( Style::HScroll ) ? -horizontalScrollBar->getScroll() : 0;
                 int rpy = vertikalScrollBar && hatStyle( Style::VScroll ) ? -vertikalScrollBar->getScroll() : 0;
                 rpy += dgy;
-                int dgmhö = vertikalScrollBar && hatStyle( Style::VScroll ) ? dgy + vertikalScrollBar->getScrollData()->max + dgrbr : dgy + dghö - dgrbr;
+                int dgmhi = vertikalScrollBar && hatStyle( Style::VScroll ) ? dgy + vertikalScrollBar->getScrollData()->max + dgrbr : dgy + dghi - dgrbr;
                 if( hatWertStyle( i, DiagWert::Style::Hintergrund ) )
                 {
                     DiagPunkt *vorher = 0;
@@ -1860,15 +1860,15 @@ void LDiag::render( Bild &zRObj )
                         if( jetzt && vorher )
                         {
                             int ax = (int)( rpx + vorher->hIntervall * daten->hIntervallBreite );
-                            int ay = (int)( dgmhö - vorher->vIntervall * daten->vIntervallHöhe );
+                            int ay = (int)( dgmhi - vorher->vIntervall * daten->vIntervallHeight );
                             int bx = (int)( rpx + jetzt->hIntervall * daten->hIntervallBreite );
-                            int by = (int)( dgmhö - jetzt->vIntervall * daten->vIntervallHöhe );
+                            int by = (int)( dgmhi - jetzt->vIntervall * daten->vIntervallHeight );
                             if( ax >= bx )
                             {
                                 vorher = jetzt;
                                 continue;
                             }
-                            if( !( ax > dgbr - dgrbr || bx < 0 || ( ay > dgy + dghö - dgrbr && by > dgy + dghö - dgrbr ) ) )
+                            if( !( ax > dgbr - dgrbr || bx < 0 || ( ay > dgy + dghi - dgrbr && by > dgy + dghi - dgrbr ) ) )
                             {
                                 double yf = (double)( by - ay ) / ( bx - ax );
                                 double y = (double)ay;
@@ -1877,12 +1877,12 @@ void LDiag::render( Bild &zRObj )
                                 if( hatWertStyle( i, DiagWert::Style::HAlpha ) )
                                 {
                                     for( int x = ax; x < bx; x++, y += yf )
-                                        zRObj.drawLinieVAlpha( x, (int)( y + 0.5 ), dgmhö - (int)( y + 0.5 ), wert->hintergrund );
+                                        zRObj.drawLinieVAlpha( x, (int)( y + 0.5 ), dgmhi - (int)( y + 0.5 ), wert->hintergrund );
                                 }
                                 else
                                 {
                                     for( int x = ax; x < bx; x++, y += yf )
-                                        zRObj.drawLinieV( x, (int)( y + 0.5 ), dgmhö - (int)( y + 0.5 ), wert->hintergrund );
+                                        zRObj.drawLinieV( x, (int)( y + 0.5 ), dgmhi - (int)( y + 0.5 ), wert->hintergrund );
                                 }
                                 if( hatWertStyle( i, DiagWert::Style::Alpha ) )
                                     zRObj.drawLinieAlpha( Punkt( ax, ay ), Punkt( bx, by ), wert->farbe );
@@ -1903,11 +1903,11 @@ void LDiag::render( Bild &zRObj )
                         if( jetzt && vorher )
                         {
                             if( hatWertStyle( i, DiagWert::Style::Alpha ) )
-                                zRObj.drawLinieAlpha( Punkt( (int)( rpx + vorher->hIntervall * daten->hIntervallBreite ), (int)( dgmhö - vorher->vIntervall * daten->vIntervallHöhe ) ),
-                                                      Punkt( (int)( rpx + jetzt->hIntervall * daten->hIntervallBreite ), (int)( dgmhö - jetzt->vIntervall * daten->vIntervallHöhe ) ), wert->farbe );
+                                zRObj.drawLinieAlpha( Punkt( (int)( rpx + vorher->hIntervall * daten->hIntervallBreite ), (int)( dgmhi - vorher->vIntervall * daten->vIntervallHeight ) ),
+                                                      Punkt( (int)( rpx + jetzt->hIntervall * daten->hIntervallBreite ), (int)( dgmhi - jetzt->vIntervall * daten->vIntervallHeight ) ), wert->farbe );
                             else
-                                zRObj.drawLinie( Punkt( (int)( rpx + vorher->hIntervall * daten->hIntervallBreite ), (int)( dgmhö - vorher->vIntervall * daten->vIntervallHöhe ) ),
-                                                 Punkt( (int)( rpx + jetzt->hIntervall * daten->hIntervallBreite ), (int)( dgmhö - jetzt->vIntervall * daten->vIntervallHöhe ) ), wert->farbe );
+                                zRObj.drawLinie( Punkt( (int)( rpx + vorher->hIntervall * daten->hIntervallBreite ), (int)( dgmhi - vorher->vIntervall * daten->vIntervallHeight ) ),
+                                                 Punkt( (int)( rpx + jetzt->hIntervall * daten->hIntervallBreite ), (int)( dgmhi - jetzt->vIntervall * daten->vIntervallHeight ) ), wert->farbe );
                         }
                         vorher = jetzt;
                     }
@@ -1922,7 +1922,7 @@ void LDiag::render( Bild &zRObj )
         int rx = 5;
         int ry = 5;
         schrift->lock();
-        schrift->setSchriftGröße( schriftGr );
+        schrift->setSchriftSize( schriftGr );
         for( int i = 0; i < wAnz; ++i )
         {
             DiagWert *w = daten->werte->z( i );
@@ -2004,9 +2004,9 @@ int LDiag::getDatenAlphaFeldFarbe() const
     return dAf ? dAf->getFarbe() : 0;
 }
 
-int LDiag::getDatenAlphaFeldStärke() const
+int LDiag::getDatenAlphaFeldStrength() const
 {
-    return dAf ? dAf->getStärke() : 0;
+    return dAf ? dAf->getStrength() : 0;
 }
 
 // Reference Counting

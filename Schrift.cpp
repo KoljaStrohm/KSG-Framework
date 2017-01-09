@@ -3,7 +3,9 @@
 #include "Text.h"
 #include "Scroll.h"
 #include "Globals.h"
+#ifdef WIN32
 #include <Windows.h>
+#endif
 #include "FrameworkMath.h"
 
 using namespace Framework;
@@ -11,10 +13,10 @@ using namespace Framework;
 // Inhalt der Buchstabe Klasse aus Schrift.h
 // Konstruktor 
 Buchstabe::Buchstabe()
-    : größe( 0, 0 ),
+    : size( 0, 0 ),
     pos( 0, 0 ),
     alpha( 0 ),
-    schriftGröße( 0 ),
+    schriftSize( 0 ),
     drawSg( 0 ),
     ref( 1 )
 {}
@@ -27,23 +29,23 @@ Buchstabe::~Buchstabe()
 }
 
 // nicht constant 
-void Buchstabe::NeuBuchstabe( Punkt &größe ) // Initialisierung
+void Buchstabe::NeuBuchstabe( Punkt &size ) // Initialisierung
 {
-    this->größe = größe;
+    this->size = size;
     if( alpha )
         delete[]alpha;
-    alpha = new unsigned char[ größe.x * größe.y ];
-    ZeroMemory( alpha, größe.x * größe.y );
+    alpha = new unsigned char[ size.x * size.y ];
+    ZeroMemory( alpha, size.x * size.y );
 }
 
 void Buchstabe::setPixel( Punkt &pos, unsigned char alpha ) // setzt den alphawert des Pixels
 {
-    this->alpha[ pos.x + pos.y * größe.x ] = alpha;
+    this->alpha[ pos.x + pos.y * size.x ] = alpha;
 }
 
 void Buchstabe::setPixel( int x, int y, unsigned char alpha )
 {
-    this->alpha[ x + y * größe.x ] = alpha;
+    this->alpha[ x + y * size.x ] = alpha;
 }
 
 void Buchstabe::setPixel( int i, unsigned char alpha )
@@ -62,35 +64,35 @@ void Buchstabe::setPosition( int x, int y )
     pos.y = y;
 }
 
-void Buchstabe::setSchriftGröße( int sg ) // setzt die Schriftgröße des Buchstaben
+void Buchstabe::setSchriftSize( int sg ) // setzt die Schriftgröße des Buchstaben
 {
-    schriftGröße = sg;
+    schriftSize = sg;
 }
 
-void Buchstabe::setDrawSchriftGröße( int dsg ) // setzt die Zeichengröße des Buchstaben
+void Buchstabe::setDrawSchriftSize( int dsg ) // setzt die Zeichengröße des Buchstaben
 {
     drawSg = dsg;
 }
 
 // constant
-const Punkt &Buchstabe::getGröße() const // gibt die Buchstabenbildgröße zurück
+const Punkt &Buchstabe::getSize() const // gibt die Buchstabenbildgröße zurück
 {
-    return größe;
+    return size;
 }
 
 int Buchstabe::getBreite() const // Buchstabenbreite
 {
-    return (int)( ( (double)größe.x / (double)schriftGröße ) * (double)drawSg + 0.5 );
+    return (int)( ( (double)size.x / (double)schriftSize ) * (double)drawSg + 0.5 );
 }
 
-int Buchstabe::getHöhe() const // Buchstabenhöhe
+int Buchstabe::getHeight() const // Buchstabenhöhe
 {
-    return (int)( ( (double)größe.y / (double)schriftGröße ) *(double)drawSg + 0.5 );
+    return (int)( ( (double)size.y / (double)schriftSize ) *(double)drawSg + 0.5 );
 }
 
-int Buchstabe::getNormHöhe() const // Buchstabenhöhe
+int Buchstabe::getNormHeight() const // Buchstabenhöhe
 {
-    return größe.y;
+    return size.y;
 }
 
 unsigned char *Buchstabe::getBuff() const // gibt den Alphabuffer zurück
@@ -107,10 +109,10 @@ void Buchstabe::render( Bild &zRObj, int f ) const // Zeichnet nach zRObj
         const Punkt &zRObjOff = zRObj.getDrawOff();
         int xp = pos.x + zRObjOff.x, yp = pos.y + zRObjOff.y;
         int xs = xp < zRObjPos.x ? ( zRObjPos.x - xp ) : 0, ys = yp < zRObjPos.y ? ( zRObjPos.y - yp ) : 0;
-        int b = größe.x, h = größe.y;
-        unsigned char a2 = ( 255 - ( f >> 24 ) );
+        int b = size.x, h = size.y;
+        unsigned char a2 = (unsigned char)( 255 - ( f >> 24 ) );
         f &= 0x00FFFFFF;
-        if( schriftGröße == drawSg )
+        if( schriftSize == drawSg )
         {
             if( xp >= zRObjGr.x || yp >= zRObjGr.y || xp + b < zRObjPos.x || yp + h < zRObjPos.y )
                 return;
@@ -118,10 +120,10 @@ void Buchstabe::render( Bild &zRObj, int f ) const // Zeichnet nach zRObj
             h = ( yp + h ) > zRObjGr.y ? ( zRObjGr.y - yp ) : h;
             if( !a2 )
             {
-                int xx, ygr = ( ys - 1 ) * größe.x, ygr2 = ( yp + ys - 1 ) * zRObj.getBreite();
+                int xx, ygr = ( ys - 1 ) * size.x, ygr2 = ( yp + ys - 1 ) * zRObj.getBreite();
                 for( int yy = ys; yy < h; ++yy )
                 {
-                    ygr += größe.x;
+                    ygr += size.x;
                     ygr2 += zRObj.getBreite();
                     for( xx = xs; xx < b; ++xx )
                         zRObj.alphaPixel( xp + xx + ygr2, f | ( alpha[ xx + ygr ] << 24 ) );
@@ -130,10 +132,10 @@ void Buchstabe::render( Bild &zRObj, int f ) const // Zeichnet nach zRObj
             else
             {
                 int a;
-                int xx, ygr = ( ys - 1 ) * größe.x, ygr2 = ( yp + ys - 1 ) * zRObj.getBreite();
+                int xx, ygr = ( ys - 1 ) * size.x, ygr2 = ( yp + ys - 1 ) * zRObj.getBreite();
                 for( int yy = ys; yy < h; ++yy )
                 {
-                    ygr += größe.x;
+                    ygr += size.x;
                     ygr2 += zRObj.getBreite();
                     for( xx = xs; xx < b; ++xx )
                     {
@@ -146,10 +148,10 @@ void Buchstabe::render( Bild &zRObj, int f ) const // Zeichnet nach zRObj
         }
         else
         {
-            double xoff = (double)schriftGröße / (double)drawSg,
-                yoff = (double)schriftGröße / (double)drawSg;
+            double xoff = (double)schriftSize / (double)drawSg,
+                yoff = (double)schriftSize / (double)drawSg;
             double x = xs * xoff, y = ys * yoff;
-            int maxX = getBreite(), maxY = getHöhe();
+            int maxX = getBreite(), maxY = getHeight();
             maxX = ( xp + maxX ) >= zRObjGr.x ? ( zRObjGr.x - xp ) : maxX;
             maxY = ( yp + maxY ) >= zRObjGr.y ? ( zRObjGr.y - yp ) : maxY;
             if( !a2 )
@@ -208,10 +210,10 @@ Buchstabe *Buchstabe::release()
 // Konstruktor 
 Alphabet::Alphabet()
     : zeichen( new Buchstabe*[ 256 ] ),
-    schriftGröße( 12 ),
-    drawSchriftGröße( 12 ),
+    schriftSize( 12 ),
+    drawSchriftSize( 12 ),
     pos( 0, 0 ),
-    zeilenHöhe( 0 ),
+    zeilenHeight( 0 ),
     zeilenAbstand( 5 ),
     ref( 1 )
 {
@@ -240,7 +242,7 @@ void Alphabet::NeuAlphabet() // Initialisierung
     }
     for( int i = 0; i < 256; ++i )
         zeichen[ i ] = 0;
-    zeilenHöhe = 0;
+    zeilenHeight = 0;
 }
 
 void Alphabet::setBuchstabe( unsigned char i, Buchstabe *buchstabe ) // setzt einen Buchstaben
@@ -250,34 +252,34 @@ void Alphabet::setBuchstabe( unsigned char i, Buchstabe *buchstabe ) // setzt ei
     zeichen[ i ] = buchstabe;
     if( zeichen[ i ] )
     {
-        zeichen[ i ]->setSchriftGröße( schriftGröße );
-        zeichen[ i ]->setDrawSchriftGröße( drawSchriftGröße );
+        zeichen[ i ]->setSchriftSize( schriftSize );
+        zeichen[ i ]->setDrawSchriftSize( drawSchriftSize );
     }
-    zeilenHöhe = 0;
+    zeilenHeight = 0;
     for( int i = 0; i < 256; ++i )
     {
         if( zeichen[ i ] != 0 )
-            zeilenHöhe = maxInt( zeichen[ i ]->getHöhe(), zeilenHöhe );
+            zeilenHeight = maxInt( zeichen[ i ]->getHeight(), zeilenHeight );
     }
 }
 
-void Alphabet::setSchriftgröße( int gr ) // setzt die Schriftgröße
+void Alphabet::setSchriftSize( int gr ) // setzt die Schriftgröße
 {
-    schriftGröße = gr;
+    schriftSize = gr;
     for( int i = 0; i < 256; ++i )
     {
         if( zeichen[ i ] )
-            zeichen[ i ]->setSchriftGröße( gr );
+            zeichen[ i ]->setSchriftSize( gr );
     }
 }
 
-void Alphabet::setDrawSchriftgröße( int gr ) // setzt die Zeichengröße
+void Alphabet::setDrawSchriftSize( int gr ) // setzt die Zeichengröße
 {
-    drawSchriftGröße = gr;
+    drawSchriftSize = gr;
     for( int i = 0; i < 256; ++i )
     {
         if( zeichen[ i ] )
-            zeichen[ i ]->setDrawSchriftGröße( gr );
+            zeichen[ i ]->setDrawSchriftSize( gr );
     }
 }
 
@@ -315,14 +317,14 @@ bool Alphabet::hatBuchstabe( unsigned char b ) const
     return zeichen[ b ] != 0;
 }
 
-int Alphabet::getSchriftgröße() const // gibt die Schriftgröße zurück
+int Alphabet::getSchriftSize() const // gibt die Schriftgröße zurück
 {
-    return schriftGröße;
+    return schriftSize;
 }
 
-int Alphabet::getDrawSchriftGröße() const // gibt die Zeichengröße zurück
+int Alphabet::getDrawSchriftSize() const // gibt die Zeichengröße zurück
 {
-    return drawSchriftGröße;
+    return drawSchriftSize;
 }
 
 int Alphabet::getZeilenAbstand() const // gibt den Zeilenabstand zurück
@@ -330,9 +332,9 @@ int Alphabet::getZeilenAbstand() const // gibt den Zeilenabstand zurück
     return zeilenAbstand;
 }
 
-int Alphabet::getZeilenHöhe() const // gibt die Höhe des höchsten Zeichens zurück
+int Alphabet::getZeilenHeight() const // gibt die Höhe des höchsten Zeichens zurück
 {
-    return (int)( (double)zeilenHöhe / schriftGröße * drawSchriftGröße + 0.5 );
+    return (int)( (double)zeilenHeight / schriftSize * drawSchriftSize + 0.5 );
 }
 
 const Punkt &Alphabet::getPosition() const // gibt die DrawPosition zurück
@@ -343,11 +345,11 @@ const Punkt &Alphabet::getPosition() const // gibt die DrawPosition zurück
 int Alphabet::getTextBreite( Text *zTxt ) const // gibt die Breite des Textes zurück
 {
     int ret = 0;
-    int län = zTxt->getLänge();
+    int len = zTxt->getLength();
     char *buff = zTxt->getText();
     unsigned char c = 0;
     int tmp = 0;
-    for( int i = 0; i < län; ++i )
+    for( int i = 0; i < len; ++i )
     {
         c = (unsigned char)buff[ i ];
         if( buff[ i ] == '\n' )
@@ -362,9 +364,9 @@ int Alphabet::getTextBreite( Text *zTxt ) const // gibt die Breite des Textes zu
             continue;
         }
         else if( buff[ i ] == '\t' )
-            tmp += drawSchriftGröße;
+            tmp += drawSchriftSize;
         else if( buff[ i ] == ' ' )
-            tmp += drawSchriftGröße / 2;
+            tmp += drawSchriftSize / 2;
         else if( zeichen[ c ] )
             tmp += zeichen[ c ]->getBreite();
     }
@@ -373,22 +375,22 @@ int Alphabet::getTextBreite( Text *zTxt ) const // gibt die Breite des Textes zu
     return ret;
 }
 
-int Alphabet::getTextHöhe( Text *zTxt ) const // gibt die Höhe des Textes zurück
+int Alphabet::getTextHeight( Text *zTxt ) const // gibt die Höhe des Textes zurück
 {
-    int hö = getZeilenHöhe();
-    return hö + ( ( hö + zeilenAbstand ) * zTxt->anzahlVon( '\n' ) );
+    int hi = getZeilenHeight();
+    return hi + ( ( hi + zeilenAbstand ) * zTxt->anzahlVon( '\n' ) );
 }
 
 int Alphabet::textPos( Text *zText, int mausX, int mausY ) const // gibt den Buchstaben zurück, auf den die Maus zeigt
 {
     char *buffer = zText->getText();
-    int län = zText->getLänge();
+    int len = zText->getLength();
     int tx = 0;
     int ty = 0;
-    int sh = getZeilenHöhe();
+    int sh = getZeilenHeight();
     if( mausX < 0 || mausY < 0 )
         return -1;
-    for( int i = 0; i < län; ++i )
+    for( int i = 0; i < len; ++i )
     {
         if( buffer[ i ] == '\n' )
         {
@@ -398,9 +400,9 @@ int Alphabet::textPos( Text *zText, int mausX, int mausY ) const // gibt den Buc
                 return i;
         }
         if( buffer[ i ] == '\t' )
-            tx += drawSchriftGröße;
+            tx += drawSchriftSize;
         if( buffer[ i ] == ' ' )
-            tx += drawSchriftGröße / 2;
+            tx += drawSchriftSize / 2;
         if( zeichen[ (unsigned char)buffer[ i ] ] )
             tx += zeichen[ (unsigned char)buffer[ i ] ]->getBreite();
         int txpl = 0;
@@ -410,33 +412,32 @@ int Alphabet::textPos( Text *zText, int mausX, int mausY ) const // gibt den Buc
             return i;
     }
     if( mausY < ty + sh + zeilenAbstand )
-        return län;
+        return len;
     return -1;
 }
 
-void Alphabet::textFormatieren( Text *zText, int maxBreite, int schriftGröße ) // fügt zeilenumbrüche ein 
+void Alphabet::textFormatieren( Text *zText, int maxBreite, int schriftSize ) // fügt zeilenumbrüche ein 
 {
-    int sg = drawSchriftGröße;
-    setDrawSchriftgröße( schriftGröße );
-    int zeilenHöhe = getZeilenHöhe() + getZeilenAbstand();
+    int sg = drawSchriftSize;
+    setDrawSchriftSize( schriftSize );
     int lastPos = -1;
-    int län = zText->getLänge();
+    int len = zText->getLength();
     char *txt = zText->getText();
     int x = 0;
     Text result = zText->getText();
-    for( int i = 0; i < län; ++i )
+    for( int i = 0; i < len; ++i )
     {
         char c = txt[ i ];
         if( c == ' ' )
         {
             lastPos = i;
-            x += schriftGröße / 2;
+            x += schriftSize / 2;
             continue;
         }
         if( c == '\t' )
         {
             lastPos = i;
-            x += schriftGröße;
+            x += schriftSize;
             continue;
         }
         if( c == '\n' )
@@ -445,7 +446,7 @@ void Alphabet::textFormatieren( Text *zText, int maxBreite, int schriftGröße ) /
             lastPos = -1;
             continue;
         }
-        if( c == '\r' && län - i >= 11 )
+        if( c == '\r' && len - i >= 11 )
         {
             i += 10;
             continue;
@@ -465,31 +466,31 @@ void Alphabet::textFormatieren( Text *zText, int maxBreite, int schriftGröße ) /
         }
     }
     zText->setText( result );
-    setDrawSchriftgröße( sg );
+    setDrawSchriftSize( sg );
 }
 
 void Alphabet::render( Text *zTxt, Bild &rendezRObj, int f ) const // Zeichnet txt nach rendezRObj
 {
     int zRObjBr = rendezRObj.getBreite();
-    int zRObjHö = rendezRObj.getHöhe();
+    int zRObjHi = rendezRObj.getHeight();
     int xp = pos.x;
     int yp = pos.y;
-    int zh = getZeilenHöhe();
-    if( yp + ( zh + zeilenAbstand ) * zTxt->anzahlVon( '\n' ) + zh < 0 || xp >= zRObjBr || yp >= zRObjHö )
+    int zh = getZeilenHeight();
+    if( yp + ( zh + zeilenAbstand ) * zTxt->anzahlVon( '\n' ) + zh < 0 || xp >= zRObjBr || yp >= zRObjHi )
         return;
     char *text = zTxt->getText();
-    int län = zTxt->getLänge();
-    for( int i = 0; i < län; ++i )
+    int len = zTxt->getLength();
+    for( int i = 0; i < len; ++i )
     {
         unsigned char c = text[ i ];
         if( c == ' ' )
         {
-            xp += drawSchriftGröße / 2;
+            xp += drawSchriftSize / 2;
             continue;
         }
         if( c == '\t' )
         {
-            xp += drawSchriftGröße;
+            xp += drawSchriftSize;
             continue;
         }
         if( c == '\n' )
@@ -498,7 +499,7 @@ void Alphabet::render( Text *zTxt, Bild &rendezRObj, int f ) const // Zeichnet t
             xp = pos.x;
             continue;
         }
-        if( c == '\r' && län - i >= 11 )
+        if( c == '\r' && len - i >= 11 )
         {
             i += 3;
             Text *hex1 = zTxt->getTeilText( i, i + 6 );
@@ -524,37 +525,37 @@ void Alphabet::render( Text *zTxt, Bild &rendezRObj, int f ) const // Zeichnet t
 void Alphabet::render( Text *zTxt, Bild &rendezRObj, int cpos, int cf, int fbeg, int ff, int f ) const
 {
     int zRObjBr = rendezRObj.getBreite();
-    int zRObjHö = rendezRObj.getHöhe();
+    int zRObjHi = rendezRObj.getHeight();
     int xp = pos.x;
     int yp = pos.y;
-    int zh = getZeilenHöhe();
-    if( yp + ( zh + zeilenAbstand ) * zTxt->anzahlVon( '\n' ) + zh < 0 || xp >= zRObjBr || yp >= zRObjHö )
+    int zh = getZeilenHeight();
+    if( yp + ( zh + zeilenAbstand ) * zTxt->anzahlVon( '\n' ) + zh < 0 || xp >= zRObjBr || yp >= zRObjHi )
         return;
     char *text = zTxt->getText();
-    int län = zTxt->getLänge();
-    bool färb = 0;
-    for( int i = 0; i < län; ++i )
+    int len = zTxt->getLength();
+    bool faerb = 0;
+    for( int i = 0; i < len; ++i )
     {
         unsigned char c = text[ i ];
         if( i == fbeg )
-            färb = !färb;
+            faerb = !faerb;
         if( i == cpos )
         {
             rendezRObj.drawLinieVAlpha( xp, yp, zh, cf );
-            färb = !färb;
+            faerb = !faerb;
         }
         if( c == ' ' )
         {
-            if( färb )
-                rendezRObj.alphaRegion( xp, yp, drawSchriftGröße / 2, zh, ff );
-            xp += drawSchriftGröße / 2;
+            if( faerb )
+                rendezRObj.alphaRegion( xp, yp, drawSchriftSize / 2, zh, ff );
+            xp += drawSchriftSize / 2;
             continue;
         }
         if( c == '\t' )
         {
-            if( färb )
-                rendezRObj.alphaRegion( xp, yp, drawSchriftGröße, zh, ff );
-            xp += drawSchriftGröße;
+            if( faerb )
+                rendezRObj.alphaRegion( xp, yp, drawSchriftSize, zh, ff );
+            xp += drawSchriftSize;
             continue;
         }
         if( c == '\n' )
@@ -563,7 +564,7 @@ void Alphabet::render( Text *zTxt, Bild &rendezRObj, int cpos, int cf, int fbeg,
             xp = pos.x;
             continue;
         }
-        if( c == '\r' && län - i >= 11 )
+        if( c == '\r' && len - i >= 11 )
         {
             i += 3;
             Text *hex1 = zTxt->getTeilText( i, i + 6 );
@@ -579,7 +580,7 @@ void Alphabet::render( Text *zTxt, Bild &rendezRObj, int cpos, int cf, int fbeg,
         {
             if( xp >= zRObjBr )
                 continue;
-            if( färb )
+            if( faerb )
             {
                 int br = zeichen[ c ]->getBreite();
                 rendezRObj.alphaRegion( xp, yp, br, zh, ff );
@@ -589,7 +590,7 @@ void Alphabet::render( Text *zTxt, Bild &rendezRObj, int cpos, int cf, int fbeg,
             xp += zeichen[ c ]->getBreite();
         }
     }
-    if( län == cpos )
+    if( len == cpos )
         rendezRObj.drawLinieVAlpha( xp, yp, zh, cf );
 }
 
@@ -628,7 +629,7 @@ bool AlphabetArray::addAlphabet( Alphabet *alphabet ) // Fügt ein Alphabet hinzu
 {
     if( This )
     {
-        if( This->getSchriftgröße() == alphabet->getSchriftgröße() )
+        if( This->getSchriftSize() == alphabet->getSchriftSize() )
         {
             alphabet->release();
             return false;
@@ -648,7 +649,7 @@ bool AlphabetArray::removeAlphabet( int sg ) // entfernt ein Alphabet
 {
     if( This )
     {
-        if( This->getSchriftgröße() == sg )
+        if( This->getSchriftSize() == sg )
             This = This->release();
         return 1;
     }
@@ -664,12 +665,12 @@ bool AlphabetArray::removeAlphabet( int sg ) // entfernt ein Alphabet
     return 0;
 }
 
-void AlphabetArray::setDrawSchriftGröße( int sg ) // Setzt die Draw Schriftgröße aller Alphabete
+void AlphabetArray::setDrawSchriftSize( int sg ) // Setzt die Draw Schriftgröße aller Alphabete
 {
     if( This )
-        This->setDrawSchriftgröße( sg );
+        This->setDrawSchriftSize( sg );
     if( next )
-        next->setDrawSchriftGröße( sg );
+        next->setDrawSchriftSize( sg );
 }
 
 void AlphabetArray::setZeilenAbstand( int za ) // setzt den Zeilenabstant aller Alphabete
@@ -690,7 +691,7 @@ Alphabet *AlphabetArray::getAlphabet( unsigned char sg ) const // gibt getThis v
 {
     if( !This )
         return 0;
-    if( This->getSchriftgröße() == sg )
+    if( This->getSchriftSize() == sg )
         return This->getThis();
     if( next )
         return next->getAlphabet( sg );
@@ -701,7 +702,7 @@ Alphabet *AlphabetArray::zAlphabet( unsigned char sg ) const // gibt ein Alphabe
 {
     if( !This )
         return 0;
-    if( This->getSchriftgröße() == sg )
+    if( This->getSchriftSize() == sg )
         return This;
     if( next )
         return next->zAlphabet( sg );
@@ -736,7 +737,7 @@ AlphabetArray *AlphabetArray::getNext() const // gibt das nächste Alphabet zurüc
 Schrift::Schrift()
     : alphabetAnzahl( 0 ),
     alphabet( new AlphabetArray() ),
-    schriftGröße( 12 ),
+    schriftSize( 12 ),
     zeilenAbstand( 5 ),
     drawPos( 0, 0 ),
     ref( 1 )
@@ -768,7 +769,7 @@ bool Schrift::addAlphabet( Alphabet *alphabet ) // Fügt der Schrift ein Alphabet
     if( this->alphabet->addAlphabet( alphabet ) )
     {
         ++alphabetAnzahl;
-        alphabet->setDrawSchriftgröße( schriftGröße );
+        alphabet->setDrawSchriftSize( schriftSize );
         unlock();
         return true;
     }
@@ -799,11 +800,11 @@ void Schrift::setDrawPosition( Punkt &pos )
     unlock();
 }
 
-void Schrift::setSchriftGröße( int sg ) // setzt die Schriftgröße
+void Schrift::setSchriftSize( int sg ) // setzt die Schriftgröße
 {
     lock();
-    schriftGröße = sg;
-    alphabet->setDrawSchriftGröße( sg );
+    schriftSize = sg;
+    alphabet->setDrawSchriftSize( sg );
     unlock();
 }
 
@@ -815,39 +816,39 @@ void Schrift::setZeilenAbstand( int za ) // setzt den Zeilenabstand
     unlock();
 }
 
-void Schrift::textFormatieren( Text *zText, int maxBreite, int schriftGröße ) // fügt zeilenumbrüche ein
+void Schrift::textFormatieren( Text *zText, int maxBreite, int schriftSize ) // fügt zeilenumbrüche ein
 {
     lock();
-    Alphabet *drawAlphabet = alphabet->zAlphabet( schriftGröße );
+    Alphabet *drawAlphabet = alphabet->zAlphabet( (unsigned char)schriftSize );
     if( !drawAlphabet )
     {
         for( int i = 0; i < 256; ++i )
         {
-            drawAlphabet = alphabet->zAlphabet( schriftGröße - i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize - i ) );
             if( drawAlphabet )
                 break;
-            drawAlphabet = alphabet->zAlphabet( schriftGröße + i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize + i ) );
             if( drawAlphabet )
                 break;
         }
     }
     if( drawAlphabet )
-        drawAlphabet->textFormatieren( zText, maxBreite, schriftGröße );
+        drawAlphabet->textFormatieren( zText, maxBreite, schriftSize );
     unlock();
 }
 
 void Schrift::renderText( Text *zTxt, Bild &zRObj, int f ) // zeichnet txt nach zRObj
 {
     lock();
-    Alphabet *drawAlphabet = alphabet->zAlphabet( schriftGröße );
+    Alphabet *drawAlphabet = alphabet->zAlphabet( (unsigned char)schriftSize );
     if( !drawAlphabet )
     {
         for( int i = 0; i < 256; ++i )
         {
-            drawAlphabet = alphabet->zAlphabet( schriftGröße - i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize - i ) );
             if( drawAlphabet )
                 break;
-            drawAlphabet = alphabet->zAlphabet( schriftGröße + i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize + i ) );
             if( drawAlphabet )
                 break;
         }
@@ -863,15 +864,15 @@ void Schrift::renderText( Text *zTxt, Bild &zRObj, int f ) // zeichnet txt nach 
 void Schrift::renderText( Text *zTxt, Bild &zRObj, int cpos, int cf, int fbeg, int ff, int f )
 {
     lock();
-    Alphabet *drawAlphabet = alphabet->zAlphabet( schriftGröße );
+    Alphabet *drawAlphabet = alphabet->zAlphabet( (unsigned char)schriftSize );
     if( !drawAlphabet )
     {
         for( int i = 0; i < 256; ++i )
         {
-            drawAlphabet = alphabet->zAlphabet( schriftGröße - i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize - i ) );
             if( drawAlphabet )
                 break;
-            drawAlphabet = alphabet->zAlphabet( schriftGröße + i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize + i ) );
             if( drawAlphabet )
                 break;
         }
@@ -887,12 +888,12 @@ void Schrift::renderText( Text *zTxt, Bild &zRObj, int cpos, int cf, int fbeg, i
 // constant 
 Alphabet *Schrift::getAlphabet( int sg ) const // gibt einen Alphaberarray zurück
 {
-    return alphabet->getAlphabet( sg );
+    return alphabet->getAlphabet( (unsigned char)sg );
 }
 
 Alphabet *Schrift::zAlphabet( int sg ) const
 {
-    return alphabet->zAlphabet( sg );
+    return alphabet->zAlphabet( (unsigned char)sg );
 }
 
 Alphabet *Schrift::getAlphabetI( int index ) const
@@ -910,9 +911,9 @@ unsigned char Schrift::getAlphabetAnzahl() const // gibt die anzahl von in der S
     return alphabetAnzahl;
 }
 
-int Schrift::getSchriftGröße() const // gibt die Schriftgröße zurück
+int Schrift::getSchriftSize() const // gibt die Schriftgröße zurück
 {
-    return schriftGröße;
+    return schriftSize;
 }
 
 int Schrift::getZeilenabstand() const // gibt den Zeilenabstand zurück
@@ -937,15 +938,15 @@ const Punkt &Schrift::getDrawPosition() const
 
 int Schrift::getTextBreite( Text *zTxt ) const // gibt die Breite des Textes zurück
 {
-    Alphabet *drawAlphabet = alphabet->zAlphabet( schriftGröße );
+    Alphabet *drawAlphabet = alphabet->zAlphabet( (unsigned char)schriftSize );
     if( !drawAlphabet )
     {
         for( int i = 0; i < 256; ++i )
         {
-            drawAlphabet = alphabet->zAlphabet( schriftGröße - i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize - i ) );
             if( drawAlphabet )
                 break;
-            drawAlphabet = alphabet->zAlphabet( schriftGröße + i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize + i ) );
             if( drawAlphabet )
                 break;
         }
@@ -955,37 +956,37 @@ int Schrift::getTextBreite( Text *zTxt ) const // gibt die Breite des Textes zur
     return drawAlphabet->getTextBreite( zTxt );
 }
 
-int Schrift::getTextHöhe( Text *zTxt ) const // gibt die Höhe des Textes zurück
+int Schrift::getTextHeight( Text *zTxt ) const // gibt die Höhe des Textes zurück
 {
-    Alphabet *drawAlphabet = alphabet->zAlphabet( schriftGröße );
+    Alphabet *drawAlphabet = alphabet->zAlphabet( (unsigned char)schriftSize );
     if( !drawAlphabet )
     {
         for( int i = 0; i < 256; ++i )
         {
-            drawAlphabet = alphabet->zAlphabet( schriftGröße - i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize - i ) );
             if( drawAlphabet )
                 break;
-            drawAlphabet = alphabet->zAlphabet( schriftGröße + i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize + i ) );
             if( drawAlphabet )
                 break;
         }
     }
     if( !drawAlphabet )
         return 0;
-    return drawAlphabet->getTextHöhe( zTxt );
+    return drawAlphabet->getTextHeight( zTxt );
 }
 
 int Schrift::textPos( Text *zTxt, int mausX, int mausY ) const // gibt den Buchstaben zurück, auf den die Maus zeigt
 {
-    Alphabet *drawAlphabet = alphabet->zAlphabet( schriftGröße );
+    Alphabet *drawAlphabet = alphabet->zAlphabet( (unsigned char)schriftSize );
     if( !drawAlphabet )
     {
         for( int i = 0; i < 256; ++i )
         {
-            drawAlphabet = alphabet->zAlphabet( schriftGröße - i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize - i ) );
             if( drawAlphabet )
                 break;
-            drawAlphabet = alphabet->zAlphabet( schriftGröße + i );
+            drawAlphabet = alphabet->zAlphabet( (unsigned char)( schriftSize + i ) );
             if( drawAlphabet )
                 break;
         }

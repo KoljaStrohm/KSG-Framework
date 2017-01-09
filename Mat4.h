@@ -263,14 +263,14 @@ namespace Framework
             return t;
         }
         // Erzeugt eine Matrix, die einen Vektor auf den Bildschirm Projeziert
-        //  öffnungswinkel: Der Öffnungswinkel der Kamera im Bogenmas
+        //  openingAngle: Der Öffnungswinkel der Kamera im Bogenmas
         //  bildschirmXY: Das Seitenverhältnis des Rechtecks auf dem Bildschirm, in dem gezeichnet werden soll. (Breite / Höhe)
         //  minz: Der Mindestabstand zur Kamera, ab dem gezeichnet wird
         //  maxZ: Der Maximalabstand zur Kamera, ab dem nicht mehr gezeichnet wird
-        static Mat4 projektion( float öffnungswinkel, float bildschirmXY, float minZ, float maxZ )
+        static Mat4 projektion( float openingAngle, float bildschirmXY, float minZ, float maxZ )
         {
-            Mat4 p = { (float)( 1 / tan( öffnungswinkel / 2 ) ) / bildschirmXY, 0, 0, 0,
-                0, (float)( 1 / tan( öffnungswinkel / 2 ) ), 0, 0,
+            Mat4 p = { (float)( 1 / tan( openingAngle / 2 ) ) / bildschirmXY, 0, 0, 0,
+                0, (float)( 1 / tan( openingAngle / 2 ) ), 0, 0,
                 0, 0, maxZ / ( maxZ - minZ ), -( minZ * maxZ ) / ( maxZ - minZ ),
                 0, 0, 1, 0 };
             return p;

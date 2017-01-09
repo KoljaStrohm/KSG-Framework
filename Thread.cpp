@@ -87,7 +87,7 @@ void Thread::threadEnd()
 }
 
 // constant 
-bool Thread::läuft() const // prüft, ob der Thrad aktiv ist
+bool Thread::isRunning() const // prüft, ob der Thrad aktiv ist
 {
     return run;
 }
@@ -177,7 +177,7 @@ void ThreadRegister::add( Thread *t )
 void ThreadRegister::remove( Thread *t )
 {
     EnterCriticalSection( &cs );
-    threads.lösche( threads.getWertIndex( t ) );
+    threads.remove( threads.getWertIndex( t ) );
     LeaveCriticalSection( &cs );
 }
 
@@ -206,7 +206,7 @@ void ThreadRegister::cleanUpClosedThreads()
 #ifndef WIN32
         pthread_join( closedThreads.get( 0 ), 0 );
 #endif
-        closedThreads.lösche( 0 );
+        closedThreads.remove( 0 );
     }
     LeaveCriticalSection( &cs );
 }

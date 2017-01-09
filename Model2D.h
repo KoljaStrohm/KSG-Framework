@@ -1,9 +1,7 @@
 #ifndef Model2D_H
 #define Model2D_H
 
-#ifdef WIN32
 #include "Zeichnung.h"
-#endif
 #include "Punkt.h"
 #include "Array.h"
 #include "DreieckListe.h"
@@ -52,7 +50,7 @@ namespace Framework
         //  return: gibt immer 1 zurück
         __declspec( dllexport ) bool erstelleModell( Array< Polygon2D > *polygons );
         // Löscht die erstellten Dreiecklisten und die Eckpunkte
-        __declspec( dllexport ) void löscheModell();
+        __declspec( dllexport ) void removeModell();
         // Erhöht den Reference Counting Zähler.
         //  return: this.
         __declspec( dllexport ) Model2DData *getThis();
@@ -61,15 +59,10 @@ namespace Framework
         __declspec( dllexport ) Model2DData *release();
     };
 
-#ifdef WIN32
     // Eine Zeichnung von einem Model
     class Model2D : public Zeichnung
-#else
-    class Model2D
-#endif
     {
     public:
-#ifdef WIN32
         class Style : public Zeichnung::Style
         {
         public:
@@ -78,24 +71,20 @@ namespace Framework
             const static __int64 Alpha = 0x40; // Wenn dieser Fag gesetzt ist, wird beim Zeichnen alphablending verwendet
             const static __int64 Mesh = 0x20; // Wenn dieser Flag gesetzt ist, werden die Render der Dreiecke gezeichnet
         };
-#endif
     private:
         Model2DData *rData;
         float drehung;
-        float größe;
+        float size;
         int ref;
-#ifdef WIN32
         int farbe;
         Bild *textur;
-#else
         Punkt pos;
-#endif
 
     public:
         // Konstruktor
         __declspec( dllexport ) Model2D();
         // Destruktor
-        __declspec( dllexport ) ~Model2D();
+        __declspec( dllexport ) virtual ~Model2D();
         // Setzt die Daten des Models
         //  mdl: Die Model Daten
         __declspec( dllexport ) void setModel( Model2DData *mdl );
@@ -106,12 +95,11 @@ namespace Framework
         //  drehung: Der Winkel in Bogenmas, der hinzugefügt werden soll
         __declspec( dllexport ) void addDrehung( float drehung );
         // Setzt die Skallierung des Modells
-        //  größe: Der Faktor, mit dem Skalliert wird
-        __declspec( dllexport ) void setGröße( float größe );
+        //  size: Der Faktor, mit dem Skalliert wird
+        __declspec( dllexport ) void setSize( float size );
         // Addiert zur Skallierung einen bestimmten Wert hinzu
-        //  größe: Der Wert, der zur skallierung hinzugefügt werden soll
-        __declspec( dllexport ) void addGröße( float größe );
-#ifdef WIN32
+        //  size: Der Wert, der zur skallierung hinzugefügt werden soll
+        __declspec( dllexport ) void addSize( float size );
         // Setzt die Textur
         //  t: Das Bild, das als Textur verwendet werden soll
         __declspec( dllexport ) void setTextur( Bild *t );
@@ -127,15 +115,10 @@ namespace Framework
         // Zeichnet die Zeihnung in ein bestimmtes Bild
         //  zRObj: Das Bild, in das gezeichnet werden soll
         __declspec( dllexport ) void render( Bild &zRObj ) override;
-#else
-        // Setzt die Position
-        //  p: Die neue Position
-        __declspec( dllexport ) void setPosition( Punkt p );
-#endif
         // gibt die Drehung des Models zurück
         __declspec( dllexport ) float getDrehung() const;
         // gibt den Skallierungs Faktor zurück
-        __declspec( dllexport ) float getGröße() const;
+        __declspec( dllexport ) float getSize() const;
         // Gibt zurück, ob ein Punkt in dem Model enthalten ist
         //  p: Der Punkt
         __declspec( dllexport ) bool istPunktInnen( Vertex p ) const;
@@ -151,10 +134,6 @@ namespace Framework
         __declspec( dllexport ) Model2DData *getModel() const;
         // Gibt die Model Daten ohne erhöhten Reference Counter zurück
         __declspec( dllexport ) Model2DData *zModel() const;
-#ifndef WIN32
-        // Gibt die Position des Models zurück
-        Punkt getPosition() const;
-#endif
         // Erhöht den Reference Counting Zähler.
         //  return: this.
         __declspec( dllexport ) Model2D *getThis();
@@ -163,5 +142,4 @@ namespace Framework
         __declspec( dllexport ) Model2D *release();
     };
 }
-
 #endif

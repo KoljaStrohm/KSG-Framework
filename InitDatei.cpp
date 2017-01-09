@@ -57,17 +57,17 @@ bool InitDatei::laden()
 {
     Datei *dat = new Datei();
     dat->setDatei( pfad->getText() );
-    if( !dat->öffnen( Datei::Style::lesen ) )
+    if( !dat->open( Datei::Style::lesen ) )
     {
         dat->release();
         return 0;
     }
-    löscheAlle();
+    removeAlle();
     Text *zeile = dat->leseZeile();
     for( int i = 0; zeile; ++i )
     {
-        zeile->löschen( "\r\n" );
-        zeile->löschen( "\n" );
+        zeile->remove( "\r\n" );
+        zeile->remove( "\n" );
         Text *n = zeile->getTeilText( 0, zeile->positionVon( '=' ) );
         Text *w = zeile->getTeilText( zeile->positionVon( '=' ) + 1 );
         name->set( n, i );
@@ -76,7 +76,7 @@ bool InitDatei::laden()
         zeile = dat->leseZeile();
         feldAnzahl = i + 1;
     }
-    dat->schließen();
+    dat->close();
     dat->release();
     return 1;
 }
@@ -167,7 +167,7 @@ bool InitDatei::setWert( int num, const char *wert )
     return 1;
 }
 
-bool InitDatei::löscheWert( Text *name )
+bool InitDatei::removeWert( Text *name )
 {
     if( !wertExistiert( name->getText() ) )
     {
@@ -178,8 +178,8 @@ bool InitDatei::löscheWert( Text *name )
     {
         if( this->name->z( i )->istGleich( name->getText() ) )
         {
-            this->name->lösche( i );
-            this->wert->lösche( i );
+            this->name->remove( i );
+            this->wert->remove( i );
             --feldAnzahl;
             name->release();
             return 1;
@@ -189,7 +189,7 @@ bool InitDatei::löscheWert( Text *name )
     return 0;
 }
 
-bool InitDatei::löscheWert( const char *name )
+bool InitDatei::removeWert( const char *name )
 {
     if( !wertExistiert( name ) )
         return 0;
@@ -197,8 +197,8 @@ bool InitDatei::löscheWert( const char *name )
     {
         if( this->name->z( i )->istGleich( name ) )
         {
-            this->name->lösche( i );
-            this->wert->lösche( i );
+            this->name->remove( i );
+            this->wert->remove( i );
             --feldAnzahl;
             return 1;
         }
@@ -206,22 +206,22 @@ bool InitDatei::löscheWert( const char *name )
     return 0;
 }
 
-bool InitDatei::löscheWert( int num )
+bool InitDatei::removeWert( int num )
 {
     if( num >= feldAnzahl )
         return 0;
-    this->name->lösche( num );
-    this->wert->lösche( num );
+    this->name->remove( num );
+    this->wert->remove( num );
     --feldAnzahl;
     return 1;
 }
 
-void InitDatei::löscheAlle()
+void InitDatei::removeAlle()
 {
     for( ; feldAnzahl > 0; --feldAnzahl )
     {
-        this->name->lösche( 0 );
-        this->wert->lösche( 0 );
+        this->name->remove( 0 );
+        this->wert->remove( 0 );
     }
 }
 
@@ -231,7 +231,7 @@ bool InitDatei::speichern()
     dat->setDatei( pfad->getText() );
     if( !dat->existiert() )
         dat->erstellen();
-    if( !dat->öffnen( Datei::Style::schreiben ) )
+    if( !dat->open( Datei::Style::schreiben ) )
     {
         dat->release();
         return 0;
@@ -239,14 +239,14 @@ bool InitDatei::speichern()
     for( int i = 0; i < feldAnzahl; ++i )
     {
         Text *zeile = new Text( "" );
-        zeile->anhängen( name->z( i )->getText() );
-        zeile->anhängen( "=" );
-        zeile->anhängen( wert->z( i )->getText() );
-        zeile->anhängen( "\n" );
-        dat->schreibe( zeile->getText(), zeile->getLänge() );
+        zeile->append( name->z( i )->getText() );
+        zeile->append( "=" );
+        zeile->append( wert->z( i )->getText() );
+        zeile->append( "\n" );
+        dat->schreibe( zeile->getText(), zeile->getLength() );
         zeile->release();
     }
-    dat->schließen();
+    dat->close();
     dat->release();
     return 1;
 }

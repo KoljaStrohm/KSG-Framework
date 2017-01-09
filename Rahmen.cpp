@@ -17,6 +17,10 @@ LRahmen::LRahmen()
     ref( 1 )
 {}
 
+// Destruktor
+LRahmen::~LRahmen()
+{}
+
 // nicht constant 
 void LRahmen::setRamenBreite( int br ) // setzt die Breite des Rahmens
 {
@@ -38,7 +42,7 @@ void LRahmen::setFarbe( int f ) // Legt die Farbe des Rahmens fest
 
 void LRahmen::render( Bild &Obj ) // Zeichnet den Rahmen in das RenderZeichnung
 {
-    __super::render( Obj );
+	Zeichnung::render( Obj );
     int x = pos.x;
     int y = pos.y;
     int b = x + gr.x - 1;
@@ -85,7 +89,7 @@ Zeichnung *LRahmen::dublizieren() const // Kopiert das Zeichnung
 {
     LRahmen *obj = new LRahmen();
     obj->setPosition( pos );
-    obj->setGröße( gr );
+    obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
     obj->setMausEreignis( Mak );

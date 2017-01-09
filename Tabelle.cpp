@@ -18,11 +18,11 @@ ObjTabelle::ObjTabelle()
     spaltenNamen( new RCArray< Text >() ),
     zeilenNamen( new RCArray< Text >() ),
     spaltenBreite( new Array< int >() ),
-    zeilenHöhe( new Array< int >() ),
+    zeilenHeight( new Array< int >() ),
     minSpaltenBreite( new Array< int >() ),
     maxSpaltenBreite( new Array< int >() ),
-    minZeilenHöhe( new Array< int >() ),
-    maxZeilenHöhe( new Array< int >() ),
+    minZeilenHeight( new Array< int >() ),
+    maxZeilenHeight( new Array< int >() ),
     spaltenAnzahl( 0 ),
     zeilenAnzahl( 0 ),
     klickSpalte( -1 ),
@@ -54,16 +54,16 @@ ObjTabelle::~ObjTabelle()
         zeilenNamen->release();
     if( spaltenBreite )
         spaltenBreite->release();
-    if( zeilenHöhe )
-        zeilenHöhe->release();
+    if( zeilenHeight )
+        zeilenHeight->release();
     if( minSpaltenBreite )
         minSpaltenBreite->release();
     if( maxSpaltenBreite )
         maxSpaltenBreite->release();
-    if( minZeilenHöhe )
-        minZeilenHöhe->release();
-    if( maxZeilenHöhe )
-        maxZeilenHöhe->release();
+    if( minZeilenHeight )
+        minZeilenHeight->release();
+    if( maxZeilenHeight )
+        maxZeilenHeight->release();
     if( aRam )
         aRam->release();
     if( aAf )
@@ -143,7 +143,7 @@ void ObjTabelle::addZeile( const char *name ) // Zeile Hinzufügen
 {
     lockZeichnung();
     zeilenNamen->add( new Text( name ), zeilenAnzahl );
-    zeilenHöhe->add( 20 );
+    zeilenHeight->add( 20 );
     ++zeilenAnzahl;
     rend = 1;
     unlockZeichnung();
@@ -153,7 +153,7 @@ void ObjTabelle::addZeile( Text *name )
 {
     lockZeichnung();
     zeilenNamen->add( name, zeilenAnzahl );
-    zeilenHöhe->add( 20 );
+    zeilenHeight->add( 20 );
     ++zeilenAnzahl;
     rend = 1;
     unlockZeichnung();
@@ -165,9 +165,9 @@ void ObjTabelle::addZeile( int zNum, const char *name ) // Zeile bei zNum einfüg
         return;
     lockZeichnung();
     zeilenNamen->add( new Text( name ), zNum );
-    zeilenHöhe->add( 20, zNum );
-    minZeilenHöhe->add( 0, zNum );
-    maxZeilenHöhe->add( 100, zNum );
+    zeilenHeight->add( 20, zNum );
+    minZeilenHeight->add( 0, zNum );
+    maxZeilenHeight->add( 100, zNum );
     for( int i = 0; i < spaltenAnzahl; ++i )
     {
         if( zZeichnungs->z( i ) )
@@ -190,9 +190,9 @@ void ObjTabelle::addZeile( int zNum, Text *name )
         return;
     lockZeichnung();
     zeilenNamen->add( name, zNum );
-    zeilenHöhe->add( 20, zNum );
-    minZeilenHöhe->add( 0, zNum );
-    maxZeilenHöhe->add( 100, zNum );
+    zeilenHeight->add( 20, zNum );
+    minZeilenHeight->add( 0, zNum );
+    maxZeilenHeight->add( 100, zNum );
     for( int i = 0; i < spaltenAnzahl; ++i )
     {
         if( zZeichnungs->z( i ) )
@@ -214,18 +214,18 @@ void ObjTabelle::removeSpalte( int sNum ) // Spalte löschen
     if( sNum >= spaltenAnzahl )
         return;
     lockZeichnung();
-    zZeichnungs->lösche( sNum );
-    spaltenNamen->lösche( sNum );
-    spaltenBreite->lösche( sNum );
-    minSpaltenBreite->lösche( sNum );
-    maxSpaltenBreite->lösche( sNum );
+    zZeichnungs->remove( sNum );
+    spaltenNamen->remove( sNum );
+    spaltenBreite->remove( sNum );
+    minSpaltenBreite->remove( sNum );
+    maxSpaltenBreite->remove( sNum );
     if( msaRam->z( sNum ) )
         msaRam->z( sNum )->release();
-    msaRam->lösche( sNum );
+    msaRam->remove( sNum );
     if( msaAf->z( sNum ) )
         msaAf->z( sNum )->release();
-    msaAf->lösche( sNum );
-    styles->lösche( sNum );
+    msaAf->remove( sNum );
+    styles->remove( sNum );
     --spaltenAnzahl;
     rend = 1;
     unlockZeichnung();
@@ -246,20 +246,20 @@ void ObjTabelle::removeZeile( int zNum ) // Zeile löschen
     if( zNum >= zeilenAnzahl )
         return;
     lockZeichnung();
-    zeilenNamen->lösche( zNum );
-    zeilenHöhe->lösche( zNum );
-    minZeilenHöhe->lösche( zNum );
-    maxZeilenHöhe->lösche( zNum );
+    zeilenNamen->remove( zNum );
+    zeilenHeight->remove( zNum );
+    minZeilenHeight->remove( zNum );
+    maxZeilenHeight->remove( zNum );
     for( int i = 0; i < spaltenAnzahl; ++i )
     {
         if( zZeichnungs->z( i ) )
-            zZeichnungs->z( i )->lösche( zNum );
+            zZeichnungs->z( i )->remove( zNum );
         if( msaRam->z( i ) )
-            msaRam->z( i )->lösche( zNum );
+            msaRam->z( i )->remove( zNum );
         if( msaAf->z( i ) )
-            msaAf->z( i )->lösche( zNum );
+            msaAf->z( i )->remove( zNum );
         if( styles->z( i ) )
-            styles->z( i )->lösche( zNum );
+            styles->z( i )->remove( zNum );
     }
     --zeilenAnzahl;
     rend = 1;
@@ -290,27 +290,27 @@ void ObjTabelle::setSpaltePosition( int sNum, int pos )
 {
     if( sNum >= spaltenAnzahl || pos >= spaltenAnzahl || sNum == pos )
         return;
-    int löschPos = sNum;
+    int delPos = sNum;
     int insertPos = pos;
     if( pos < sNum )
-        ++löschPos;
+        ++delPos;
     else
         ++insertPos;
     lockZeichnung();
     zZeichnungs->add( zZeichnungs->get( sNum ), insertPos );
-    zZeichnungs->lösche( löschPos );
+    zZeichnungs->remove( delPos );
     spaltenNamen->add( spaltenNamen->get( sNum ), insertPos );
-    spaltenNamen->lösche( löschPos );
+    spaltenNamen->remove( delPos );
     spaltenBreite->add( spaltenBreite->hat( sNum ) ? spaltenBreite->get( sNum ) : 0, insertPos );
-    spaltenBreite->lösche( löschPos );
+    spaltenBreite->remove( delPos );
     minSpaltenBreite->add( minSpaltenBreite->hat( sNum ) ? minSpaltenBreite->get( sNum ) : 0, insertPos );
-    minSpaltenBreite->lösche( löschPos );
+    minSpaltenBreite->remove( delPos );
     msaRam->add( msaRam->z( sNum ), insertPos );
-    msaRam->lösche( löschPos );
+    msaRam->remove( delPos );
     msaAf->add( msaAf->z( sNum ), insertPos );
-    msaAf->lösche( löschPos );
+    msaAf->remove( delPos );
     styles->add( styles->get( sNum ), insertPos );
-    styles->lösche( löschPos );
+    styles->remove( delPos );
     rend = 1;
     unlockZeichnung();
 }
@@ -329,42 +329,42 @@ void ObjTabelle::setZeilePosition( int zNum, int pos )
 {
     if( zNum >= zeilenAnzahl || pos >= zeilenAnzahl || pos == zNum )
         return;
-    int löschPos = zNum;
+    int delPos = zNum;
     int insertPos = pos;
     if( pos < zNum )
-        ++löschPos;
+        ++delPos;
     else
         ++insertPos;
     lockZeichnung();
     zeilenNamen->add( zeilenNamen->get( zNum ), insertPos );
-    zeilenNamen->lösche( löschPos );
-    zeilenHöhe->add( zeilenHöhe->hat( zNum ) ? zeilenHöhe->get( zNum ) : 0, insertPos );
-    zeilenHöhe->lösche( löschPos );
-    minZeilenHöhe->add( minZeilenHöhe->hat( zNum ) ? minZeilenHöhe->get( zNum ) : 0, insertPos );
-    minZeilenHöhe->lösche( löschPos );
-    maxZeilenHöhe->add( maxZeilenHöhe->hat( zNum ) ? maxZeilenHöhe->get( zNum ) : 0, insertPos );
-    maxZeilenHöhe->lösche( löschPos );
+    zeilenNamen->remove( delPos );
+    zeilenHeight->add( zeilenHeight->hat( zNum ) ? zeilenHeight->get( zNum ) : 0, insertPos );
+    zeilenHeight->remove( delPos );
+    minZeilenHeight->add( minZeilenHeight->hat( zNum ) ? minZeilenHeight->get( zNum ) : 0, insertPos );
+    minZeilenHeight->remove( delPos );
+    maxZeilenHeight->add( maxZeilenHeight->hat( zNum ) ? maxZeilenHeight->get( zNum ) : 0, insertPos );
+    maxZeilenHeight->remove( delPos );
     for( int i = 0; i < spaltenAnzahl; ++i )
     {
         if( zZeichnungs->z( i ) )
         {
             zZeichnungs->z( i )->add( zZeichnungs->z( i )->hat( zNum ) ? zZeichnungs->z( i )->get( zNum ) : 0, insertPos );
-            zZeichnungs->z( i )->lösche( löschPos );
+            zZeichnungs->z( i )->remove( delPos );
         }
         if( msaRam->z( i ) )
         {
             msaRam->z( i )->add( msaRam->z( i )->z( zNum ) ? msaRam->z( i )->get( zNum ) : 0, insertPos );
-            msaRam->z( i )->lösche( löschPos );
+            msaRam->z( i )->remove( delPos );
         }
         if( msaAf->z( i ) )
         {
             msaAf->z( i )->add( msaAf->z( i )->z( zNum ) ? msaAf->z( i )->get( zNum ) : 0, insertPos );
-            msaAf->z( i )->lösche( löschPos );
+            msaAf->z( i )->remove( delPos );
         }
         if( styles->z( i ) )
         {
             styles->z( i )->add( styles->z( i )->hat( zNum ) ? styles->z( i )->get( zNum ) : 0, insertPos );
-            styles->z( i )->lösche( löschPos );
+            styles->z( i )->remove( delPos );
         }
     }
     rend = 1;
@@ -413,24 +413,24 @@ void ObjTabelle::setSpaltenBreite( Text *name, int br )
     setSpaltenBreite( getSpaltenNummer( name ), br );
 }
 
-void ObjTabelle::setZeilenHöhe( int zNum, int hö ) // setzt die Zeilenhöhe
+void ObjTabelle::setZeilenHeight( int zNum, int hi ) // setzt die Zeilenhöhe
 {
     if( zNum >= zeilenAnzahl )
         return;
     lockZeichnung();
-    zeilenHöhe->set( hö, zNum );
+    zeilenHeight->set( hi, zNum );
     rend = 1;
     unlockZeichnung();
 }
 
-void ObjTabelle::setZeilenHöhe( const char *name, int hö )
+void ObjTabelle::setZeilenHeight( const char *name, int hi )
 {
-    setZeilenHöhe( getZeilenNummer( name ), hö );
+    setZeilenHeight( getZeilenNummer( name ), hi );
 }
 
-void ObjTabelle::setZeilenHöhe( Text *name, int hö )
+void ObjTabelle::setZeilenHeight( Text *name, int hi )
 {
-    setZeilenHöhe( getZeilenNummer( name ), hö );
+    setZeilenHeight( getZeilenNummer( name ), hi );
 }
 
 void ObjTabelle::setMinSpaltenBreite( int sNum, int minBr ) // setzt die mindest Spaltenbreite
@@ -473,44 +473,44 @@ void ObjTabelle::setMaxSpaltenBreite( Text *name, int maxBr )
     setMaxSpaltenBreite( getSpaltenNummer( name ), maxBr );
 }
 
-void ObjTabelle::setMinZeilenHöhe( int zNum, int minHö ) // setzt die mindest Zeilenhöhe
+void ObjTabelle::setMinZeilenHeight( int zNum, int minHi ) // setzt die mindest Zeilenhöhe
 {
     if( zNum >= zeilenAnzahl )
         return;
     lockZeichnung();
-    minZeilenHöhe->set( minHö, zNum );
+    minZeilenHeight->set( minHi, zNum );
     rend = 1;
     unlockZeichnung();
 }
 
-void ObjTabelle::setMinZeilenHöhe( const char *name, int minHö )
+void ObjTabelle::setMinZeilenHeight( const char *name, int minHi )
 {
-    setMinZeilenHöhe( getZeilenNummer( name ), minHö );
+    setMinZeilenHeight( getZeilenNummer( name ), minHi );
 }
 
-void ObjTabelle::setMinZeilenHöhe( Text *name, int minHö )
+void ObjTabelle::setMinZeilenHeight( Text *name, int minHi )
 {
-    setMinZeilenHöhe( getZeilenNummer( name ), minHö );
+    setMinZeilenHeight( getZeilenNummer( name ), minHi );
 }
 
-void ObjTabelle::setMaxZeilenHöhe( int zNum, int maxHö ) // setzt die maximale Zeilenhöhe
+void ObjTabelle::setMaxZeilenHeight( int zNum, int maxHi ) // setzt die maximale Zeilenhöhe
 {
     if( zNum >= zeilenAnzahl )
         return;
     lockZeichnung();
-    maxZeilenHöhe->set( maxHö, zNum );
+    maxZeilenHeight->set( maxHi, zNum );
     rend = 1;
     unlockZeichnung();
 }
 
-void ObjTabelle::setMaxZeilenHöhe( const char *name, int maxHö )
+void ObjTabelle::setMaxZeilenHeight( const char *name, int maxHi )
 {
-    setMaxZeilenHöhe( getZeilenHöhe( name ), maxHö );
+    setMaxZeilenHeight( getZeilenHeight( name ), maxHi );
 }
 
-void ObjTabelle::setMaxZeilenHöhe( Text *name, int maxHö )
+void ObjTabelle::setMaxZeilenHeight( Text *name, int maxHi )
 {
-    setMaxZeilenHöhe( getZeilenHöhe( name ), maxHö );
+    setMaxZeilenHeight( getZeilenHeight( name ), maxHi );
 }
 
 void ObjTabelle::setAuswahl( int sNum, int zNum ) // wählt das entsprechnde Feld aus
@@ -586,11 +586,11 @@ void ObjTabelle::setAAfFarbe( int f ) // setzt die Farbe des auswahl AlphaFeldes
     rend = 1;
 }
 
-void ObjTabelle::setAAfStärke( int st ) // setzt die Stärke des auswahl AlphaFeldes
+void ObjTabelle::setAAfStrength( int st ) // setzt die Stärke des auswahl AlphaFeldes
 {
     if( !aAf )
         aAf = new AlphaFeld();
-    aAf->setStärke( st );
+    aAf->setStrength( st );
     rend = 1;
 }
 
@@ -703,7 +703,7 @@ void ObjTabelle::setAAfFarbe( Text *spaltenName, Text *zeilenName, int f )
     setAAfFarbe( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), f );
 }
 
-void ObjTabelle::setAAfStärke( int sNum, int zNum, int st ) // setzt die Stärke des auswahl AlphaFeldes
+void ObjTabelle::setAAfStrength( int sNum, int zNum, int st ) // setzt die Stärke des auswahl AlphaFeldes
 {
     if( msaAf->z( sNum ) )
     {
@@ -713,19 +713,19 @@ void ObjTabelle::setAAfStärke( int sNum, int zNum, int st ) // setzt die Stärke 
             tmp = new AlphaFeld();
             msaAf->z( sNum )->set( tmp, zNum );
         }
-        tmp->setStärke( st );
+        tmp->setStrength( st );
         rend = 1;
     }
 }
 
-void ObjTabelle::setAAfStärke( const char *spaltenName, const char *zeilenName, int st )
+void ObjTabelle::setAAfStrength( const char *spaltenName, const char *zeilenName, int st )
 {
-    setAAfStärke( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), st );
+    setAAfStrength( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), st );
 }
 
-void ObjTabelle::setAAfStärke( Text *spaltenName, Text *zeilenName, int st )
+void ObjTabelle::setAAfStrength( Text *spaltenName, Text *zeilenName, int st )
 {
-    setAAfStärke( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), st );
+    setAAfStrength( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), st );
 }
 
 void ObjTabelle::addMsStyle( int sNum, int zNum, __int64 style ) // setzt den Style wenn Multistyled
@@ -790,7 +790,7 @@ void ObjTabelle::setMsStyle( Text *spaltenName, Text *zeilenName, __int64 style,
     setMsStyle( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), style, add_remove );
 }
 
-void ObjTabelle::löscheMsStyle( int sNum, int zNum, __int64 style )
+void ObjTabelle::removeMsStyle( int sNum, int zNum, __int64 style )
 {
     if( sNum >= spaltenAnzahl || zNum >= zeilenAnzahl )
         return;
@@ -799,14 +799,14 @@ void ObjTabelle::löscheMsStyle( int sNum, int zNum, __int64 style )
     rend = 1;
 }
 
-void ObjTabelle::löscheMsStyle( const char *spaltenName, const char *zeilenName, __int64 style )
+void ObjTabelle::removeMsStyle( const char *spaltenName, const char *zeilenName, __int64 style )
 {
-    löscheMsStyle( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), style );
+    removeMsStyle( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), style );
 }
 
-void ObjTabelle::löscheMsStyle( Text *spaltenName, Text *zeilenName, __int64 style )
+void ObjTabelle::removeMsStyle( Text *spaltenName, Text *zeilenName, __int64 style )
 {
-    löscheMsStyle( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), style );
+    removeMsStyle( getSpaltenNummer( spaltenName ), getZeilenNummer( zeilenName ), style );
 }
 
 bool ObjTabelle::tick( double tickVal ) // tick Message
@@ -822,7 +822,7 @@ bool ObjTabelle::tick( double tickVal ) // tick Message
         }
     }
     unlockZeichnung();
-    return __super::tick( tickVal );
+    return ZeichnungHintergrund::tick( tickVal );
 }
 
 void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
@@ -837,7 +837,7 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
         {
             mausIn = 0;
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -846,17 +846,17 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
         }
         removeFokus = 1;
     }
-    bool außerhalb = !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Verlässt;
-    bool MakB = Mak && ( me.verarbeitet || außerhalb || Mak( makParam, this, me ) );
-    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Verlässt )
+    bool ausserhalb = !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves;
+    bool MakB = Mak && ( me.verarbeitet || ausserhalb || Mak( makParam, this, me ) );
+    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves )
     {
         if( removeFokus && me.id == ME_RLinks )
         {
             if( MakB )
-                löscheStyle( Style::Fokus );
+                removeStyle( Style::Fokus );
         }
     }
-    else if( !mausIn && me.id != ME_Verlässt )
+    else if( !mausIn && me.id != ME_Leaves )
     {
         mausIn = 1;
         MausEreignis me2;
@@ -869,9 +869,9 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
     int tmx = me.mx;
     int tmy = me.my;
     bool aufScroll = 0;
-    if( !außerhalb && vertikalScrollBar && hatStyle( Style::VScroll ) && me.mx > pos.x + gr.x - 15 )
+    if( !ausserhalb && vertikalScrollBar && hatStyle( Style::VScroll ) && me.mx > pos.x + gr.x - 15 )
         aufScroll = 1;
-    if( !außerhalb && horizontalScrollBar && hatStyle( Style::HScroll ) && me.my > pos.y + gr.y - 15 )
+    if( !ausserhalb && horizontalScrollBar && hatStyle( Style::HScroll ) && me.my > pos.y + gr.y - 15 )
         aufScroll = 1;
     me.mx -= pos.x + ( ( horizontalScrollBar && hatStyle( Style::HScroll ) ) ? horizontalScrollBar->getScroll() : 0 );
     me.my -= pos.y + ( ( vertikalScrollBar && hatStyle( Style::VScroll ) ) ? vertikalScrollBar->getScroll() : 0 );
@@ -880,10 +880,10 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
         lockZeichnung();
         if( removeFokus && me.id == ME_RLinks )
         {
-            löscheStyle( Style::Fokus );
+            removeStyle( Style::Fokus );
             klickSpalte = -1;
         }
-        if( !me.verarbeitet && !außerhalb && !aufScroll )
+        if( !me.verarbeitet && !ausserhalb && !aufScroll )
         {
             double ox = getMausSpalte( me.mx + ( ( horizontalScrollBar && hatStyle( Style::HScroll ) ) ? horizontalScrollBar->getScroll() : 0 ) );
             double oy = getMausZeile( me.my + ( ( vertikalScrollBar && hatStyle( Style::VScroll ) ) ? vertikalScrollBar->getScroll() : 0 ) );
@@ -893,9 +893,9 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
                 klickSpalte = -1;
                 mSpalte = -1, mZeile = -1;
             }
-            if( ( hatStyle( Style::SpaltenBreiteÄnderbar ) || hatStyle( Style::ZeilenHöheÄnderbar ) ) && klickSpalte < 0 )
+            if( ( hatStyle( Style::SpaltenBreiteChangeable ) || hatStyle( Style::ZeilenHeightChangeable ) ) && klickSpalte < 0 )
             {
-                if( hatStyle( Style::SpaltenBreiteÄnderbar ) )
+                if( hatStyle( Style::SpaltenBreiteChangeable ) )
                 {
                     if( me.id == ME_PLinks && ox != (int)ox )
                     {
@@ -915,7 +915,7 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
                         rend = 1;
                     }
                 }
-                if( hatStyle( Style::ZeilenHöheÄnderbar ) )
+                if( hatStyle( Style::ZeilenHeightChangeable ) )
                 {
                     if( me.id == ME_PLinks && oy != (int)oy )
                     {
@@ -925,12 +925,12 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
                     }
                     if( mZeile > -1 )
                     {
-                        int hö = getZeilenHöhe( (int)mZeile ) + ( me.my - my );
-                        if( hatStyle( Style::ZeilenHöheMax ) && hö > getMaxZeilenHöhe( (int)mZeile ) )
-                            hö = getMaxZeilenHöhe( (int)mZeile );
-                        if( hatStyle( Style::ZeilenHöheMin ) && hö < getMinZeilenHöhe( (int)mZeile ) )
-                            hö = getMinZeilenHöhe( (int)mZeile );
-                        setZeilenHöhe( (int)mZeile, hö );
+                        int hi = getZeilenHeight( (int)mZeile ) + ( me.my - my );
+                        if( hatStyle( Style::ZeilenHeightMax ) && hi > getMaxZeilenHeight( (int)mZeile ) )
+                            hi = getMaxZeilenHeight( (int)mZeile );
+                        if( hatStyle( Style::ZeilenHeightMin ) && hi < getMinZeilenHeight( (int)mZeile ) )
+                            hi = getMinZeilenHeight( (int)mZeile );
+                        setZeilenHeight( (int)mZeile, hi );
                         my = me.my;
                         rend = 1;
                     }
@@ -956,9 +956,9 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
         }
         me.mx += ( horizontalScrollBar && hatStyle( Style::HScroll ) ) ? horizontalScrollBar->getScroll() : 0;
         me.my += ( vertikalScrollBar && hatStyle( Style::VScroll ) ) ? vertikalScrollBar->getScroll() : 0;
-        if( me.id != ME_Betritt && me.id != ME_Verlässt )
+        if( me.id != ME_Betritt && me.id != ME_Leaves )
         {
-            if( !außerhalb )
+            if( !ausserhalb )
             {
                 bool vs = hatStyle( Style::VScroll ) && vertikalScrollBar;
                 bool hs = hatStyle( Style::HScroll ) && horizontalScrollBar;
@@ -1045,9 +1045,9 @@ void ObjTabelle::render( Bild &zRObj ) // zeichnet nach zRObj
 {
     if( hatStyleNicht( Style::Sichtbar ) )
         return;
-    __super::render( zRObj );
+	ZeichnungHintergrund::render( zRObj );
     lockZeichnung();
-    if( !zRObj.setDrawOptions( innenPosition, innenGröße ) )
+    if( !zRObj.setDrawOptions( innenPosition, innenSize ) )
     {
         unlockZeichnung();
         return;
@@ -1066,12 +1066,12 @@ void ObjTabelle::render( Bild &zRObj ) // zeichnet nach zRObj
             continue;
         for( int z = 0; z < zeilenAnzahl && tmp_zZeichnungs; ++z )
         {
-            int zHö = zeilenHöhe->hat( z ) ? zeilenHöhe->get( z ) : 0;
+            int zHi = zeilenHeight->hat( z ) ? zeilenHeight->get( z ) : 0;
             Zeichnung *obj = tmp_zZeichnungs->hat( z ) ? tmp_zZeichnungs->get( z ) : 0;
             if( obj )
             {
                 obj->setPosition( xPos, yPos );
-                obj->setGröße( sBr, zHö );
+                obj->setSize( sBr, zHi );
                 obj->render( zRObj );
                 if( selected.x == s && selected.y == z )
                 {
@@ -1090,30 +1090,30 @@ void ObjTabelle::render( Bild &zRObj ) // zeichnet nach zRObj
                     if( aRamB )
                     {
                         tmp_aRam->setPosition( xPos, yPos );
-                        tmp_aRam->setGröße( sBr, zHö );
+                        tmp_aRam->setSize( sBr, zHi );
                         tmp_aRam->render( zRObj );
                         aRbr = tmp_aRam->getRBreite();
                     }
                     if( aAfB )
                     {
                         tmp_aAf->setPosition( aRbr + xPos, aRbr + yPos );
-                        tmp_aAf->setGröße( sBr - aRbr * 2, zHö - aRbr * 2 );
+                        tmp_aAf->setSize( sBr - aRbr * 2, zHi - aRbr * 2 );
                         tmp_aAf->render( zRObj );
                     }
                 }
             }
             if( hatStyle( Style::Raster ) )
             {
-                zRObj.drawLinieH( xPos, yPos + zHö, sBr, rasterFarbe );
+                zRObj.drawLinieH( xPos, yPos + zHi, sBr, rasterFarbe );
                 yPos += rasterBreite;
             }
-            yPos += zHö;
+            yPos += zHi;
             if( z == zeilenAnzahl - 1 && vertikalScrollBar && hatStyle( Style::VScroll ) )
                 vertikalScrollBar->getScrollData()->max = yPos + vertikalScrollBar->getScroll();
         }
         if( hatStyle( Style::Raster ) )
         {
-            zRObj.drawLinieV( xPos + sBr, 0, innenGröße.y, rasterFarbe );
+            zRObj.drawLinieV( xPos + sBr, 0, innenSize.y, rasterFarbe );
             xPos += rasterBreite;
         }
         xPos += sBr;
@@ -1237,19 +1237,19 @@ int ObjTabelle::getSpaltenBreite( Text *name ) const
     return getSpaltenBreite( getSpaltenNummer( name ) );
 }
 
-int ObjTabelle::getZeilenHöhe( int num ) const // gibt die Höhe der Zeile zurück
+int ObjTabelle::getZeilenHeight( int num ) const // gibt die Höhe der Zeile zurück
 {
-    return zeilenHöhe->get( num );
+    return zeilenHeight->get( num );
 }
 
-int ObjTabelle::getZeilenHöhe( const char *name ) const
+int ObjTabelle::getZeilenHeight( const char *name ) const
 {
-    return getZeilenHöhe( getZeilenNummer( name ) );
+    return getZeilenHeight( getZeilenNummer( name ) );
 }
 
-int ObjTabelle::getZeilenHöhe( Text *name ) const
+int ObjTabelle::getZeilenHeight( Text *name ) const
 {
-    return getZeilenHöhe( getZeilenNummer( name ) );
+    return getZeilenHeight( getZeilenNummer( name ) );
 }
 
 int ObjTabelle::getMinSpaltenBreite( int num ) const // gibt die minimale Spaltengröße zurück
@@ -1282,34 +1282,34 @@ int ObjTabelle::getMaxSpaltenBreite( Text *name ) const
     return getMaxSpaltenBreite( getSpaltenNummer( name ) );
 }
 
-int ObjTabelle::getMinZeilenHöhe( int num ) const // gibt die minimale Zeilenhöhe zurück
+int ObjTabelle::getMinZeilenHeight( int num ) const // gibt die minimale Zeilenhöhe zurück
 {
-    return minZeilenHöhe->get( num );
+    return minZeilenHeight->get( num );
 }
 
-int ObjTabelle::getMinZeilenHöhe( const char *name ) const
+int ObjTabelle::getMinZeilenHeight( const char *name ) const
 {
-    return getMinZeilenHöhe( getZeilenNummer( name ) );
+    return getMinZeilenHeight( getZeilenNummer( name ) );
 }
 
-int ObjTabelle::getMinZeilenHöhe( Text *name ) const
+int ObjTabelle::getMinZeilenHeight( Text *name ) const
 {
-    return getMinZeilenHöhe( getZeilenNummer( name ) );
+    return getMinZeilenHeight( getZeilenNummer( name ) );
 }
 
-int ObjTabelle::getMaxZeilenHöhe( int num ) const // gibt die maximale Zeilenhöhe zurück
+int ObjTabelle::getMaxZeilenHeight( int num ) const // gibt die maximale Zeilenhöhe zurück
 {
-    return maxZeilenHöhe->get( num );
+    return maxZeilenHeight->get( num );
 }
 
-int ObjTabelle::getMaxZeilenHöhe( const char *name ) const
+int ObjTabelle::getMaxZeilenHeight( const char *name ) const
 {
-    return getMaxZeilenHöhe( getZeilenNummer( name ) );
+    return getMaxZeilenHeight( getZeilenNummer( name ) );
 }
 
-int ObjTabelle::getMaxZeilenHöhe( Text *name ) const
+int ObjTabelle::getMaxZeilenHeight( Text *name ) const
 {
-    return getMaxZeilenHöhe( getZeilenNummer( name ) );
+    return getMaxZeilenHeight( getZeilenNummer( name ) );
 }
 
 double ObjTabelle::getMausSpalte( int mx ) const // ermittelt die Spalte unter der Maus
@@ -1360,7 +1360,7 @@ double ObjTabelle::getMausZeile( int my ) const // ermittelt die Zeile unter der
     int yy = rahmen ? rahmen->getRBreite() : 0;
     for( int i = 0; i < zeilenAnzahl; ++i )
     {
-        yy += zeilenHöhe->get( i );
+        yy += zeilenHeight->get( i );
         if( my < yy - 5 )
             return i;
         if( my < yy + 5 )
@@ -1520,7 +1520,7 @@ Zeichnung *ObjTabelle::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
 {
     ObjTabelle *obj = new ObjTabelle();
     obj->setPosition( pos );
-    obj->setGröße( gr );
+    obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
     obj->setMausEreignis( Mak );
@@ -1555,12 +1555,12 @@ Zeichnung *ObjTabelle::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
             if( !s )
             {
                 obj->addZeile( zeilenNamen->get( z ) );
-                if( zeilenHöhe->hat( z ) )
-                    obj->setZeilenHöhe( z, zeilenHöhe->get( z ) );
-                if( minZeilenHöhe->hat( z ) )
-                    obj->setMinZeilenHöhe( z, minZeilenHöhe->get( z ) );
-                if( maxZeilenHöhe->hat( z ) )
-                    obj->setMaxZeilenHöhe( z, maxZeilenHöhe->get( z ) );
+                if( zeilenHeight->hat( z ) )
+                    obj->setZeilenHeight( z, zeilenHeight->get( z ) );
+                if( minZeilenHeight->hat( z ) )
+                    obj->setMinZeilenHeight( z, minZeilenHeight->get( z ) );
+                if( maxZeilenHeight->hat( z ) )
+                    obj->setMaxZeilenHeight( z, maxZeilenHeight->get( z ) );
             }
             if( zZeichnungs->z( s ) && zZeichnungs->z( s )->hat( z ) )
                 obj->setZeichnungZ( s, z, zZeichnungs->z( s )->get( z ) );

@@ -35,11 +35,11 @@ namespace Framework
         // Bringt den Normalen Vektor der Ebene auf die Länge 1
         inline Ebene3D &normalize()
         {
-            const T länge = län();
-            x /= länge;
-            y /= länge;
-            z /= länge;
-            w /= länge;
+            const T length = len();
+            x /= length;
+            y /= length;
+            z /= length;
+            w /= length;
             return *this;
         }
         // Tauscht die Werte zweier Ebenen
@@ -108,14 +108,14 @@ namespace Framework
             return{ (T2)x, (T2)y, (T2)z, (T2)w };
         }
         // Errehnet das Quadrat der Länge des Normalen Vektors der Ebene
-        inline T länSq() const
+        inline T lenSq() const
         {
             return x * x + y * y + z * z;
         }
         // Errechnet die Länge des Normalen Vektors
-        inline T län() const
+        inline T len() const
         {
-            return sqrt( länSq() );
+            return sqrt( lenSq() );
         }
         // Berechnet die Entfernung der Ebene zu einem Vektor
         //  r: Der Vektor

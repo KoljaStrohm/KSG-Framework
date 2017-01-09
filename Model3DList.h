@@ -7,10 +7,9 @@ namespace Framework
     class Model3DData; // Model3D.h
     class Text; // Text.h
     class Model3D; // Model3D.h
-
     namespace Standart3DTypes
     {
-        const static char *würfel = "f_würfel"; // Die Modeldaten eines Würfels der 100 * 100 * 100 groß ist
+        extern const char *cube; // = "f_würfel"; Die Modeldaten eines Würfels der 100 * 100 * 100 groß ist
     };
 
     // Verwaltet alle geladenen Modeldaten, so dass mehrere Zeichnungen die selben Daten benutzen können
@@ -34,7 +33,7 @@ namespace Framework
         bool addModel( Model3DData *mdl, const char *name );
         // Entfernt ein Model aus der Liste
         //  name: Der Name des Models
-        void löscheModel( const char *name );
+        void removeModel( const char *name );
         // Überprüft, ob unter einem bestimmten Namen ein Model abgespeichert wurde
         //  name: Der Name
         //  return: true, wenn ein Model mit dem Namen existiert

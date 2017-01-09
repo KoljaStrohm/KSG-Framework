@@ -59,24 +59,24 @@ void M3Datei::leseDaten()
     modelPos = new Array< __int64 >();
     Datei d;
     d.setDatei( pfad );
-    if( !d.öffnen( Datei::Style::lesen ) )
+    if( !d.open( Datei::Style::lesen ) )
         return;
     unsigned char anz = 0;
     d.lese( (char*)&anz, 1 );
     for( int i = 0; i < anz; i++ )
     {
-        char län = 0;
-        d.lese( &län, 1 );
-        char *n = new char[ län + 1 ];
-        n[ län ] = 0;
-        d.lese( n, län );
+        char len = 0;
+        d.lese( &len, 1 );
+        char *n = new char[ len + 1 ];
+        n[ (int)len ] = 0;
+        d.lese( n, len );
         modelName->add( new Text( n ) );
         delete[] n;
         __int64 p = 0;
         d.lese( (char*)&p, 8 );
         modelPos->add( p );
     }
-    d.schließen();
+    d.close();
 }
 
 // Speichert 3D Modell Daten in der Datei
@@ -96,50 +96,50 @@ bool M3Datei::saveModel( Model3DData *zMdr, Text *name )
 //  return: 1, falls das Modell gespeichert wurde. 0, falls ein fehler beim speichern auftrat
 bool M3Datei::saveModel( Model3DData *zMdr, const char *name )
 {
-    if( !modelName || !pfad.getLänge() )
+    if( !modelName || !pfad.getLength() )
         return 0;
-    if( hatModel( name ) && !löscheModel( name ) )
+    if( hatModel( name ) && !removeModel( name ) )
         return 0;
     int anz = modelName->getEintragAnzahl();
     anz = modelName->getEintragAnzahl();
     Datei d;
     d.setDatei( pfad );
-    if( !d.öffnen( Datei::Style::lesen ) )
+    if( !d.open( Datei::Style::lesen ) )
         return 0;
     Datei neu;
     neu.setDatei( pfad );
-    neu.zPfad()->anhängen( "0" );
+    neu.zPfad()->append( "0" );
     while( neu.existiert() )
-        neu.zPfad()->anhängen( "0" );
-    if( !neu.öffnen( Datei::Style::schreiben ) )
+        neu.zPfad()->append( "0" );
+    if( !neu.open( Datei::Style::schreiben ) )
     {
         if( d.istOffen() )
-            d.schließen();
+            d.close();
         return 0;
     }
     modelName->add( new Text( name ) );
-    int offs = textLänge( name ) + 9;
+    int offs = textLength( name ) + 9;
     for( int i = 0; i < anz; i++ )
         modelPos->set( modelPos->get( i ) + offs, i );
-    if( d.getGröße() < 0 )
+    if( d.getSize() < 0 )
         modelPos->add( offs + 1 );
     else
-        modelPos->add( d.getGröße() + offs );
+        modelPos->add( d.getSize() + offs );
     anz++;
     char tmp = (char)anz;
     neu.schreibe( &tmp, 1 );
     for( int i = 0; i < anz; i++ )
     {
-        char län = (char)modelName->z( i )->getLänge();
-        neu.schreibe( &län, 1 );
-        neu.schreibe( modelName->z( i )->getText(), län );
+        char len = (char)modelName->z( i )->getLength();
+        neu.schreibe( &len, 1 );
+        neu.schreibe( modelName->z( i )->getText(), len );
         __int64 pos = modelPos->get( i );
         neu.schreibe( (char*)&pos, 8 );
     }
     if( d.existiert() )
     {
         d.setLPosition( modelPos->get( 0 ) - offs, 0 );
-        __int64 dl = d.getGröße() - d.getLPosition();
+        __int64 dl = d.getSize() - d.getLPosition();
         char bytes[ 2048 ];
         while( dl )
         {
@@ -149,7 +149,7 @@ bool M3Datei::saveModel( Model3DData *zMdr, const char *name )
             dl -= l;
         }
     }
-    d.schließen();
+    d.close();
     /*char pAnz = zMdr->polygons->getEintragAnzahl();
     neu.schreibe( &pAnz, 1 );
     for( int p = 0; p < pAnz; p++ )
@@ -175,8 +175,8 @@ bool M3Datei::saveModel( Model3DData *zMdr, const char *name )
             }
         }
     }*/
-    d.löschen();
-    neu.schließen();
+    d.remove();
+    neu.close();
     neu.umbenennen( pfad );
     leseDaten();
     return 1;
@@ -185,7 +185,7 @@ bool M3Datei::saveModel( Model3DData *zMdr, const char *name )
 // Löscht ein 3D Modell aus der Datei
 //  name: Der Name des Modells
 //  return: 1, wenn das Modell gelöscht wurde. 0, wenn das Modell nicht gefunden wurde, oder ein fehler beim speichern auftrat
-bool M3Datei::löscheModel( Text *name )
+bool M3Datei::removeModel( Text *name )
 {
     return 0;
 }
@@ -193,7 +193,7 @@ bool M3Datei::löscheModel( Text *name )
 // Löscht ein 3D Modell aus der Datei
 //  name: Der Name des Modells
 //  return: 1, wenn das Modell gelöscht wurde. 0, wenn das Modell nicht gefunden wurde, oder ein fehler beim speichern auftrat
-bool M3Datei::löscheModel( const char *name )
+bool M3Datei::removeModel( const char *name )
 {
     return 0;
 }

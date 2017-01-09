@@ -35,7 +35,7 @@ namespace Framework
         // Konstruktor
         __declspec( dllexport ) M2DVorschau();
         // Destruktor
-        __declspec( dllexport ) ~M2DVorschau();
+        __declspec( dllexport ) virtual ~M2DVorschau();
         // Setzt einen Zeiger auf das Model, das angezeigt werden soll
         //  mdl: Das Model
         __declspec( dllexport ) void setModel2DZ( Model2D *mdl );

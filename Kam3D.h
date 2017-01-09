@@ -21,7 +21,7 @@ namespace Framework
         Mat4< float > view;
         Mat4< float > proj;
 
-        float öffnungswinkel;
+        float openingAngle;
         float minZ;
         float maxZ;
         Vec3< float > pos;
@@ -61,11 +61,11 @@ namespace Framework
         __declspec( dllexport ) void setBildschirmPosition( int x, int y );
         // Setzt die Größe des Bildes auf dem Bildschirm
         //  p: Ein Punkt, mit x als Breite und y als Höhe in Pixlen
-        __declspec( dllexport ) void setBildschirmGröße( Punkt p );
+        __declspec( dllexport ) void setBildschirmSize( Punkt p );
         // Setzt die Größe des Bildes auf dem Bildschirm
         //  br: Die Breite in Pixeln
-        //  hö: Die Höhe in Pixeln
-        __declspec( dllexport ) void setBildschirmGröße( int br, int hö );
+        //  hi: Die Höhe in Pixeln
+        __declspec( dllexport ) void setBildschirmSize( int br, int hi );
         // Setzt die Welt, die gezeichnet werden soll
         //  w: Die Welt
         __declspec( dllexport ) void setWelt( Welt3D *w );

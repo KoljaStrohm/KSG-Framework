@@ -96,7 +96,7 @@ namespace Framework
         // Konstruktor
         __declspec( dllexport ) Animation2D();
         // Destruktor
-        __declspec( dllexport ) ~Animation2D();
+        __declspec( dllexport ) virtual ~Animation2D();
         // Legt fest, ob ein Rahmen um die Animation gezeichnet werden soll
         //  ram: 1, wenn ein Rahmen gezeichnet werden soll
         __declspec( dllexport ) void setRahmen( bool ram );

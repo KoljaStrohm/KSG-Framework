@@ -22,6 +22,8 @@ namespace Framework
     public:
         // Konstruktor 
         __declspec( dllexport ) LRahmen();
+		// Destruktor
+		__declspec( dllexport ) virtual ~LRahmen();
         // Setzt die Breite des Rahmens
         //  br: Die Breite in Pixeln
         __declspec( dllexport ) void setRamenBreite( int br );

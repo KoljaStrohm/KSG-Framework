@@ -14,7 +14,7 @@ using namespace Framework;
 // Konstruktor
 Kam3D::Kam3D()
 {
-    öffnungswinkel = (float)PI / 4;
+    openingAngle = (float)PI / 4;
     minZ = 0.1f;
     maxZ = 5000;
     pos = Vec3< float >( 0, 0, -1000 );
@@ -51,7 +51,7 @@ Kam3D::~Kam3D()
 void Kam3D::updateMatrix()
 {
     view = view.rotationX( -rotX ) * view.rotationY( -rotY ) * view.rotationZ( -rotZ ) * view.translation( Vec3< float >( -pos.x, -pos.y, -pos.z ) );
-    proj = proj.projektion( öffnungswinkel, viewport->Width / viewport->Height, minZ, maxZ );
+    proj = proj.projektion( openingAngle, viewport->Width / viewport->Height, minZ, maxZ );
 }
 
 // Setzt die Position der Kamera in der 3D Welt
@@ -107,7 +107,7 @@ void Kam3D::setBildschirmPosition( int x, int y )
 
 // Setzt die Größe des Bildes auf dem Bildschirm
 //  p: Ein Punkt, mit x als Breite und y als Höhe in Pixlen
-void Kam3D::setBildschirmGröße( Punkt p )
+void Kam3D::setBildschirmSize( Punkt p )
 {
     viewport->Width = (float)p.x;
     viewport->Height = (float)p.y;
@@ -117,7 +117,7 @@ void Kam3D::setBildschirmGröße( Punkt p )
 // Setzt die Größe des Bildes auf dem Bildschirm
 //  br: Die Breite in Pixeln
 //  hö: Die Höhe in Pixeln
-void Kam3D::setBildschirmGröße( int br, int hö )
+void Kam3D::setBildschirmSize( int br, int hö )
 {
     viewport->Width = (float)br;
     viewport->Height = (float)hö;

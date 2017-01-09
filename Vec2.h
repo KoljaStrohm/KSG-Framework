@@ -31,9 +31,9 @@ namespace Framework
         // Skalliert den Vektor, so dass er die Länge 1 hat
         inline Vec2 &normalize()
         {
-            const T länge = län();
-            x /= länge;
-            y /= länge;
+            const T length = getLength();
+            x /= length;
+            y /= length;
             return *this;
         }
         // Dreht den Vektor um 90 Grad gegen den Uhrzeigersinn
@@ -113,14 +113,14 @@ namespace Framework
             return Vec2< T2 >( (T2)x, (T2)y );
         }
         // Errechnet das Quadrat der Länge desVektors
-        inline T länSq() const
+        inline T getLengthSq() const
         {
             return *this * *this;
         }
         // Errechnet die Länge des Vektors
-        inline T län() const
+        inline T getLength() const
         {
-            return sqrt( länSq() );
+            return sqrt( getLengthSq() );
         }
         // Errechnet das Skalarprodukt zwischen zwei Vektoren
         //  r: Der andere Vektor

@@ -19,10 +19,10 @@ namespace Framework
     class Buchstabe
     {
     private:
-        Punkt größe;
+        Punkt size;
         Punkt pos;
         unsigned char *alpha;
-        int schriftGröße;
+        int schriftSize;
         int drawSg;
         int ref;
 
@@ -33,8 +33,8 @@ namespace Framework
         __declspec( dllexport ) ~Buchstabe();
 
         // Erstellt einen neuen Buchstaben mit bestimmter Größe
-        //  größe: Die Größe des Buchstabens in Pixel
-        __declspec( dllexport ) void NeuBuchstabe( Punkt &größe );
+        //  size: Die Größe des Buchstabens in Pixel
+        __declspec( dllexport ) void NeuBuchstabe( Punkt &size );
         // Setzt den Alphawert eines bestimmten Pixels
         //  pos: Die position des Pixels
         //  alpha: Der Wert des Pixels
@@ -57,21 +57,21 @@ namespace Framework
         __declspec( dllexport ) void setPosition( int x, int y );
         // Setzt die Schriftgröße, zu der der Buchstabe gehört
         //  sg: Die Schriftgröße des Buchstabens. Wenn der Buchstabe in einer anderen größe gezeichnet werden soll, wird automatisch skalliert
-        __declspec( dllexport ) void setSchriftGröße( int sg );
+        __declspec( dllexport ) void setSchriftSize( int sg );
         // Setzt die Schriftgröße, in der der Buchstabe gezeichnet werden soll
         //  dsg: Die Schriftgröße, in der der Buchstabe gezeichnet werden soll. Ist die ungleich der Schriftgröße, zu der der Buchstabe gehört, so wird automatisch skalliert.
-        __declspec( dllexport ) void setDrawSchriftGröße( int dsg );
+        __declspec( dllexport ) void setDrawSchriftSize( int dsg );
 
         // Gibt die alpha Werte des Buchstabens als array zurück wobei die werte Zeilenweise hintereinander stehen
         __declspec( dllexport ) unsigned char *getBuff() const;
         // Gibt die Größe des Buchstabens in Pixeln nicht skalliert zurück.
-        __declspec( dllexport ) const Punkt &getGröße() const;
+        __declspec( dllexport ) const Punkt &getSize() const;
         // Gibt die Breite des Buchstabens in Pixeln zurück (Der Wert wurde bereits mit der Draw Schriftgröße skalliert)
         __declspec( dllexport ) int getBreite() const;
         // Gibt die Höhe des Buchstabens in Pixeln zurück (Der Wert wurde bereits mit der Draw Schriftgröße skalliert)
-        __declspec( dllexport ) int getHöhe() const;
+        __declspec( dllexport ) int getHeight() const;
         // Gibt die nicht skallierte Höhe des Buchstabens in Pixeln zurück
-        __declspec( dllexport ) int getNormHöhe() const;
+        __declspec( dllexport ) int getNormHeight() const;
         // Zeichnet den Buchstaben in ein bestimmtes Bild
         // Nutze (setPosition) und (setDrawSchriftGröße) um die Position und die Größe zu verändern
         //  zRObj: Das Bild, in den der Buchstabe gezeichnet werden soll
@@ -92,10 +92,10 @@ namespace Framework
     {
     private:
         Buchstabe **zeichen;
-        int schriftGröße;
-        int drawSchriftGröße;
+        int schriftSize;
+        int drawSchriftSize;
         Punkt pos;
-        int zeilenHöhe;
+        int zeilenHeight;
         int zeilenAbstand;
         int ref;
 
@@ -114,10 +114,10 @@ namespace Framework
         __declspec( dllexport ) void setBuchstabe( unsigned char i, Buchstabe *buchstabe );
         // Setzt die Schriftgröße des Alphabets und die der gespeicherten buchstaben
         //  gr: Die Schriftgröße des Alphabets
-        __declspec( dllexport ) void setSchriftgröße( int gr );
+        __declspec( dllexport ) void setSchriftSize( int gr );
         // Setzt die Schriftgröße, in der die gespeicherten Buchstaben gezeichnet werden sollen.
         //  gr: Die Zeichen Schriftgröße. Wenn sie ungleich der Schriftgröße des Alphabets ist, wird automatisch skalliert
-        __declspec( dllexport ) void setDrawSchriftgröße( int gr );
+        __declspec( dllexport ) void setDrawSchriftSize( int gr );
         // Setzt den Zeilenabstand beim Zeichnen eines Textes
         //  za: Der Abschtand zum unteren Ende der Zeile darüber in Pixeln
         __declspec( dllexport ) void setZeilenAbstand( int za );
@@ -142,13 +142,13 @@ namespace Framework
         //  return: (true), wenn ein Zeichen zu dem Code gefunden wurde. (false) sonnst
         __declspec( dllexport ) bool hatBuchstabe( unsigned char b ) const;
         // Gibt die Schriftgröße zurück, deren Zeichen in diesem Alphabet gespeichert werden
-        __declspec( dllexport ) int getSchriftgröße() const;
+        __declspec( dllexport ) int getSchriftSize() const;
         // Gibt die Schriftgröße zurück, in der die gespeicherten Zeichen gezeichnet werden
-        __declspec( dllexport ) int getDrawSchriftGröße() const;
+        __declspec( dllexport ) int getDrawSchriftSize() const;
         // Gibt den Abstand in Pixeln zum unteren Ende der darüber ligenden Zeile zurück
         __declspec( dllexport ) int getZeilenAbstand() const;
         // Gibt die skallierte Höhe zurück, die eine gezeichnete Zeile in Pixeln benötigt
-        __declspec( dllexport ) int getZeilenHöhe() const;
+        __declspec( dllexport ) int getZeilenHeight() const;
         // gibt die Position zurück, an der der erste Buchstabe gezeichnet wird
         __declspec( dllexport ) const Punkt &getPosition() const;
         // Ermittelt, wie viele Pixel benötigt werden, um einen Bestimmten Text vollständig darzustellen
@@ -156,7 +156,7 @@ namespace Framework
         __declspec( dllexport ) int getTextBreite( Text *zTxt ) const;
         // Ermittelt, wie viele Pixel benötigt werden, um einen Bestimmten Text vollständig darzustellen
         //  zTxt: Der Text, von dem die Höhe in Pixeln ermitelt werden soll
-        __declspec( dllexport ) int getTextHöhe( Text *zTxt ) const;
+        __declspec( dllexport ) int getTextHeight( Text *zTxt ) const;
         // Ermittelt das Zeichen im Text, auf das die Maus zeigt
         //  zTxt: Der Text, auf den die Maus Zeigt
         //  mausX: Die X Position der Maus in Pixeln Relativ zur Position des ersten Zeichens
@@ -165,7 +165,8 @@ namespace Framework
         // Fügt Zeilenumbrüche in den Text ein, so dass er bei einer vorgegebenen Breite follständig angezeigt wird
         //  zText: Der text, in den die Zeilenumbrüche eingefügt werden sollen
         //  maxBreite: Die Breite in Pixeln auf der der Text follständig angezeigt werden soll
-        __declspec( dllexport ) void textFormatieren( Text *zText, int maxBreite, int schriftGröße );
+		//  schriftSize: Die Schriftgröße, in der der Text passend dargestellt werden soll
+        __declspec( dllexport ) void textFormatieren( Text *zText, int maxBreite, int schriftSize );
         // Zeichnet einen Bestimmten Text auf ein Bild
         // Nutze (setDrawPosition) und (setDrawSchriftGröße) um die Position und die Größe zu verändern
         //  zText: Der Text, der gezeichnet werden soll
@@ -216,7 +217,7 @@ namespace Framework
         __declspec( dllexport ) bool removeAlphabet( int sg );
         // Setzt die Schriftgröße, in der gezeichnet werden soll
         //  sg: Die Schriftgröße
-        __declspec( dllexport ) void setDrawSchriftGröße( int sg );
+        __declspec( dllexport ) void setDrawSchriftSize( int sg );
         // Setzt den Zeilenabstand, der zum zeichnen verwendet werden soll
         //  za: Der Zeilenabstand zum unteren Ende der darüber liegenden zeile in Pixeln
         __declspec( dllexport ) void setZeilenAbstand( int za );
@@ -251,7 +252,7 @@ namespace Framework
     private:
         unsigned char alphabetAnzahl;
         AlphabetArray *alphabet;
-        int schriftGröße;
+        int schriftSize;
         int zeilenAbstand;
         Punkt drawPos;
         CRITICAL_SECTION cs;
@@ -286,15 +287,15 @@ namespace Framework
         __declspec( dllexport ) void setDrawPosition( Punkt &pos );
         // Setzt die Schriftgröße, in der gezeichnet werden soll. Die Schrift wählt automatisch das passende Alphabet zum Zeichnen
         //  sg: Die Schriftgröße
-        __declspec( dllexport ) void setSchriftGröße( int sg );
+        __declspec( dllexport ) void setSchriftSize( int sg );
         // Setzt den Zeilenabstand, der zum zeichnen verwendet werden soll
         //  za: Der Zeilenabstand zum unteren Ende der darüber liegenden zeile in Pixeln
         __declspec( dllexport ) void setZeilenAbstand( int za );
         // Fügt Zeilenumbrüche in den Text ein, so dass er bei einer vorgegebenen Breite follständig angezeigt wird
         //  zText: Der text, in den die Zeilenumbrüche eingefügt werden sollen
         //  maxBreite: Die Breite in Pixeln auf der der Text follständig angezeigt werden soll
-        //  schriftGröße: Die Schriftgröße, die verwendet werden soll
-        __declspec( dllexport ) void textFormatieren( Text *zText, int maxBreite, int schriftGröße );
+        //  schriftSize: Die Schriftgröße, die verwendet werden soll
+        __declspec( dllexport ) void textFormatieren( Text *zText, int maxBreite, int schriftSize );
         // Zeichnet einen Bestimmten Text auf ein Bild
         // Nutze (setDrawPosition) und (setSchriftGröße) um die Position und die Größe zu verändern
         //  zText: Der Text, der gezeichnet werden soll
@@ -330,7 +331,7 @@ namespace Framework
         // Gibt zurück, wie viele Alphabete (und damit Schriftgrößen) in der Schrift enthalten sind
         __declspec( dllexport ) unsigned char getAlphabetAnzahl() const;
         // Gibt die Schriftgröße zurück, die zum Zeichnen verwendet wird
-        __declspec( dllexport ) int getSchriftGröße() const;
+        __declspec( dllexport ) int getSchriftSize() const;
         // Gibt den Abstand in Pixeln zum unteren Ende der darüber ligenden Zeile zurück
         __declspec( dllexport ) int getZeilenabstand() const;
         // Gibt die x Koordinate des ersten Zeichens, dass gezeichnet wird, in Pixeln zurück
@@ -344,7 +345,7 @@ namespace Framework
         __declspec( dllexport ) int getTextBreite( Text *zTxt ) const;
         // Ermittelt, wie viele Pixel benötigt werden, um einen Bestimmten Text vollständig darzustellen
         //  zTxt: Der Text, von dem die Höhe in Pixeln ermitelt werden soll
-        __declspec( dllexport ) int getTextHöhe( Text *zTxt ) const;
+        __declspec( dllexport ) int getTextHeight( Text *zTxt ) const;
         // Ermittelt das Zeichen im Text, auf das die Maus zeigt
         //  zTxt: Der Text, auf den die Maus Zeigt
         //  mausX: Die X Position der Maus in Pixeln Relativ zur Position des ersten Zeichens

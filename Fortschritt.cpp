@@ -21,7 +21,7 @@ FBalken::FBalken()
     fBgBild( 0 ),
     schrift( 0 ),
     schriftFarbe( 0 ),
-    schriftGröße( 0 ),
+    schriftSize( 0 ),
     ref( 1 )
 {
     style = 0;
@@ -103,11 +103,11 @@ void FBalken::setFAFFarbe( int f ) // setzt die Fertig Alpha Feld Farbe
     rend = 1;
 }
 
-void FBalken::setFAFStärke( int st ) // setzt die Stärke des Fertig Alpha Feldes
+void FBalken::setFAFStrength( int st ) // setzt die Stärke des Fertig Alpha Feldes
 {
     if( !fBuffer )
         fBuffer = new AlphaFeld();
-    fBuffer->setStärke( st );
+    fBuffer->setStrength( st );
     rend = 1;
 }
 
@@ -129,8 +129,8 @@ void FBalken::setFBgBild( Bild *b ) // kopiert in das Fertig Hintergrund Bild
 {
     if( !fBgBild )
         fBgBild = new Bild();
-    fBgBild->neuBild( b->getBreite(), b->getHöhe(), 0 );
-    fBgBild->drawBild( 0, 0, b->getBreite(), b->getHöhe(), *b );
+    fBgBild->neuBild( b->getBreite(), b->getHeight(), 0 );
+    fBgBild->drawBild( 0, 0, b->getBreite(), b->getHeight(), *b );
     b->release();
     rend = 1;
 }
@@ -149,9 +149,9 @@ void FBalken::setSFarbe( int f ) // setzt die Schrift Farbe
     rend = 1;
 }
 
-void FBalken::setSGröße( unsigned char gr ) // setzt die Schrift größe
+void FBalken::setSSize( unsigned char gr ) // setzt die Schrift größe
 {
-    schriftGröße = gr;
+    schriftSize = gr;
     rend = 1;
 }
 
@@ -160,8 +160,8 @@ void FBalken::render( Bild &zRObj ) // zeichnet nach zRObj
     if( !hatStyle( Style::Sichtbar ) )
         return;
     lockZeichnung();
-    löscheStyle( Style::VScroll | Style::HScroll );
-    __super::render( zRObj );
+    removeStyle( Style::VScroll | Style::HScroll );
+	ZeichnungHintergrund::render( zRObj );
     if( !zRObj.setDrawOptions( pos, gr ) )
     {
         unlockZeichnung();
@@ -196,7 +196,7 @@ void FBalken::render( Bild &zRObj ) // zeichnet nach zRObj
     int rbr = 0;
     if( hatStyle( Style::FRahmen ) && fRahmen )
     {
-        fRahmen->setGröße( b, h );
+        fRahmen->setSize( b, h );
         fRahmen->render( zRObj );
         rbr = fRahmen->getRBreite();
     }
@@ -205,7 +205,7 @@ void FBalken::render( Bild &zRObj ) // zeichnet nach zRObj
         if( hatStyle( Style::FAlpha ) )
             zRObj.alphaRegion( rbr, rbr, b - rbr * 2, h - rbr * 2, fBgF );
         else
-            zRObj.füllRegion( rbr, rbr, b - rbr * 2, h - rbr * 2, fBgF );
+            zRObj.fillRegion( rbr, rbr, b - rbr * 2, h - rbr * 2, fBgF );
     }
     if( hatStyle( Style::FBild ) && fBgBild )
     {
@@ -216,17 +216,17 @@ void FBalken::render( Bild &zRObj ) // zeichnet nach zRObj
     }
     if( hatStyle( Style::FBuffered ) && fBuffer )
     {
-        fBuffer->setGröße( b - rbr * 2, h - rbr * 2 );
+        fBuffer->setSize( b - rbr * 2, h - rbr * 2 );
         fBuffer->render( zRObj );
     }
     zRObj.releaseDrawOptions();
     if( hatStyle( Style::Prozent ) && schrift )
     {
-        schrift->setSchriftGröße( schriftGröße );
+        schrift->setSchriftSize( schriftSize );
         Text txt;
-        txt.anhängen( (int)getProzent() );
-        txt.anhängen( "%" );
-        schrift->setDrawPosition( rbr + ( gr.x - rbr * 2 ) / 2 - schrift->getTextBreite( &txt ) / 2, rbr + ( gr.y - rbr * 2 ) / 2 - schrift->getTextHöhe( &txt ) / 2 );
+        txt.append( (int)getProzent() );
+        txt.append( "%" );
+        schrift->setDrawPosition( rbr + ( gr.x - rbr * 2 ) / 2 - schrift->getTextBreite( &txt ) / 2, rbr + ( gr.y - rbr * 2 ) / 2 - schrift->getTextHeight( &txt ) / 2 );
         schrift->renderText( &txt, zRObj, schriftFarbe );
     }
     zRObj.releaseDrawOptions();
@@ -243,7 +243,7 @@ double FBalken::getProzent() const // gibt die momentane Prozentzahl zurück
 {
     if( !maxAk )
         return 0;
-    return ak / ( maxAk / 100.0 );
+    return (double)ak / ( (double)maxAk / 100.0 );
 }
 
 __int64 FBalken::getAktion() const // gibt die fertigen Aktionen zurück

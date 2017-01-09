@@ -62,13 +62,13 @@ namespace Framework
         }
 
         // Löscht den letzten Punkt
-        void löscheLetztenPunkt()
+        void removeLetztenPunkt()
         {
             int i = punkte->getEintragAnzahl() - 1;
             if( !punkte->hat( i ) )
                 return;
             delete punkte->get( i );
-            punkte->lösche( i );
+            punkte->remove( i );
         }
 
         // Löscht alle Ecken

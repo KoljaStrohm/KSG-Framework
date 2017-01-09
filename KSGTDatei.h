@@ -49,7 +49,7 @@ namespace Framework
         // Löscht eine Zeile
         //  zeile: Der Index der Zeile, die gelöscht werden soll
         //  return: 1, wenn die Zeile gelöscht wurde. 0, wenn die Zeile nicht gefunden wurde
-        __declspec( dllexport ) bool löscheZeile( int zeile );
+        __declspec( dllexport ) bool removeZeile( int zeile );
         // Fügt einer Bestimmten Zeile einen Wert hinzu
         //  zeile: Der Index der Zeile, der ein Wert hinzugefügt werden soll
         //  pos: Die Position in der Zeile, an der der Wert hinzugefügt werden soll
@@ -88,7 +88,7 @@ namespace Framework
         //  zeile: Der Index der Zeile, aus der ein Wert gelöscht werden soll
         //  feld: Die Position in der Zeile, an der der Wert gelöscht werden soll
         //  return: 1, falls Der Wert erfolgreich gelöscht wurde. 0, falls die Zeile oder der Wert nicht existiert
-        __declspec( dllexport ) bool löscheFeld( int zeile, int feld );
+        __declspec( dllexport ) bool removeFeld( int zeile, int feld );
         // Speichert die Tabelle in der Datei
         //  return: 1, falls die Tabbelle erfolgreich gespeichert wurde
         __declspec( dllexport ) bool speichern();

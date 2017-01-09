@@ -12,16 +12,18 @@ namespace Framework
     class AlphaFeld : public Zeichnung
     {
     private:
-        int stärke;
+        int strength;
         int farbe;
         int ref;
 
     public:
         // Konstruktor 
         __declspec( dllexport ) AlphaFeld();
+		//Destruktor
+		__declspec( dllexport ) virtual ~AlphaFeld();
         // Setzt die Stärke des Übergangs. Dies ist der Wert um den der Alpha Wert der Farbe für jeden Pixel nach innen abnimmt
         //  st: Die Stärke
-        __declspec( dllexport ) void setStärke( int st );
+        __declspec( dllexport ) void setStrength( int st );
         // Setzt die Farbe des Alpha Feldes
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setFarbe( int f );
@@ -29,7 +31,7 @@ namespace Framework
         //  zRObj: Das Bild, in das gezeichnet werden soll
         __declspec( dllexport ) void render( Bild &zRObj ) override;
         // Gibt die Stärke des Alpha Feldes zurück
-        __declspec( dllexport ) int getStärke() const;
+        __declspec( dllexport ) int getStrength() const;
         // gibt die Farbe des Alpha Feldes im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getFarbe() const;
         // Kopiert das Alpha Feld, so dass es ohne auswirkungen auf das Original verwendet werden kann

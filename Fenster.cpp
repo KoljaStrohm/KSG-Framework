@@ -8,12 +8,14 @@
 #include "Rahmen.h"
 #include "TextFeld.h"
 #include "Scroll.h"
-#include "Maus.h"
 #include "ToolTip.h"
 #include "Globals.h"
+#ifdef WIN32
+#include "Maus.h"
+#endif
 
 using namespace Framework;
-
+#ifdef WIN32
 // Fensterklasse erzeugen
 WNDCLASS Framework::F_Normal( HINSTANCE hInst )// Erzeugen einer normalen Fensterklasse
 {
@@ -176,7 +178,7 @@ LRESULT CALLBACK Framework::WindowProc( HWND hwnd, UINT message, WPARAM wparam, 
         if( 1 )
         {
             MausTrack = 1;
-            MausEreignis me = { ME_Verlässt, (int)LOWORD( lparam ), (int)HIWORD( lparam ), 0, 0, 0 };
+            MausEreignis me = { ME_Leaves, (int)LOWORD( lparam ), (int)HIWORD( lparam ), 0, 0, 0 };
             me.rmx = me.mx;
             me.rmy = me.my;
             WFensterA.sendMausMessage( hwnd, me );
@@ -397,7 +399,7 @@ unsigned char Framework::VirtualZuChar( int Virtual )
         up = 1;
     if( CAPSLOCK && !SHIFT )
         up = 1;
-    ret = KleinOrGroß( ret, up );
+    ret = smallOrBig( ret, up );
     return ret;
 }
 
@@ -533,7 +535,7 @@ void WFenster::setPosition( Punkt &p )// Fenster Position
     SetWindowPos( hWnd, 0, res.left, res.top, res.right, res.bottom, 0 ); // Position ändern
 }
 
-void WFenster::setGröße( Punkt &g )// Fenster Größe
+void WFenster::setSize( Punkt &g )// Fenster Größe
 {
     RECT r;
     GetWindowRect( hWnd, &r ); // vorherige Größe herausfinden
@@ -553,7 +555,7 @@ void WFenster::setGröße( Punkt &g )// Fenster Größe
     SetWindowPos( hWnd, 0, res.left, res.top, res.right, res.bottom, 0 ); // Größe ändern
 }
 
-void WFenster::setGröße( int breite, int höhe )
+void WFenster::setSize( int breite, int höhe )
 {
     RECT r;
     GetWindowRect( hWnd, &r ); // vorherige Größe herausfinden
@@ -604,7 +606,7 @@ void WFenster::doMausAktion( MausEreignis &me )
 {
     if( !MausAktion || !MausAktion( makParam, this, me ) )
         return;
-    if( screen && me.id != ME_Betritt && me.id != ME_Verlässt )
+    if( screen && me.id != ME_Betritt && me.id != ME_Leaves )
     {
         screen->doMausEreignis( me );
         if( !me.verarbeitet && verschiebbar )
@@ -737,7 +739,7 @@ void WFenster::ladeRahmenFenster( Bild *zBild, HINSTANCE hinst ) // setzt einen 
     info.bmiHeader.biSize = sizeof( info.bmiHeader );
     info.bmiHeader.biBitCount = 32;
     info.bmiHeader.biWidth = zBild->getBreite();
-    info.bmiHeader.biHeight = -zBild->getHöhe();
+    info.bmiHeader.biHeight = -zBild->getHeight();
     info.bmiHeader.biCompression = BI_RGB;
     info.bmiHeader.biPlanes = 1;
     unsigned char *pPixels = 0;
@@ -749,7 +751,7 @@ void WFenster::ladeRahmenFenster( Bild *zBild, HINSTANCE hinst ) // setzt einen 
     int pitch = ( ( zBild->getBreite() * 32 + 31 ) & ~31 ) >> 3;
     unsigned char *pRow = 0;
     int *buffer = zBild->getBuffer();
-    for( int i = 0; i < zBild->getHöhe(); ++i )
+    for( int i = 0; i < zBild->getHeight(); ++i )
     {
         pRow = &pPixels[ i * pitch ];
         for( int i2 = 0; i2 < zBild->getBreite(); ++i2 )
@@ -765,7 +767,7 @@ void WFenster::ladeRahmenFenster( Bild *zBild, HINSTANCE hinst ) // setzt einen 
     if( zBild->getBreite() * 4 == pitch )
     {
         int i = 0;
-        int totalBytes = zBild->getBreite() * zBild->getHöhe() * 4;
+        int totalBytes = zBild->getBreite() * zBild->getHeight() * 4;
 
         for( i = 0; i < totalBytes; i += 4 )
         {
@@ -780,7 +782,7 @@ void WFenster::ladeRahmenFenster( Bild *zBild, HINSTANCE hinst ) // setzt einen 
         int x = 0;
         int y = 0;
 
-        for( y = 0; y < zBild->getHöhe(); ++y )
+        for( y = 0; y < zBild->getHeight(); ++y )
         {
             for( x = 0; x < zBild->getBreite(); ++x )
             {
@@ -801,7 +803,7 @@ void WFenster::ladeRahmenFenster( Bild *zBild, HINSTANCE hinst ) // setzt einen 
                                  0,
                                  0,
                                  zBild->getBreite(),
-                                 zBild->getHöhe(),
+                                 zBild->getHeight(),
                                  0,
                                  0,
                                  wcl.hInstance,
@@ -816,7 +818,7 @@ void WFenster::ladeRahmenFenster( Bild *zBild, HINSTANCE hinst ) // setzt einen 
                 HGDIOBJ hPrevObj = NULL;
                 POINT ptDest = { 0, 0 };
                 POINT ptSrc = { 0, 0 };
-                SIZE client = { zBild->getBreite(), zBild->getHöhe() };
+                SIZE client = { zBild->getBreite(), zBild->getHeight() };
                 BLENDFUNCTION blendFunc = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
 
                 hPrevObj = SelectObject( hdc, bitmap );
@@ -828,8 +830,8 @@ void WFenster::ladeRahmenFenster( Bild *zBild, HINSTANCE hinst ) // setzt einen 
                 ReleaseDC( rahmen, h );
             }
             UpdateWindow( rahmen );
-            Punkt pos = getPosition() + ( getGröße() - zBild->getGröße() ) / 2;
-            SetWindowPos( rahmen, 0, pos.x, pos.y, zBild->getBreite(), zBild->getHöhe(), 0 );
+            Punkt pos = getPosition() + ( getGröße() - zBild->getSize() ) / 2;
+            SetWindowPos( rahmen, 0, pos.x, pos.y, zBild->getBreite(), zBild->getHeight(), 0 );
         }
     }
 }
@@ -1084,28 +1086,29 @@ void Framework::WMessageBox( HWND hWnd, Text *titel, Text *meldung, UINT style )
     titel->release();
     meldung->release();
 }
+#endif
 
 // Inhalt der Fenster Klasse aus Fenster.h
 // Konstruktor 
 Fenster::Fenster()
     : Zeichnung(),
-    schließenMe( 0 ),
-    schließenMeParam( 0 ),
+    closingMe( 0 ),
+    closingMeParam( 0 ),
     rahmen( 0 ),
     titel( 0 ),
     members( 0 ),
-    bgKörperFarbe( 0xFF000000 ),
-    bgKörperBild( 0 ),
-    körperBuffer( 0 ),
-    bgSchließFarbe( 0xFF000000 ),
-    bgSchließBild( 0 ),
-    schließBuffer( 0 ),
-    schließKlickBuffer( 0 ),
+    bgBodyColor( 0xFF000000 ),
+    bgBodyPicture( 0 ),
+    bodyBuffer( 0 ),
+    bgClosingFarbe( 0xFF000000 ),
+    bgClosingBild( 0 ),
+    closeBuffer( 0 ),
+    closeKlickBuffer( 0 ),
     vScroll( 0 ),
     hScroll( 0 ),
     kMin( 0, 0 ),
     kMax( 0, 0 ),
-    schließKlick( 0 ),
+    closeKlick( 0 ),
     klick( 0 ),
     mx( 0 ),
     my( 0 ),
@@ -1126,16 +1129,16 @@ Fenster::~Fenster()
         titel->release();
     if( members )
         delete members;
-    if( körperBuffer )
-        körperBuffer->release();
-    if( bgKörperBild )
-        bgKörperBild->release();
-    if( bgSchließBild )
-        bgSchließBild->release();
-    if( schließBuffer )
-        schließBuffer->release();
-    if( schließKlickBuffer )
-        schließKlickBuffer->release();
+    if( bodyBuffer )
+        bodyBuffer->release();
+    if( bgBodyPicture )
+        bgBodyPicture->release();
+    if( bgClosingBild )
+        bgClosingBild->release();
+    if( closeBuffer )
+        closeBuffer->release();
+    if( closeKlickBuffer )
+        closeKlickBuffer->release();
     if( vScroll )
         vScroll->release();
     if( hScroll )
@@ -1218,11 +1221,11 @@ void Fenster::setTSFarbe( int f ) // setzt die Titel Schrift Farbe
     rend = 1;
 }
 
-void Fenster::setTSGröße( int gr ) // setzt die Titel Schrift Größe
+void Fenster::setTSSize( int gr ) // setzt die Titel Schrift Größe
 {
     if( !titel )
         titel = new TextFeld();
-    titel->setSchriftGröße( gr );
+    titel->setSchriftSize( (unsigned char)gr );
     rend = 1;
 }
 
@@ -1252,11 +1255,11 @@ void Fenster::setTAfFarbe( int f ) // setzt die Titel AlphFeld Farbe
     rend = 1;
 }
 
-void Fenster::setTAfStärke( int st ) // setzt die Stärke des Titel AlphaFeldes
+void Fenster::setTAfStrength( int st ) // setzt die Stärke des Titel AlphaFeldes
 {
     if( !titel )
         titel = new TextFeld();
-    titel->setAlphaFeldStärke( st );
+    titel->setAlphaFeldStrength( st );
     rend = 1;
 }
 
@@ -1305,19 +1308,19 @@ void Fenster::setTRBreite( int br ) // setzt die Titel Rahmen Breite
 // -- Körper Hintergrund -- 
 void Fenster::setKBgFarbe( int f ) // setzt die Körper Hintergrund Farbe
 {
-    bgKörperFarbe = f;
+    bgBodyColor = f;
     rend = 1;
 }
 
 // -- Körper Hintergrund Bild -- 
 void Fenster::setKBgBild( Bild *b ) // setzt das Körper Hintergrund Bild
 {
-    if( !bgKörperBild )
-        bgKörperBild = new Bild();
-    bgKörperBild->neuBild( b->getBreite(), b->getHöhe(), 0 );
-    int *buff1 = bgKörperBild->getBuffer();
+    if( !bgBodyPicture )
+        bgBodyPicture = new Bild();
+    bgBodyPicture->neuBild( b->getBreite(), b->getHeight(), 0 );
+    int *buff1 = bgBodyPicture->getBuffer();
     int *buff2 = b->getBuffer();
-    int gr = bgKörperBild->getBreite() * bgKörperBild->getHöhe();
+    int gr = bgBodyPicture->getBreite() * bgBodyPicture->getHeight();
     for( int i = 0; i < gr; ++i )
         buff1[ i ] = buff2[ i ];
     b->release();
@@ -1326,64 +1329,64 @@ void Fenster::setKBgBild( Bild *b ) // setzt das Körper Hintergrund Bild
 
 void Fenster::setKBgBildZ( Bild *b )
 {
-    if( bgKörperBild )
-        bgKörperBild->release();
-    bgKörperBild = b;
+    if( bgBodyPicture )
+        bgBodyPicture->release();
+    bgBodyPicture = b;
     rend = 1;
 }
 
 // -- Körper AlphaFeld -- 
 void Fenster::setKAlphaFeldZ( AlphaFeld *af ) // setzt das Körper AlphaFeld
 {
-    if( körperBuffer )
-        körperBuffer->release();
-    körperBuffer = af;
+    if( bodyBuffer )
+        bodyBuffer->release();
+    bodyBuffer = af;
     rend = 1;
 }
 
 void Fenster::setKAfFarbe( int f ) // setzt Körper AlphaFeld Farbe
 {
-    if( !körperBuffer )
-        körperBuffer = new AlphaFeld();
-    körperBuffer->setFarbe( f );
+    if( !bodyBuffer )
+        bodyBuffer = new AlphaFeld();
+    bodyBuffer->setFarbe( f );
     rend = 1;
 }
 
-void Fenster::setKAfStärke( int st ) // setzt die Stärke des Körper AlphaFeldes
+void Fenster::setKAfStrength( int st ) // setzt die Stärke des Körper AlphaFeldes
 {
-    if( !körperBuffer )
-        körperBuffer = new AlphaFeld();
-    körperBuffer->setStärke( st );
+    if( !bodyBuffer )
+        bodyBuffer = new AlphaFeld();
+    bodyBuffer->setStrength( st );
     rend = 1;
 }
 
 // -- Schließen --
-void Fenster::setSchließenMeParam( void *param )
+void Fenster::setClosingMeParam( void *param )
 {
-    schließenMeParam = param;
+    closingMeParam = param;
 }
 
-void Fenster::setSchließenMe( bool( *schließenMe )( void *, void *, MausEreignis ) ) // setzt das Schließen Mausereignis
+void Fenster::setClosingMe( bool( *closeMe )( void *, void *, MausEreignis ) ) // setzt das Schließen Mausereignis
 {
-    this->schließenMe = schließenMe;
+    this->closingMe = closeMe;
 }
 
 // -- Schließen Hintergrund -- 
 void Fenster::setSBgFarbe( int f ) // setzt die Schließ Hintergrund Farbe
 {
-    bgSchließFarbe = f;
+    bgClosingFarbe = f;
     rend = 1;
 }
 
 // -- Schließen Hintergrund Bild -- 
 void Fenster::setSBgBild( Bild *b ) // setzt das Schließ Hintergrund Bild
 {
-    if( !bgSchließBild )
-        bgSchließBild = new Bild();
-    bgSchließBild->neuBild( b->getBreite(), b->getHöhe(), 0 );
-    int *buff1 = bgSchließBild->getBuffer();
+    if( !bgClosingBild )
+        bgClosingBild = new Bild();
+    bgClosingBild->neuBild( b->getBreite(), b->getHeight(), 0 );
+    int *buff1 = bgClosingBild->getBuffer();
     int *buff2 = b->getBuffer();
-    int gr = bgSchließBild->getBreite() * bgSchließBild->getHöhe();
+    int gr = bgClosingBild->getBreite() * bgClosingBild->getHeight();
     for( int i = 0; i < gr; ++i )
         buff1[ i ] = buff2[ i ];
     b->release();
@@ -1392,59 +1395,59 @@ void Fenster::setSBgBild( Bild *b ) // setzt das Schließ Hintergrund Bild
 
 void Fenster::setSBgBildZ( Bild *b )
 {
-    if( bgSchließBild )
-        bgSchließBild->release();
-    bgSchließBild = b;
+    if( bgClosingBild )
+        bgClosingBild->release();
+    bgClosingBild = b;
     rend = 1;
 }
 
 // -- Schließen AlphaFeld -- 
 void Fenster::setSAlphaFeldZ( AlphaFeld *af ) // setzt das Schließ AlphaFeld
 {
-    if( schließBuffer )
-        schließBuffer->release();
-    schließBuffer = af;
+    if( closeBuffer )
+        closeBuffer->release();
+    closeBuffer = af;
     rend = 1;
 }
 
 void Fenster::setSAfFarbe( int f ) // setzt die Farbe des Schließ AlphaFeldes
 {
-    if( !schließBuffer )
-        schließBuffer = new AlphaFeld();
-    schließBuffer->setFarbe( f );
+    if( !closeBuffer )
+        closeBuffer = new AlphaFeld();
+    closeBuffer->setFarbe( f );
     rend = 1;
 }
 
-void Fenster::setSAfStärke( int st ) // setzt die Stärke des Schließ AlphaFeldes
+void Fenster::setSAfStrength( int st ) // setzt die Stärke des Schließ AlphaFeldes
 {
-    if( !schließBuffer )
-        schließBuffer = new AlphaFeld();
-    schließBuffer->setStärke( st );
+    if( !closeBuffer )
+        closeBuffer = new AlphaFeld();
+    closeBuffer->setStrength( st );
     rend = 1;
 }
 
 // -- Schließen Klick AlphaFeld -- 
 void Fenster::setSKAlphaFeldZ( AlphaFeld *af ) // setzt das Schließ klick AlphaFeld
 {
-    if( schließKlickBuffer )
-        schließKlickBuffer->release();
-    schließKlickBuffer = af;
+    if( closeKlickBuffer )
+        closeKlickBuffer->release();
+    closeKlickBuffer = af;
     rend = 1;
 }
 
 void Fenster::setSKAfFarbe( int f ) // setzt die Farbe des Schließ klick AlphaFeldes
 {
-    if( !schließKlickBuffer )
-        schließKlickBuffer = new AlphaFeld();
-    schließKlickBuffer->setFarbe( f );
+    if( !closeKlickBuffer )
+        closeKlickBuffer = new AlphaFeld();
+    closeKlickBuffer->setFarbe( f );
     rend = 1;
 }
 
-void Fenster::setSKAfStärke( int st ) // setzt die Stärke des Schließ klick AlphaFeldes
+void Fenster::setSKAfStrength( int st ) // setzt die Stärke des Schließ klick AlphaFeldes
 {
-    if( !schließKlickBuffer )
-        schließKlickBuffer = new AlphaFeld();
-    schließKlickBuffer->setStärke( st );
+    if( !closeKlickBuffer )
+        closeKlickBuffer = new AlphaFeld();
+    closeKlickBuffer->setStrength( st );
     rend = 1;
 }
 
@@ -1533,7 +1536,7 @@ void Fenster::setVSBMax( int max )
     if( hatStyle( Style::Rahmen ) && rahmen )
         rbr = rahmen->getRBreite();
     if( hatStyle( Style::Titel ) && titel )
-        th = titel->getHöhe();
+        th = titel->getHeight();
     int hsh = 0;
     if( hatStyle( Style::HScroll ) && hScroll )
         hsh = 15;
@@ -1601,7 +1604,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
         {
             mausIn = 0;
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -1609,7 +1612,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
             return;
         }
     }
-    else if( !mausIn && me.id != ME_Verlässt )
+    else if( !mausIn && me.id != ME_Leaves )
     {
         mausIn = 1;
         MausEreignis me2;
@@ -1634,76 +1637,76 @@ void Fenster::doMausEreignis( MausEreignis &me )
             rbr = rahmen->getRBreite();
         int th = 0;
         if( hatStyle( Style::Titel ) && titel )
-            th = titel->getHöhe();
+            th = titel->getHeight();
         bool hSc = hatStyle( Style::HScroll ) && hScroll;
         bool vSc = hatStyle( Style::VScroll ) && vScroll;
         if( !me.verarbeitet && me.id == ME_Bewegung && klick )
         {
-            if( hatStyle( Style::Beweglich ) || hatStyle( Style::HöheÄnderbar ) || hatStyle( Style::BreiteÄnderbar ) || hatStyle( Style::TitelHöheÄnderbar ) )
+            if( hatStyle( Style::Beweglich ) || hatStyle( Style::HeightChangeable ) || hatStyle( Style::BreiteChangeable ) || hatStyle( Style::TitelHeightChangeable ) )
             {
                 if( Mak( makParam, this, me ) )
                 {
                     mpr = 1;
                     bool ret1 = 0;
                     bool mset = 0;
-                    int schö = 0;
+                    int schi = 0;
                     int scbr = 0;
                     if( hSc )
                     {
-                        schö = 15;
+                        schi = 15;
                         scbr = 40;
                     }
                     if( vSc )
                     {
                         scbr += 15;
-                        schö = 40;
+                        schi = 40;
                     }
                     bool minXb, maxXb, minYb, maxYb;
                     bool kMinXb, kMaxXb, kMinYb, kMaxYb;
                     minXb = hatStyle( Style::MinBr );
                     maxXb = hatStyle( Style::MaxBr );
-                    minYb = hatStyle( Style::MinHö );
-                    maxYb = hatStyle( Style::MaxHö );
-                    kMinXb = hatStyle( Style::Körper_minBr );
-                    kMaxXb = hatStyle( Style::Körper_maxBr );
-                    kMinYb = hatStyle( Style::Körper_minHö );
-                    kMaxYb = hatStyle( Style::Körper_maxHö );
+                    minYb = hatStyle( Style::MinHi );
+                    maxYb = hatStyle( Style::MaxHi );
+                    kMinXb = hatStyle( Style::BodyMinBr );
+                    kMaxXb = hatStyle( Style::BodyMaxBr );
+                    kMinYb = hatStyle( Style::BodyMinHi );
+                    kMaxYb = hatStyle( Style::BodyMaxHi );
                     int fMinBr = rbr * 2 + scbr;
                     if( minXb )
                         fMinBr = fMinBr < min.x ? min.x : fMinBr;
                     if( kMinXb )
                         fMinBr = fMinBr < ( rbr * 2 + kMin.x + scbr ) ? ( rbr * 2 + kMin.x + scbr ) : fMinBr;
-                    int fMinHö = rbr * 2 + th + schö;
+                    int fMinHi = rbr * 2 + th + schi;
                     if( minYb )
-                        fMinHö = fMinHö < min.y ? min.y : fMinHö;
+                        fMinHi = fMinHi < min.y ? min.y : fMinHi;
                     if( kMinYb )
-                        fMinHö = fMinHö < ( rbr * 2 + kMin.y + th + schö ) ? ( rbr * 2 + kMin.y + th + schö ) : fMinHö;
+                        fMinHi = fMinHi < ( rbr * 2 + kMin.y + th + schi ) ? ( rbr * 2 + kMin.y + th + schi ) : fMinHi;
                     int fMaxBr = 0;
                     if( maxXb )
                         fMaxBr = max.x;
                     if( kMaxXb )
                         fMaxBr = fMaxBr < ( rbr * 2 + kMax.x + scbr ) ? ( rbr * 2 + kMax.x + scbr ) : fMaxBr;
-                    int fMaxHö = 0;
+                    int fMaxHi = 0;
                     if( maxYb )
-                        fMaxHö = max.y;
+                        fMaxHi = max.y;
                     if( kMaxYb )
-                        fMaxHö = fMaxHö < ( rbr * 2 + kMax.y + th + schö ) ? ( rbr * 2 + kMax.y + th + schö ) : fMaxHö;
+                        fMaxHi = fMaxHi < ( rbr * 2 + kMax.y + th + schi ) ? ( rbr * 2 + kMax.y + th + schi ) : fMaxHi;
                     minXb |= kMinXb, maxXb |= kMaxXb, minYb |= kMinYb, maxYb |= kMaxYb;
-                    if( hatStyle( Style::HöheÄnderbar ) )
+                    if( hatStyle( Style::HeightChangeable ) )
                     {
                         if( mx > -5 && mx < gr.x + 5 && my > -5 && my < rbr )
                         {
                             pos.y -= my - me.my;
                             gr.y += my - me.my;
-                            if( gr.y < fMinHö )
+                            if( gr.y < fMinHi )
                             {
-                                pos.y += fMinHö - gr.y;
-                                gr.y = fMinHö;
+                                pos.y += fMinHi - gr.y;
+                                gr.y = fMinHi;
                             }
-                            else if( maxYb && gr.y > fMaxHö )
+                            else if( maxYb && gr.y > fMaxHi )
                             {
-                                pos.y += gr.y - fMaxHö;
-                                gr.y = fMaxHö;
+                                pos.y += gr.y - fMaxHi;
+                                gr.y = fMaxHi;
                             }
                             else if( vSc )
                                 vScroll->getScrollData()->anzeige = gr.y;
@@ -1713,10 +1716,10 @@ void Fenster::doMausEreignis( MausEreignis &me )
                         else if( mx > -5 && mx < gr.x + 5 && my > gr.y - rbr && my < gr.y + 5 )
                         {
                             gr.y += me.my - my;
-                            if( gr.y < fMinHö )
-                                gr.y = fMinHö;
-                            else if( maxYb && gr.y > fMaxHö )
-                                gr.y = fMaxHö;
+                            if( gr.y < fMinHi )
+                                gr.y = fMinHi;
+                            else if( maxYb && gr.y > fMaxHi )
+                                gr.y = fMaxHi;
                             else
                             {
                                 mset = 1;
@@ -1727,7 +1730,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
                             ret1 = 1;
                         }
                     }
-                    if( hatStyle( Style::BreiteÄnderbar ) )
+                    if( hatStyle( Style::BreiteChangeable ) )
                     {
                         if( mx > -5 && mx < rbr && my > -5 && my < gr.y + 5 )
                         {
@@ -1765,18 +1768,18 @@ void Fenster::doMausEreignis( MausEreignis &me )
                             ret1 = 1;
                         }
                     }
-                    if( hatStyle( Style::TitelHöheÄnderbar ) && titel && mx > -5 && mx < gr.x + 5 && my < rbr + th + 5 && my > rbr + th )
+                    if( hatStyle( Style::TitelHeightChangeable ) && titel && mx > -5 && mx < gr.x + 5 && my < rbr + th + 5 && my > rbr + th )
                     {
-                        int maxTh = gr.y - rbr * 2 - schö;
+                        int maxTh = gr.y - rbr * 2 - schi;
                         if( kMaxYb )
                             maxTh = maxTh < ( gr.x - rbr * 2 - kMin.y ) ? maxTh : ( gr.x - rbr * 2 - kMin.y );
-                        if( hatStyle( Style::Schließbar ) )
+                        if( hatStyle( Style::Closable ) )
                             maxTh = ( gr.x - th - 5 - rbr * 2 - me.my + my ) < 0 ? th : maxTh;
-                        titel->setGröße( titel->getBreite(), titel->getHöhe() + me.my - my );
-                        if( titel->getHöhe() > maxTh )
-                            titel->setGröße( titel->getBreite(), maxTh );
-                        else if( titel->getHöhe() < 5 )
-                            titel->setGröße( titel->getBreite(), 5 );
+                        titel->setSize( titel->getBreite(), titel->getHeight() + me.my - my );
+                        if( titel->getHeight() > maxTh )
+                            titel->setSize( titel->getBreite(), maxTh );
+                        else if( titel->getHeight() < 5 )
+                            titel->setSize( titel->getBreite(), 5 );
                         else
                             mset = 1;
                         rend = 1;
@@ -1805,16 +1808,16 @@ void Fenster::doMausEreignis( MausEreignis &me )
         {
             if( me.id == ME_RLinks )
             {
-                if( schließKlick )
+                if( closeKlick )
                     rend = 1;
-                schließKlick = 0, klick = 0;
+                closeKlick = 0, klick = 0;
                 mx = -1, my = -1;
             }
-            if( me.id == ME_Verlässt )
+            if( me.id == ME_Leaves )
             {
-                if( schließKlick != 0 )
+                if( closeKlick != 0 )
                     rend = 1;
-                schließKlick = 0, klick = 0;
+                closeKlick = 0, klick = 0;
                 mx = -1, my = -1;
             }
             if( !me.verarbeitet )
@@ -1824,30 +1827,30 @@ void Fenster::doMausEreignis( MausEreignis &me )
                     klick = 1;
                     mx = me.mx, my = me.my;
                 }
-                if( hatStyle( Style::Schließbar ) && me.my <= th + rbr && me.mx >= gr.x + rbr - th && me.my >= rbr && me.mx <= gr.x - rbr )
+                if( hatStyle( Style::Closable ) && me.my <= th + rbr && me.mx >= gr.x + rbr - th && me.my >= rbr && me.mx <= gr.x - rbr )
                 {
-                    if( !schließenMe || schließenMe( schließenMeParam, this, me ) )
+                    if( !closingMe || closingMe( closingMeParam, this, me ) )
                     {
                         if( me.id == ME_PLinks )
                         {
-                            schließKlick = 1;
+                            closeKlick = 1;
                             rend = 1;
                         }
-                        if( !schließKlick && MausStand[ M_Links ] )
+                        if( !closeKlick && MausStand[ M_Links ] )
                         {
-                            schließKlick = 1;
+                            closeKlick = 1;
                             rend = 1;
                         }
                         me.verarbeitet = 1;
                     }
                 }
-                else if( schließKlick )
+                else if( closeKlick )
                 {
-                    schließKlick = 0;
+                    closeKlick = 0;
                     rend = 1;
                 }
             }
-            if( members && me.id != ME_Betritt && me.id != ME_Verlässt )
+            if( members && me.id != ME_Betritt && me.id != ME_Leaves )
             {
                 if( vSc )
                 {
@@ -1927,11 +1930,11 @@ void Fenster::render( Bild &zRObj ) // zeichent nach zRObj
             unlockZeichnung();
             return;
         }
-        __super::render( zRObj );
+		Zeichnung::render( zRObj );
         int rbr = 0;
         if( hatStyle( Style::Rahmen ) && rahmen )
         {
-            rahmen->setGröße( gr );
+            rahmen->setSize( gr );
             rahmen->render( zRObj );
             rbr = rahmen->getRBreite();
         }
@@ -1942,7 +1945,7 @@ void Fenster::render( Bild &zRObj ) // zeichent nach zRObj
             titel->setStyle( TextFeld::Style::HAlpha, hatStyle( Style::TitelHAlpha ) );
             titel->setStyle( TextFeld::Style::HBild, hatStyle( Style::TitelHBild ) );
             titel->setStyle( TextFeld::Style::Buffered, hatStyle( Style::TitelBuffered ) );
-            th = titel->getHöhe();
+            th = titel->getHeight();
             if( !zRObj.setDrawOptions( rbr, rbr, gr.x - rbr * 2, th ) )
             {
                 zRObj.releaseDrawOptions();
@@ -1950,42 +1953,42 @@ void Fenster::render( Bild &zRObj ) // zeichent nach zRObj
                 return;
             }
             int sbr = 0;
-            if( hatStyle( Style::Schließbar ) )
+            if( hatStyle( Style::Closable ) )
             {
                 sbr = th;
-                if( hatStyle( Style::SchließHintergrund ) )
+                if( hatStyle( Style::ClosingHintergrund ) )
                 {
-                    if( hatStyle( Style::SchließHAlpha ) )
-                        zRObj.alphaRegion( gr.x - th - rbr * 2, 0, th, th, bgSchließFarbe );
+                    if( hatStyle( Style::ClosingHAlpha ) )
+                        zRObj.alphaRegion( gr.x - th - rbr * 2, 0, th, th, bgClosingFarbe );
                     else
-                        zRObj.füllRegion( gr.x - th - rbr * 2, 0, th, th, bgSchließFarbe );
-                    if( hatStyle( Style::SchließHBild ) && bgSchließBild )
+                        zRObj.fillRegion( gr.x - th - rbr * 2, 0, th, th, bgClosingFarbe );
+                    if( hatStyle( Style::ClosingHBild ) && bgClosingBild )
                     {
-                        if( hatStyle( Style::SchließHAlpha ) )
-                            zRObj.alphaBild( gr.x - th - rbr * 2, 0, th, th, *bgSchließBild );
+                        if( hatStyle( Style::ClosingHAlpha ) )
+                            zRObj.alphaBild( gr.x - th - rbr * 2, 0, th, th, *bgClosingBild );
                         else
-                            zRObj.drawBild( gr.x - th - rbr * 2, 0, th, th, *bgSchließBild );
+                            zRObj.drawBild( gr.x - th - rbr * 2, 0, th, th, *bgClosingBild );
                     }
                 }
-                if( !hatStyle( Style::SchließHBild ) || !bgSchließBild )
+                if( !hatStyle( Style::ClosingHBild ) || !bgClosingBild )
                 {
                     zRObj.drawLinie( Punkt( gr.x - th - rbr * 2, 0 ), Punkt( gr.x - rbr * 2, th ), 0xFFFFFFFF );
                     zRObj.drawLinie( Punkt( gr.x - rbr * 2, 0 ), Punkt( gr.x - th - rbr * 2, th ), 0xFFFFFFFF );
                 }
-                if( hatStyle( Style::SchließBuffer ) && schließBuffer )
+                if( hatStyle( Style::ClosingBuffer ) && closeBuffer )
                 {
-                    schließBuffer->setPosition( gr.x - th - rbr * 2, 0 );
-                    schließBuffer->setGröße( th, th );
-                    schließBuffer->render( zRObj );
+                    closeBuffer->setPosition( gr.x - th - rbr * 2, 0 );
+                    closeBuffer->setSize( th, th );
+                    closeBuffer->render( zRObj );
                 }
-                if( hatStyle( Style::SchließKlickBuffer ) && schließKlickBuffer && schließKlick )
+                if( hatStyle( Style::ClosingKlickBuffer ) && closeKlickBuffer && closeKlick )
                 {
-                    schließKlickBuffer->setPosition( gr.x - th - rbr * 2, 0 );
-                    schließKlickBuffer->setGröße( th, th );
-                    schließKlickBuffer->render( zRObj );
+                    closeKlickBuffer->setPosition( gr.x - th - rbr * 2, 0 );
+                    closeKlickBuffer->setSize( th, th );
+                    closeKlickBuffer->render( zRObj );
                 }
             }
-            titel->setGröße( gr.x - rbr * 2 - sbr, th );
+            titel->setSize( gr.x - rbr * 2 - sbr, th );
             titel->render( zRObj );
             zRObj.releaseDrawOptions();
         }
@@ -2003,37 +2006,35 @@ void Fenster::render( Bild &zRObj ) // zeichent nach zRObj
         int x = rbr;
         int y = rbr + th;
         int br = gr.x - rbr * 2;
-        int hö = gr.y - rbr * 2 - th;
+        int hi = gr.y - rbr * 2 - th;
         if( vSc )
             br -= 16;
         if( hSc )
-            hö -= 16;
-        if( !zRObj.setDrawOptions( x, y, br, hö ) )
+            hi -= 16;
+        if( !zRObj.setDrawOptions( x, y, br, hi ) )
         {
             zRObj.releaseDrawOptions();
             unlockZeichnung();
             return;
         }
-        if( hatStyle( Style::KörperHintergrund ) )
+        if( hatStyle( Style::BodyHintergrund ) )
         {
-            if( hatStyle( Style::KörperHAlpha ) )
-                zRObj.alphaRegion( 0, 0, br, hö, bgKörperFarbe );
+            if( hatStyle( Style::BodyHAlpha ) )
+                zRObj.alphaRegion( 0, 0, br, hi, bgBodyColor );
             else
-                zRObj.füllRegion( 0, 0, br, hö, bgKörperFarbe );
-            if( hatStyle( Style::KörperHBild ) && bgKörperBild )
+                zRObj.fillRegion( 0, 0, br, hi, bgBodyColor );
+            if( hatStyle( Style::BodyHBild ) && bgBodyPicture )
             {
-                int *bgBuff = bgKörperBild->getBuffer();
-                int bgBr = bgKörperBild->getBreite();
-                if( hatStyle( Style::KörperHAlpha ) )
-                    zRObj.alphaBild( 0, 0, br, hö, *bgKörperBild );
+                if( hatStyle( Style::BodyHAlpha ) )
+                    zRObj.alphaBild( 0, 0, br, hi, *bgBodyPicture );
                 else
-                    zRObj.drawBild( 0, 0, br, hö, *bgKörperBild );
+                    zRObj.drawBild( 0, 0, br, hi, *bgBodyPicture );
             }
         }
-        if( hatStyle( Style::KörperBuffered ) && körperBuffer )
+        if( hatStyle( Style::BodyBuffered ) && bodyBuffer )
         {
-            körperBuffer->setGröße( br, hö );
-            körperBuffer->render( zRObj );
+            bodyBuffer->setSize( br, hi );
+            bodyBuffer->render( zRObj );
         }
         if( members )
         {
@@ -2128,11 +2129,11 @@ int Fenster::getTSFarbe() const // gibt die Titel Schrift Farbe zurück
     return titel->getSchriftFarbe();
 }
 
-int Fenster::getTSGröße() const // gibt die Titel Schrift Größe zurück
+int Fenster::getTSSize() const // gibt die Titel Schrift Größe zurück
 {
     if( !titel )
         return 0;
-    return titel->getSchriftGröße();
+    return titel->getSchriftSize();
 }
 
 // -- Titel Hintergrund -- 
@@ -2165,11 +2166,11 @@ int Fenster::getTAfFarbe() const // gibt die Farbe des Titel AlphaFeldes zurück
     return titel->getAlphaFeldFarbe();
 }
 
-int Fenster::getTAfStärke() const // gibt die Stärke des TitelAlphaFeldes zurück
+int Fenster::getTAfStrength() const // gibt die Stärke des TitelAlphaFeldes zurück
 {
     if( !titel )
         return 0;
-    return titel->getAlphaFeldStärke();
+    return titel->getAlphaFeldStrength();
 }
 
 // -- Titel Hintergrund Bild -- 
@@ -2219,120 +2220,120 @@ int Fenster::getTRBreite() const // gibt die Breite des Titel Rahmens zurück
 // -- Körper Hintergrund -- 
 int Fenster::getKBgFarbe() const // gibt die Körper Hintergrund Farbe zurück
 {
-    return bgKörperFarbe;
+    return bgBodyColor;
 }
 
 // -- Körper Hintergrund Bild -- 
 Bild *Fenster::getKBgBild() const // gibt das Körper Hintergrund Bild zurück
 {
-    if( !bgKörperBild )
+    if( !bgBodyPicture )
         return 0;
-    return bgKörperBild->getThis();
+    return bgBodyPicture->getThis();
 }
 
 Bild *Fenster::zKBgBild() const
 {
-    return bgKörperBild;
+    return bgBodyPicture;
 }
 
 // -- Körper AlphaFeld -- 
 AlphaFeld *Fenster::getKAlphaFeld() const // gibt das Körper AlphaFeld zurück
 {
-    if( !körperBuffer )
+    if( !bodyBuffer )
         return 0;
-    return körperBuffer->getThis();
+    return bodyBuffer->getThis();
 }
 
 AlphaFeld *Fenster::zKAlphaFeld() const
 {
-    return körperBuffer;
+    return bodyBuffer;
 }
 
 int Fenster::getKAfFarbe() const // gibt die Farbe des Körper AlphaFeldes zurück
 {
-    if( !körperBuffer )
+    if( !bodyBuffer )
         return 0;
-    return körperBuffer->getFarbe();
+    return bodyBuffer->getFarbe();
 }
 
-int Fenster::getKAfStärke() const // gibt die Stärke des Körper AlphaFeldes zurück
+int Fenster::getKAfStrength() const // gibt die Stärke des Körper AlphaFeldes zurück
 {
-    if( !körperBuffer )
+    if( !bodyBuffer )
         return 0;
-    return körperBuffer->getStärke();
+    return bodyBuffer->getStrength();
 }
 
 // -- Schließen Hintergrund -- 
 int Fenster::getSBgFarbe() const // gibt die Schließ Hintergrund Farbe zurück
 {
-    return bgSchließFarbe;
+    return bgClosingFarbe;
 }
 
 // -- Schließen Hintergrund Bild -- 
 Bild *Fenster::getSBgBild() const // gibt das Schließ Hintergrund Bild zurück
 {
-    if( !bgSchließBild )
+    if( !bgClosingBild )
         return 0;
-    return bgSchließBild->getThis();
+    return bgClosingBild->getThis();
 }
 
 Bild *Fenster::zSBgBild() const
 {
-    return bgSchließBild;
+    return bgClosingBild;
 }
 
 // -- Schließen AlphaFeld -- 
 AlphaFeld *Fenster::getSAlphaFeld() const // gibt das Schließ AlphaFeld zurück
 {
-    if( !schließBuffer )
+    if( !closeBuffer )
         return 0;
-    return schließBuffer->getThis();
+    return closeBuffer->getThis();
 }
 
 AlphaFeld *Fenster::zSAlphaFeld() const
 {
-    return schließBuffer;
+    return closeBuffer;
 }
 
 int Fenster::getSAfFarbe() const // gibt die Farbe des Schließ AlphaFeldes zurück
 {
-    if( !schließBuffer )
+    if( !closeBuffer )
         return 0;
-    return schließBuffer->getFarbe();
+    return closeBuffer->getFarbe();
 }
 
-int Fenster::getSAfStärke() const // gibt die Stärke des Schließ AlphaFeldes zurück
+int Fenster::getSAfStrength() const // gibt die Stärke des Schließ AlphaFeldes zurück
 {
-    if( !schließBuffer )
+    if( !closeBuffer )
         return 0;
-    return schließBuffer->getStärke();
+    return closeBuffer->getStrength();
 }
 
 // -- Schließen Klick AlphaFeld -- 
 AlphaFeld *Fenster::getSKAlphaFeld() const // gibt das Schließ Klick AlphaFeld zurück
 {
-    if( !schließKlickBuffer )
+    if( !closeKlickBuffer )
         return 0;
-    return schließKlickBuffer->getThis();
+    return closeKlickBuffer->getThis();
 }
 
 AlphaFeld *Fenster::zSKAlphaFeld() const
 {
-    return schließKlickBuffer;
+    return closeKlickBuffer;
 }
 
 int Fenster::getSKAfFarbe() const // gibt die Farbe des Schließ Klick AlphaFeldes zurück
 {
-    if( !schließKlickBuffer )
+    if( !closeKlickBuffer )
         return 0;
-    return schließKlickBuffer->getFarbe();
+    return closeKlickBuffer->getFarbe();
 }
 
-int Fenster::getSKAfStärke() const // gibt die Stärke des Schließ Klick AlphaFeldes zurück
+int Fenster::getSKAfStrength() const // gibt die Stärke des Schließ Klick AlphaFeldes zurück
 {
-    if( !schließKlickBuffer )
+    if( !closeKlickBuffer )
         return 0;
-    return schließKlickBuffer->getStärke();
+    return closeKlickBuffer->getStrength();
 }
 
 // -- min max -- 
@@ -2392,7 +2393,7 @@ Zeichnung *Fenster::dublizieren() const // Erzeugt eine Kopie des Fensters
 {
     Fenster *ret = new Fenster();
     ret->setPosition( pos );
-    ret->setGröße( gr );
+    ret->setSize( gr );
     ret->setMausEreignisParameter( makParam );
     ret->setTastaturEreignisParameter( takParam );
     ret->setMausEreignis( Mak );
@@ -2400,8 +2401,8 @@ Zeichnung *Fenster::dublizieren() const // Erzeugt eine Kopie des Fensters
     if( toolTip )
         ret->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     ret->setStyle( style );
-    ret->setSchließenMeParam( schließenMeParam );
-    ret->setSchließenMe( schließenMe );
+    ret->setClosingMeParam( closingMeParam );
+    ret->setClosingMe( closingMe );
     if( rahmen )
     {
         ret->setRBreite( rahmen->getRBreite() );
@@ -2409,26 +2410,26 @@ Zeichnung *Fenster::dublizieren() const // Erzeugt eine Kopie des Fensters
     }
     if( titel )
         ret->setTTextFeldZ( (TextFeld*)titel->dublizieren() );
-    ret->setKBgFarbe( bgKörperFarbe );
-    if( bgKörperBild )
-        ret->setKBgBild( bgKörperBild->getThis() );
-    if( körperBuffer )
+    ret->setKBgFarbe( bgBodyColor );
+    if( bgBodyPicture )
+        ret->setKBgBild( bgBodyPicture->getThis() );
+    if( bodyBuffer )
     {
-        ret->setKAfFarbe( körperBuffer->getFarbe() );
-        ret->setKAfStärke( körperBuffer->getStärke() );
+        ret->setKAfFarbe( bodyBuffer->getFarbe() );
+        ret->setKAfStrength( bodyBuffer->getStrength() );
     }
-    ret->setSBgFarbe( bgSchließFarbe );
-    if( bgSchließBild )
-        ret->setSBgBild( bgSchließBild->getThis() );
-    if( schließBuffer )
+    ret->setSBgFarbe( bgClosingFarbe );
+    if( bgClosingBild )
+        ret->setSBgBild( bgClosingBild->getThis() );
+    if( closeBuffer )
     {
-        ret->setSAfFarbe( schließBuffer->getFarbe() );
-        ret->setSAfStärke( schließBuffer->getStärke() );
+        ret->setSAfFarbe( closeBuffer->getFarbe() );
+        ret->setSAfStrength( closeBuffer->getStrength() );
     }
-    if( schließKlickBuffer )
+    if( closeKlickBuffer )
     {
-        ret->setSKAfFarbe( schließKlickBuffer->getFarbe() );
-        ret->setSKAfStärke( schließKlickBuffer->getStärke() );
+        ret->setSKAfFarbe( closeKlickBuffer->getFarbe() );
+        ret->setSKAfStrength( closeKlickBuffer->getStrength() );
     }
     if( vScroll )
     {

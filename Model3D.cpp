@@ -1,9 +1,12 @@
 #include "Model3D.h"
-#include "Render3D.h"
 #include "Model2D.h"
 #include "DXBuffer.h"
 #include "Textur.h"
+#ifdef WIN32
+#include "Render3D.h"
 #include <d3d11.h>
+#endif
+#include <stdexcept>
 
 using namespace Framework;
 
@@ -78,7 +81,7 @@ void Knochen::addKind( int id, Knochen *k )
             err += __LINE__;
             err += "!";
             delete k;
-            throw std::out_of_range( err );
+            throw std::out_of_range( (const char*)err );
         }
     }
 }
@@ -262,11 +265,11 @@ void Model3DData::setVertecies( Vertex3D *vertexList, int anz )
     delete[] this->vertexList;
     this->vertexList = vertexList;
     vertexBuffer->setData( vertexList );
-    vertexBuffer->setLänge( sizeof( Vertex3D ) * anz );
+    vertexBuffer->setLength( (int)sizeof( Vertex3D ) * anz );
     radius = 0;
     for( int i = 0; i < anz; i++ )
     {
-        float r = vertexList[ i ].pos.län();
+        float r = vertexList[ i ].pos.getLength();
         if( r > radius )
             radius = r;
     }
@@ -292,7 +295,7 @@ void Model3DData::copyModel2D( Model2DData *model, float z )
             vAnz += i.var.vertex->getEintragAnzahl();
         vertexList = new Vertex3D[ vAnz ];
         vertexBuffer->setData( vertexList );
-        vertexBuffer->setLänge( sizeof( Vertex3D ) * vAnz );
+        vertexBuffer->setLength( (int)sizeof( Vertex3D ) * vAnz );
         int index = 0;
         for( auto i = model->vListen->getArray(); i.set; i++ )
         {
@@ -305,7 +308,7 @@ void Model3DData::copyModel2D( Model2DData *model, float z )
             }
             p->indexList = new int[ p->indexAnz ];
             p->indexBuffer->setData( p->indexList );
-            p->indexBuffer->setLänge( sizeof( int ) * p->indexAnz );
+            p->indexBuffer->setLength( (int)sizeof( int ) * p->indexAnz );
             p->indexAnz = 0;
             for( auto j = i.var->getArray(); j.set; j++ )
             {
@@ -337,7 +340,7 @@ void Model3DData::removePolygon( int index )
     if( !polygons->hat( index ) )
         return;
     delete polygons->get( index );
-    polygons->lösche( index );
+    polygons->remove( index );
 }
 
 // Aktualisiert die Vertecies
@@ -372,7 +375,9 @@ void Model3DData::render( Mat4< float > &welt, const Model3DTextur *zTxt, Render
         Textur *t = zTxt->zPolygonTextur( ind );
         if( t && t->brauchtUpdate() )
             t->updateTextur( zRObj );
+#ifdef WIN32
         zRObj->draw( i->var->indexBuffer, t );
+#endif
         ind++;
     }
 }
@@ -539,7 +544,7 @@ int Model3D::errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer
     else if( model )
         ret = model->kalkulateMatrix( welt, matBuffer, viewProj );
     if( !ret )
-        return __super::errechneMatrizen( viewProj, matBuffer );
+        return Zeichnung3D::errechneMatrizen( viewProj, matBuffer );
     return ret;
 }
 
@@ -549,7 +554,7 @@ int Model3D::errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer
 bool Model3D::tick( double tickval )
 {
     radius = model ? model->getRadius() : 0;
-    return __super::tick( tickval );
+    return Zeichnung3D::tick( tickval );
 }
 
 // Zeichnet das Model
@@ -559,7 +564,9 @@ void Model3D::render( Render3D *zRObj )
     if( !model )
         return;
     model->aktualisiereVertecies( zRObj );
+#ifdef WIN32
     zRObj->beginnModel( this );
+#endif
     model->render( welt, textur, zRObj );
 }
 

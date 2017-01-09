@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -28,27 +28,27 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -127,20 +127,7 @@
       <AdditionalDependencies>d3dcompiler.lib;d3d9.lib;d3d11.lib;DXGI.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Main Server\Main Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Register Server\Register Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Patch Server\Patch Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Login Server\Login Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Information Server\Information Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Chat Server\Chat Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\DatenbankServer\DatenbankServer\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Anmeldung Server\Anmeldung Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Spiel Server\Spiel Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Erhaltung Server\Erhaltung Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Shop Server\Shop Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\Historie Server\Historie Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Server\News Server\News Server\framework.dll"
-copy "x64\Debug\Framework.dll" "..\Test\Test\framework.dll"
+      <Command>copy "x64\Debug\Framework.dll" "..\Test\Test\framework.dll"
 copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\Start\Start\framework.dll"
 copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\patcher\patcher\framework.dll"
 copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\Icon\Icon\framework.dll"
@@ -172,8 +159,7 @@ copy "x64\Debug\Framework.dll" "..\GSL Konverter\GSL Konverter\framework.dll"</C
       <AdditionalDependencies>d3dcompiler.lib;d3d9.lib;d3d11.lib;DXGI.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy "Release\Framework.dll" "..\..\Spiele Platform\Server\Fertig\x32\dlls\framework.dll"
-copy "Release\Framework.dll" "..\..\Spiele Platform\Klient\Fertig\x32\framework.dll"
+      <Command>copy "Release\Framework.dll" "..\..\Spiele Platform\Klient\Fertig\x32\framework.dll"
 copy "Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x32\framework.dll"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
@@ -200,8 +186,7 @@ copy "Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x32\framework.dll
       <AdditionalDependencies>d3dcompiler.lib;d3d9.lib;d3d11.lib;DXGI.lib;dxguid.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>copy "x64\Release\Framework.dll" "..\..\Spiele Platform\Server\Fertig\x64\dlls\framework.dll"
-copy "x64\Release\Framework.dll" "..\..\Spiele Platform\Klient\Fertig\x64\framework.dll"
+      <Command>copy "x64\Release\Framework.dll" "..\..\Spiele Platform\Klient\Fertig\x64\framework.dll"
 copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework.dll"</Command>
       <Outputs>kopiere...;%(Outputs)</Outputs>
     </CustomBuildStep>
@@ -258,7 +243,7 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClInclude Include="Punkt.h" />
     <ClInclude Include="Rahmen.h" />
     <ClInclude Include="RenderThread.h" />
-    <ClInclude Include="Schluessel.h" />
+    <ClInclude Include="Key.h" />
     <ClInclude Include="Schrift.h" />
     <ClInclude Include="Scroll.h" />
     <ClInclude Include="Tabelle.h" />
@@ -313,7 +298,7 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClCompile Include="Punkt.cpp" />
     <ClCompile Include="Rahmen.cpp" />
     <ClCompile Include="RenderThread.cpp" />
-    <ClCompile Include="Schluessel.cpp" />
+    <ClCompile Include="Key.cpp" />
     <ClCompile Include="Schrift.cpp" />
     <ClCompile Include="Scroll.cpp" />
     <ClCompile Include="Tabelle.cpp" />

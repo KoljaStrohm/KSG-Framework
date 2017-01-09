@@ -36,13 +36,13 @@ namespace Framework
             const static __int64 AuswahlRahmen = 0x0200000; // Legt fest, ob die ausgewählten Einträge einen Rahmen besitzen
             const static __int64 MultiStyled = 0x0400000; // Legt fest, ob jeder Eintrag seine eigenen Hintergrund, Farbübergang und Rahmen hat, fals er ausgewählt ist
             const static __int64 MultiSelect = 0x0800000; // Legt fest, das mehrere Einträge gleichzeitig ausgewählt sein können
-            const static __int64 Ausgewählt = 0x1000000; // Legt fest, ob ein bestimmter Eintrag ausgewählt ist, falls MultiSelect gesetzt wurde.
+            const static __int64 Selected = 0x1000000; // Legt fest, ob ein bestimmter Eintrag ausgewählt ist, falls MultiSelect gesetzt wurde.
 
             const static __int64 Normal = Sichtbar | Erlaubt | Rahmen | FeldHAlpha | FeldHintergrund | FeldRahmen | AuswahlBuffer | AuswahlRahmen; // Vereint die Flags Sichtbar, Erlaubt, Rahmen, FeldHAlpha, FeldHintergrund, FeldRahmen, AuswahlBuffer, AuswahlRahmen
         };
     private:
         RCArray< TextFeld > *tfListe;
-        int einträge, auswahl;
+        int entries, auswahl;
         int ahFarbe;
         Bild *ahBild;
         AlphaFeld *aBuffer;
@@ -59,7 +59,7 @@ namespace Framework
         // Konstruktor 
         __declspec( dllexport ) AuswahlListe();
         // Destruktor 
-        __declspec( dllexport ) ~AuswahlListe();
+        __declspec( dllexport ) virtual ~AuswahlListe();
         // Aktualisiert die Styles, größe und Position der Einträge
         __declspec( dllexport ) void update();
         // Fügt einen Eintrag hinzu
@@ -101,7 +101,7 @@ namespace Framework
         __declspec( dllexport ) void tauschEintragPos( int vpos, int npos );
         // Löscht einen Eintrag
         // pos: Der Index des Eintrags
-        __declspec( dllexport ) void löscheEintrag( int pos );
+        __declspec( dllexport ) void removeEintrag( int pos );
         // Setzt die verwendete Schrift
         //  schrift: Die Schrift
         __declspec( dllexport ) void setSchriftZ( Schrift *schrift );
@@ -124,7 +124,7 @@ namespace Framework
         __declspec( dllexport ) void setAAFZ( AlphaFeld *buffer );
         // Setzt die Stärke des Farbübergnags, der bei ausgewählten Einträgen verwendet wird, fals MulitStyled nicht gesetzt wurde
         //  st: Die Stärke
-        __declspec( dllexport ) void setAAFStärke( int st );
+        __declspec( dllexport ) void setAAFStrength( int st );
         // Setzt die Farbe des Farbübergnags, der bei ausgewählten Einträgen verwendet wird, fals MulitStyled nicht gesetzt wurde
         //  fc: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setAAFFarbe( int fc );
@@ -156,7 +156,7 @@ namespace Framework
         // Setzt die Stärke des Farbübergnags, der bei einem ausgewählten Eintrag verwendet wird, fals MulitStyled gesetzt wurde
         //  pos: Der Index des Eintrags
         //  st: Die Stärke
-        __declspec( dllexport ) void setAAFStärke( int pos, int st );
+        __declspec( dllexport ) void setAAFStrength( int pos, int st );
         // Setzt die Farbe des Farbübergnags, der bei einem ausgewählten Eintrag verwendet wird, fals MulitStyled gesetzt wurde
         //  pos: Der Index des Eintrags
         //  fc: Die Farbe im A8R8G8B8 Format
@@ -180,8 +180,8 @@ namespace Framework
         // Ändert den Style eines Eintrags, falls MulitStyled gesetzt wurde und legt fest, ob ein Eintrag ausgewählt ist, falls MultiSelect gesetzt wurde
         //  pos: Der Index des Eintrags
         //  style: Der Style
-        //  add_löschen: 1, falls der Style hinzugefügt werden soll. 0, falls der Style entfernt weden soll
-        __declspec( dllexport ) void setMsStyle( int pos, __int64 style, bool add_löschen );
+        //  add_remove: 1, falls der Style hinzugefügt werden soll. 0, falls der Style entfernt weden soll
+        __declspec( dllexport ) void setMsStyle( int pos, __int64 style, bool add_remove );
         // Fügt Styles zu einem Eintrag hinzu, falls MulitStyled gesetzt wurde und legt fest, ob ein Eintrag ausgewählt ist, falls MultiSelect gesetzt wurde
         //  pos: Der Index des Eintrags
         //  style: Der Style, der hinzugefügt werden soll
@@ -189,7 +189,7 @@ namespace Framework
         // Entfernt Styles von einem Eintrag, falls MulitStyled gesetzt wurde und legt fest, ob ein Eintrag ausgewählt ist, falls MultiSelect gesetzt wurde
         //  pos: Der Index des Eintrags
         //  style: Der Style, der entfernt werden soll
-        __declspec( dllexport ) void löscheMsStyle( int pos, __int64 style );
+        __declspec( dllexport ) void removeMsStyle( int pos, __int64 style );
         // Verarbeitet Tastatur Nachrichten
         //  me: Das Ereignis, was durch die Tastatureingabe ausgelößt wurde
         __declspec( dllexport ) void doMausEreignis( MausEreignis &me ) override;

@@ -20,11 +20,11 @@ namespace Framework
         __declspec( dllexport ) void setTextur( int id );
         // Setzt die Größe, in der Die Textur angezeigt wird
         //  gr: Ein Vektor, der für x und y die breite und höhe beinhaltet
-        __declspec( dllexport ) void setGröße( Vec2< float > gr );
+        __declspec( dllexport ) void setSize( Vec2< float > gr );
         // Setzt die Größe, in der die Textur angezeigt wird
         //  b: Die Breite, in der die Textur angezeigt wird
         //  h: Die Höhe, in der die Textur angezeigt wird
-        __declspec( dllexport ) void setGröße( float b, float h );
+        __declspec( dllexport ) void setSize( float b, float h );
         // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
         //  return: 0.
         __declspec( dllexport ) Model3D *release() override;

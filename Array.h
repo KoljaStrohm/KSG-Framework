@@ -33,7 +33,8 @@ namespace Framework
         {
             if( !next )
             {
-                *this = ArrayEintrag{ 0, 0, 0 };
+                ArrayEintrag<TYP> tmp = ArrayEintrag{ 0, 0, 0 };
+                *this = tmp;
                 return *this;
             }
             *this = *next;
@@ -44,7 +45,8 @@ namespace Framework
         {
             if( !next )
             {
-                *this = ArrayEintrag{ 0, 0, 0 };
+                ArrayEintrag<TYP> tmp = ArrayEintrag{ 0, 0, 0 };
+                *this = tmp;
                 return *this;
             }
             *this = *next;
@@ -57,16 +59,16 @@ namespace Framework
     class Array
     {
     private:
-        ArrayEintrag< TYP > *einträge;
+        ArrayEintrag< TYP > *entries;
         int ref;
 
     public:
         // Erstellt eine neue Linked List
         Array()
         {
-            einträge = new ArrayEintrag< TYP >();
-            einträge->set = 0;
-            einträge->next = 0;
+			entries = new ArrayEintrag< TYP >();
+			entries->set = 0;
+            entries->next = 0;
             ref = 1;
         }
 
@@ -74,14 +76,14 @@ namespace Framework
         ~Array()
         {
             leeren();
-            delete einträge;
+            delete entries;
         }
 
         // Hängt ein Element ans Ende der Liste an
         //  t: Das neue Element
         void add( TYP t )
         {
-            for( ArrayEintrag< TYP > *e = einträge; 1; e = e->next )
+            for( ArrayEintrag< TYP > *e = entries; 1; e = e->next )
             {
                 if( !e->set && !e->next )
                 {
@@ -105,7 +107,7 @@ namespace Framework
         {
             if( i < 0 )
                 return;
-            ArrayEintrag< TYP > *e = einträge;
+            ArrayEintrag< TYP > *e = entries;
             for( int a = 0; a < i; ++a )
             {
                 if( !e->next )
@@ -133,7 +135,7 @@ namespace Framework
         {
             if( i < 0 )
                 return;
-            ArrayEintrag< TYP > *e = einträge;
+            ArrayEintrag< TYP > *e = entries;
             for( int a = 0; a < i; ++a )
             {
                 if( !e->next )
@@ -156,7 +158,7 @@ namespace Framework
         {
             if( i < 0 || p < 0 || i == p )
                 return;
-            ArrayEintrag< TYP > *e = einträge;
+            ArrayEintrag< TYP > *e = entries;
             ArrayEintrag< TYP > *ve = 0;
             for( int a = 0; a < i; ++a )
             {
@@ -165,7 +167,7 @@ namespace Framework
                 ve = e;
                 e = e->next;
             }
-            ArrayEintrag< TYP > *e2 = einträge == e ? e->next : einträge;
+            ArrayEintrag< TYP > *e2 = entries == e ? e->next : entries;
             ArrayEintrag< TYP > *ve2 = 0;
             for( int a = 0; a < p; ++a )
             {
@@ -180,23 +182,23 @@ namespace Framework
             if( !e )
                 return;
             if( !ve2 )
-                einträge = e;
+				entries = e;
             else
                 ve2->next = e;
             if( ve )
                 ve->next = e->next;
             else
-                einträge = e->next;
+				entries = e->next;
             e->next = e2;
         }
 
         // Löscht ein Bestimmtes Element
         //  i: Der Index des Elementes das gelöscht werden soll
-        void lösche( int i )
+        void remove( int i )
         {
             if( i < 0 )
                 return;
-            ArrayEintrag< TYP > *e = einträge;
+            ArrayEintrag< TYP > *e = entries;
             for( int a = 0; a < i; ++a )
             {
                 if( !e->next )
@@ -241,29 +243,29 @@ namespace Framework
         void leeren()
         {
             ArrayEintrag< TYP > *e2 = 0;
-            for( ArrayEintrag< TYP > *e = einträge; e; e = e->next )
+            for( ArrayEintrag< TYP > *e = entries; e; e = e->next )
             {
                 delete e2;
                 e2 = e;
             }
             delete e2;
-            einträge = new ArrayEintrag< TYP >();
-            einträge->set = 0;
-            einträge->next = 0;
+			entries = new ArrayEintrag< TYP >();
+			entries->set = 0;
+			entries->next = 0;
         }
 
         // Gibt das Erste Element der Liste zurück.
         // Mit ++ kann durch die Liste iteriert werden
         ArrayEintrag< TYP > &getArray()
         {
-            return *einträge;
+            return *entries;
         }
 
         // Gibt zurück, wie viele Elemente in der Liste sind
         int getEintragAnzahl() const
         {
             int i = 0;
-            for( ArrayEintrag< TYP > *e = einträge; e && ( e->set || e->next ); e = e->next )
+            for( ArrayEintrag< TYP > *e = entries; e && ( e->set || e->next ); e = e->next )
                 ++i;
             return i;
         }
@@ -284,7 +286,7 @@ namespace Framework
                 err += i;
                 throw std::out_of_range( (char*)err );
             }
-            ArrayEintrag< TYP > *e = einträge;
+            ArrayEintrag< TYP > *e = entries;
             for( int a = 0; a < i && e; ++a )
                 e = e->next;
             if( e && e->set )
@@ -305,7 +307,7 @@ namespace Framework
         {
             if( i < 0 )
                 return 0;
-            ArrayEintrag< TYP > *e = einträge;
+            ArrayEintrag< TYP > *e = entries;
             for( int a = 0; a < i && e; ++a )
                 e = e->next;
             if( e && e->set )
@@ -318,7 +320,7 @@ namespace Framework
         int getWertIndex( TYP t ) const
         {
             int ret = 0;
-            for( ArrayEintrag< TYP > *e = einträge; e; e = e->next )
+            for( ArrayEintrag< TYP > *e = entries; e; e = e->next )
             {
                 if( e->set && e->var == t )
                     return ret;
@@ -351,16 +353,16 @@ namespace Framework
     class RCArray
     {
     private:
-        ArrayEintrag< TYP* > *einträge;
+        ArrayEintrag< TYP* > *entries;
         int ref;
 
     public:
         // Erstellt eine neue Linked List
         RCArray()
         {
-            einträge = new ArrayEintrag< TYP* >();
-            einträge->set = 0;
-            einträge->next = 0;
+            entries = new ArrayEintrag< TYP* >();
+            entries->set = 0;
+            entries->next = 0;
             ref = 1;
         }
 
@@ -368,14 +370,14 @@ namespace Framework
         ~RCArray()
         {
             leeren();
-            delete einträge;
+            delete entries;
         }
 
         // Hängt ein Element ans Ende der Liste an
         //  t: Das neue Element
         void add( TYP* t )
         {
-            for( ArrayEintrag< TYP* > *e = einträge; 1; e = e->next )
+            for( ArrayEintrag< TYP* > *e = entries; 1; e = e->next )
             {
                 if( !e->set && !e->next )
                 {
@@ -405,7 +407,7 @@ namespace Framework
                     t->release();
                 return;
             }
-            ArrayEintrag< TYP* > *e = einträge;
+            ArrayEintrag< TYP* > *e = entries;
             for( int a = 0; a < i; ++a )
             {
                 if( !e->next )
@@ -437,7 +439,7 @@ namespace Framework
                     t->release();
                 return;
             }
-            ArrayEintrag< TYP* > *e = einträge;
+            ArrayEintrag< TYP* > *e = entries;
             for( int a = 0; a < i; ++a )
             {
                 if( !e->next )
@@ -463,7 +465,7 @@ namespace Framework
             if( i < 0 || p < 0 || i == p )
                 return;
             ArrayEintrag< TYP* > *ve = 0;
-            ArrayEintrag< TYP* > *e = einträge;
+            ArrayEintrag< TYP* > *e = entries;
             for( int a = 0; a < i; ++a )
             {
                 if( !e->next )
@@ -471,7 +473,7 @@ namespace Framework
                 ve = e;
                 e = e->next;
             }
-            ArrayEintrag< TYP* > *e2 = einträge == e ? e->next : einträge;
+            ArrayEintrag< TYP* > *e2 = entries == e ? e->next : entries;
             ArrayEintrag< TYP* > *ve2 = 0;
             for( int a = 0; a < p; ++a )
             {
@@ -486,23 +488,23 @@ namespace Framework
             if( !e )
                 return;
             if( !ve2 )
-                einträge = e;
+                entries = e;
             else
                 ve2->next = e;
             if( ve )
                 ve->next = e->next;
             else
-                einträge = e->next;
+                entries = e->next;
             e->next = e2;
         }
 
         // Löscht ein Bestimmtes Element
         //  i: Der Index des Elementes das gelöscht werden soll
-        void lösche( int i )
+        void remove( int i )
         {
             if( i < 0 )
                 return;
-            ArrayEintrag< TYP* > *e = einträge;
+            ArrayEintrag< TYP* > *e = entries;
             for( int a = 0; a < i; ++a )
             {
                 if( !e->next )
@@ -553,7 +555,7 @@ namespace Framework
         void leeren()
         {
             ArrayEintrag< TYP* > *e2 = 0;
-            for( ArrayEintrag< TYP* > *e = einträge; e; e = e->next )
+            for( ArrayEintrag< TYP* > *e = entries; e; e = e->next )
             {
                 if( e2 && e2->var && e2->set )
                     e2->var->release();
@@ -563,23 +565,23 @@ namespace Framework
             if( e2 && e2->var && e2->set )
                 e2->var->release();
             delete e2;
-            einträge = new ArrayEintrag< TYP* >();
-            einträge->set = 0;
-            einträge->next = 0;
+            entries = new ArrayEintrag< TYP* >();
+            entries->set = 0;
+            entries->next = 0;
         }
 
         // Gibt das Erste Element der Liste zurück.
         // Mit ++ kann durch die Liste iteriert werden
         ArrayEintrag< TYP* > &getArray()
         {
-            return *einträge;
+            return *entries;
         }
 
         // Gibt zurück, wie viele Elemente in der Liste sind
         int getEintragAnzahl() const
         {
             int i = 0;
-            for( ArrayEintrag< TYP* > *e = einträge; e && ( e->set || e->next ); e = e->next )
+            for( ArrayEintrag< TYP* > *e = entries; e && ( e->set || e->next ); e = e->next )
                 ++i;
             return i;
         }
@@ -590,7 +592,7 @@ namespace Framework
         {
             if( i < 0 )
                 return (TYP*)0;
-            ArrayEintrag< TYP* > *e = einträge;
+            ArrayEintrag< TYP* > *e = entries;
             for( int a = 0; a < i && e; ++a )
                 e = e->next;
             if( e && e->set && e->var )
@@ -604,7 +606,7 @@ namespace Framework
         {
             if( i < 0 )
                 return (TYP*)0;
-            ArrayEintrag< TYP* > *e = einträge;
+            ArrayEintrag< TYP* > *e = entries;
             for( int a = 0; a < i && e; ++a )
                 e = e->next;
             if( e && e->set && e->var )

@@ -27,13 +27,13 @@ Knopf::Knopf()
     style = Style::Erlaubt | Style::Buffered | Style::KlickBuffer | Style::Rahmen;
     this->setMausEreignis( _ret1ME );
     setSchriftFarbe( 0xFFFFFFFF );
-    setSchriftGröße( 12 );
+    setSchriftSize( 12 );
     setLinienRahmenBreite( 2 );
     setLinienRahmenFarbe( 0xFF00FF00 );
     setAlphaFeldFarbe( 0x5500FF00 );
-    setAlphaFeldStärke( -5 );
+    setAlphaFeldStrength( -5 );
     setKBFarbe( 0xFF000000 );
-    setKBStärke( 20 );
+    setKBStrength( 20 );
     addStyle( TextFeld::Style::Center | TextFeld::Style::Mehrfarbig );
 }
 
@@ -59,10 +59,10 @@ void Knopf::setKlickBild( Bild *bild ) // setzt das Klick Bild
     {
         if( !klickBild )
             klickBild = new Bild();
-        klickBild->neuBild( bild->getBreite(), bild->getHöhe(), 0 );
+        klickBild->neuBild( bild->getBreite(), bild->getHeight(), 0 );
         int *buff1 = klickBild->getBuffer();
         int *buff2 = bild->getBuffer();
-        for( int i = 0; i < bild->getBreite() * bild->getHöhe(); ++i )
+        for( int i = 0; i < bild->getBreite() * bild->getHeight(); ++i )
             buff1[ i ] = buff2[ i ];
         bild->release();
         rend = 1;
@@ -85,11 +85,11 @@ void Knopf::setKBZ( AlphaFeld *af )
     rend = 1;
 }
 
-void Knopf::setKBStärke( int st ) // setzt die Stärke des Klick Buffers
+void Knopf::setKBStrength( int st ) // setzt die Stärke des Klick Buffers
 {
     if( !klickBuffer )
         klickBuffer = new AlphaFeld();
-    klickBuffer->setStärke( st );
+    klickBuffer->setStrength( st );
     rend = 1;
 }
 
@@ -119,7 +119,7 @@ void Knopf::doMausEreignis( MausEreignis &me ) // Maus Ereignis
             if( toolTip )
                 toolTip->setMausIn( 0 );
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -127,13 +127,13 @@ void Knopf::doMausEreignis( MausEreignis &me ) // Maus Ereignis
             return;
         }
     }
-    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Verlässt )
+    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves )
     {
         if( toolTip )
             toolTip->setMausIn( 0 );
         return;
     }
-    if( !mausIn && me.id != ME_Verlässt && !me.verarbeitet )
+    if( !mausIn && me.id != ME_Leaves && !me.verarbeitet )
     {
         mausIn = 1;
         if( toolTip )
@@ -155,7 +155,7 @@ void Knopf::doMausEreignis( MausEreignis &me ) // Maus Ereignis
             if( klickIndex )
                 rend = 1;
         }
-        if( me.id == ME_RLinks || me.id == ME_Verlässt )
+        if( me.id == ME_RLinks || me.id == ME_Leaves )
         {
             if( klickIndex )
                 rend = 1;
@@ -182,15 +182,15 @@ void Knopf::render( Bild &zRObj ) // zeichenet nach zRObj
     if( !hatStyle( Style::Sichtbar ) )
         return;
     addStyle( TextFeld::Style::Center );
-    löscheStyle( Style::VScroll | Style::HScroll );
+    removeStyle( Style::VScroll | Style::HScroll );
     bool rA = 0;
     if( !hatStyle( Style::Erlaubt ) )
     {
         zRObj.setAlpha( 0x20 );
         rA = 1;
     }
-    __super::render( zRObj );
-    if( !zRObj.setDrawOptions( innenPosition, innenGröße ) )
+	TextFeld::render( zRObj );
+    if( !zRObj.setDrawOptions( innenPosition, innenSize ) )
     {
         if( rA )
             zRObj.releaseAlpha();
@@ -201,20 +201,20 @@ void Knopf::render( Bild &zRObj ) // zeichenet nach zRObj
         if( hatStyle( Style::KlickFarbe ) )
         {
             if( hatStyle( Style::KlickAlpha ) )
-                zRObj.alphaRegion( 0, 0, innenGröße.x, innenGröße.y, klickFarbe );
+                zRObj.alphaRegion( 0, 0, innenSize.x, innenSize.y, klickFarbe );
             else
-                zRObj.füllRegion( 0, 0, innenGröße.x, innenGröße.y, klickFarbe );
+                zRObj.fillRegion( 0, 0, innenSize.x, innenSize.y, klickFarbe );
         }
         if( hatStyle( Style::KlickBild ) && klickBild )
         {
             if( hatStyle( Style::KlickAlpha ) )
-                zRObj.alphaBild( 0, 0, innenGröße.x, innenGröße.y, *klickBild );
+                zRObj.alphaBild( 0, 0, innenSize.x, innenSize.y, *klickBild );
             else
-                zRObj.drawBild( 0, 0, innenGröße.x, innenGröße.y, *klickBild );
+                zRObj.drawBild( 0, 0, innenSize.x, innenSize.y, *klickBild );
         }
         if( hatStyle( Style::KlickBuffer ) && klickBuffer )
         {
-            klickBuffer->setGröße( innenGröße.x, innenGröße.y );
+            klickBuffer->setSize( innenSize.x, innenSize.y );
             klickBuffer->render( zRObj );
         }
     }
@@ -260,18 +260,18 @@ int Knopf::getKBFarbe() const // gibt getThis der Farbe des Klick Buffers zurück
     return klickBuffer->getFarbe();
 }
 
-int Knopf::getKBStärke() const // gibt die Stärke des Klickbuffers zurück
+int Knopf::getKBStrength() const // gibt die Stärke des Klickbuffers zurück
 {
     if( !klickBuffer )
         return 0;
-    return klickBuffer->getStärke();
+    return klickBuffer->getStrength();
 }
 
 Zeichnung *Knopf::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
 {
     Knopf *obj = new Knopf();
     obj->setPosition( pos );
-    obj->setGröße( gr );
+    obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
     obj->setMausEreignis( Mak );
@@ -279,7 +279,7 @@ Zeichnung *Knopf::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
     if( toolTip )
         obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     obj->setStyle( style );
-    obj->setSchriftGröße( getSchriftGröße() );
+    obj->setSchriftSize( getSchriftSize() );
     if( zSchrift() )
         obj->setSchriftZ( getSchrift() );
     if( zText() )
@@ -305,7 +305,7 @@ Zeichnung *Knopf::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
         obj->setHorizontalScrollFarbe( horizontalScrollBar->getFarbe(), horizontalScrollBar->getBgFarbe() );
     }
     obj->setSchowChar( getShowChar() );
-    obj->setAuswahl( getFärbungPos(), getCursorPos() );
+    obj->setAuswahl( getSelectionPos(), getCursorPos() );
     obj->setKlickFarbe( klickFarbe );
     if( klickBild )
         obj->setKlickBild( klickBild->getThis() );
@@ -350,7 +350,7 @@ KontrollKnopf::KontrollKnopf()
 {
     style = Style::Erlaubt | Style::KlickBuffer;
     setKAFFarbe( 0x00007500 );
-    setKAFStärke( -30 );
+    setKAFStrength( -30 );
 }
 
 // Destruktor 
@@ -441,7 +441,7 @@ void KontrollKnopf::setSFarbe( int f ) // setzt die Schrift Farbe
     rend = 1;
 }
 
-void KontrollKnopf::setSGröße( int gr ) // setzt die Schrift Größe
+void KontrollKnopf::setSSize( int gr ) // setzt die Schrift Größe
 {
     sGr = gr;
     rend = 1;
@@ -471,8 +471,8 @@ void KontrollKnopf::setSBgBild( Bild *b )
 {
     if( !sBgB )
         sBgB = new Bild();
-    sBgB->neuBild( b->getBreite(), b->getHöhe(), 0 );
-    sBgB->drawBild( 0, 0, b->getBreite(), b->getHöhe(), *b );
+    sBgB->neuBild( b->getBreite(), b->getHeight(), 0 );
+    sBgB->drawBild( 0, 0, b->getBreite(), b->getHeight(), *b );
     b->release();
     rend = 1;
 }
@@ -489,8 +489,8 @@ void KontrollKnopf::setKBgBild( Bild *b )
 {
     if( !kBgB )
         kBgB = new Bild();
-    kBgB->neuBild( b->getBreite(), b->getHöhe(), 0 );
-    kBgB->drawBild( 0, 0, b->getBreite(), b->getHöhe(), *b );
+    kBgB->neuBild( b->getBreite(), b->getHeight(), 0 );
+    kBgB->drawBild( 0, 0, b->getBreite(), b->getHeight(), *b );
     b->release();
     rend = 1;
 }
@@ -511,11 +511,11 @@ void KontrollKnopf::setSAFFarbe( int f ) // setzt die Select Alphafeld Farbe
     rend = 1;
 }
 
-void KontrollKnopf::setSAFStärke( int st ) // setzt die Select AlphaFeld Stärke
+void KontrollKnopf::setSAFStrength( int st ) // setzt die Select AlphaFeld Stärke
 {
     if( !sAf )
         sAf = new AlphaFeld();
-    sAf->setStärke( st );
+    sAf->setStrength( st );
     rend = 1;
 }
 
@@ -535,11 +535,11 @@ void KontrollKnopf::setKAFFarbe( int f ) // setzt die Klick Alphafeld Farbe
     rend = 1;
 }
 
-void KontrollKnopf::setKAFStärke( int st ) // setzt die Klick AlphaFeld Stärke
+void KontrollKnopf::setKAFStrength( int st ) // setzt die Klick AlphaFeld Stärke
 {
     if( !kAf )
         kAf = new AlphaFeld();
-    kAf->setStärke( st );
+    kAf->setStrength( st );
     rend = 1;
 }
 
@@ -588,7 +588,7 @@ void KontrollKnopf::doMausEreignis( MausEreignis &me ) // Nachrichten verarbeitu
             if( toolTip )
                 toolTip->setMausIn( 0 );
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -596,13 +596,13 @@ void KontrollKnopf::doMausEreignis( MausEreignis &me ) // Nachrichten verarbeitu
             return;
         }
     }
-    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Verlässt )
+    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves )
     {
         if( toolTip )
             toolTip->setMausIn( 0 );
         return;
     }
-    if( !mausIn && me.id != ME_Verlässt )
+    if( !mausIn && me.id != ME_Leaves )
     {
         mausIn = 1;
         if( toolTip )
@@ -630,7 +630,7 @@ void KontrollKnopf::doMausEreignis( MausEreignis &me ) // Nachrichten verarbeitu
             addStyle( Style::MausKlick );
         if( me.id == ME_RLinks )
         {
-            löscheStyle( Style::MausKlick );
+            removeStyle( Style::MausKlick );
             setStyle( Style::Selected, !hatStyle( Style::Selected ) );
         }
         me.verarbeitet = 1;
@@ -645,10 +645,10 @@ void KontrollKnopf::render( Bild &zRObj ) // zeichnet nach zRObj
 {
     if( !hatStyle( Style::Sichtbar ) )
         return;
-    löscheStyle( Style::VScroll | Style::HScroll );
-    __super::render( zRObj );
+    removeStyle( Style::VScroll | Style::HScroll );
+	ZeichnungHintergrund::render( zRObj );
     lockZeichnung();
-    if( !zRObj.setDrawOptions( innenPosition, innenGröße ) )
+    if( !zRObj.setDrawOptions( innenPosition, innenSize ) )
     {
         unlockZeichnung();
         return;
@@ -658,48 +658,48 @@ void KontrollKnopf::render( Bild &zRObj ) // zeichnet nach zRObj
         if( hatStyle( Style::KlickFarbe ) )
         {
             if( hatStyle( Style::KlickAlpha ) )
-                zRObj.alphaRegion( 0, 0, innenGröße.x, innenGröße.y, kBgF );
+                zRObj.alphaRegion( 0, 0, innenSize.x, innenSize.y, kBgF );
             else
-                zRObj.füllRegion( 0, 0, innenGröße.x, innenGröße.y, kBgF );
+                zRObj.fillRegion( 0, 0, innenSize.x, innenSize.y, kBgF );
         }
         if( hatStyle( Style::KlickBild ) && kBgB )
         {
             if( hatStyle( Style::KlickAlpha ) )
-                zRObj.alphaBild( 0, 0, innenGröße.x, innenGröße.y, *kBgB );
+                zRObj.alphaBild( 0, 0, innenSize.x, innenSize.y, *kBgB );
             else
-                zRObj.drawBild( 0, 0, innenGröße.x, innenGröße.y, *kBgB );
+                zRObj.drawBild( 0, 0, innenSize.x, innenSize.y, *kBgB );
         }
         if( hatStyle( Style::KlickBuffer ) && kAf )
         {
-            kAf->setGröße( innenGröße.x, innenGröße.y );
+            kAf->setSize( innenSize.x, innenSize.y );
             kAf->render( zRObj );
         }
         int kbr = 0;
         if( hatStyle( Style::Selected ) && sKasten )
         {
             if( sTxt && schrift )
-                zRObj.drawBild( 0, ( gr.y / 2 - sKasten->getHöhe() / 2 ) < 0 ? 0 : ( gr.y / 2 - sKasten->getHöhe() / 2 ), innenGröße.x, innenGröße.y, *sKasten );
+                zRObj.drawBild( 0, ( gr.y / 2 - sKasten->getHeight() / 2 ) < 0 ? 0 : ( gr.y / 2 - sKasten->getHeight() / 2 ), innenSize.x, innenSize.y, *sKasten );
             else
-                zRObj.drawBild( gr.x / 2 - sKasten->getBreite() / 2, ( gr.y / 2 - sKasten->getHöhe() / 2 ) < 0 ? 0 : ( gr.y / 2 - sKasten->getHöhe() / 2 ), innenGröße.x, innenGröße.y, *sKasten );
+                zRObj.drawBild( gr.x / 2 - sKasten->getBreite() / 2, ( gr.y / 2 - sKasten->getHeight() / 2 ) < 0 ? 0 : ( gr.y / 2 - sKasten->getHeight() / 2 ), innenSize.x, innenSize.y, *sKasten );
             kbr = sKasten->getBreite();
             if( sTxt && schrift )
             {
-                schrift->setSchriftGröße( sGr );
-                schrift->setDrawPosition( kbr + 5, gr.y / 2 - schrift->getTextHöhe( sTxt ) / 2 );
+                schrift->setSchriftSize( sGr );
+                schrift->setDrawPosition( kbr + 5, gr.y / 2 - schrift->getTextHeight( sTxt ) / 2 );
                 schrift->renderText( sTxt, zRObj, sF );
             }
         }
         else if( kasten )
         {
             if( txt && schrift )
-                zRObj.drawBild( 0, ( gr.y / 2 - kasten->getHöhe() / 2 ) < 0 ? 0 : ( gr.y / 2 - kasten->getHöhe() / 2 ), innenGröße.x, innenGröße.y, *kasten );
+                zRObj.drawBild( 0, ( gr.y / 2 - kasten->getHeight() / 2 ) < 0 ? 0 : ( gr.y / 2 - kasten->getHeight() / 2 ), innenSize.x, innenSize.y, *kasten );
             else
-                zRObj.drawBild( gr.x / 2 - kasten->getBreite() / 2, ( gr.y / 2 - kasten->getHöhe() / 2 ) < 0 ? 0 : ( gr.y / 2 - kasten->getHöhe() / 2 ), innenGröße.x, innenGröße.y, *kasten );
+                zRObj.drawBild( gr.x / 2 - kasten->getBreite() / 2, ( gr.y / 2 - kasten->getHeight() / 2 ) < 0 ? 0 : ( gr.y / 2 - kasten->getHeight() / 2 ), innenSize.x, innenSize.y, *kasten );
             kbr = kasten->getBreite();
             if( txt && schrift )
             {
-                schrift->setSchriftGröße( sGr );
-                schrift->setDrawPosition( kbr + 5, gr.y / 2 - schrift->getTextHöhe( txt ) / 2 );
+                schrift->setSchriftSize( sGr );
+                schrift->setDrawPosition( kbr + 5, gr.y / 2 - schrift->getTextHeight( txt ) / 2 );
                 schrift->renderText( txt, zRObj, sF );
             }
         }
@@ -709,35 +709,35 @@ void KontrollKnopf::render( Bild &zRObj ) // zeichnet nach zRObj
         if( hatStyle( Style::SelectFarbe ) )
         {
             if( hatStyle( Style::SelectAlpha ) )
-                zRObj.alphaRegion( 0, 0, innenGröße.x, innenGröße.y, sBgF );
+                zRObj.alphaRegion( 0, 0, innenSize.x, innenSize.y, sBgF );
             else
-                zRObj.füllRegion( 0, 0, innenGröße.x, innenGröße.y, sBgF );
+                zRObj.fillRegion( 0, 0, innenSize.x, innenSize.y, sBgF );
         }
         if( hatStyle( Style::SelectBild ) && sBgB )
         {
             if( hatStyle( Style::SelectAlpha ) )
-                zRObj.alphaBild( 0, 0, innenGröße.x, innenGröße.y, *sBgB );
+                zRObj.alphaBild( 0, 0, innenSize.x, innenSize.y, *sBgB );
             else
-                zRObj.drawBild( 0, 0, innenGröße.x, innenGröße.y, *sBgB );
+                zRObj.drawBild( 0, 0, innenSize.x, innenSize.y, *sBgB );
         }
         if( hatStyle( Style::SelectBuffer ) && sAf )
         {
-            sAf->setGröße( innenGröße.x, innenGröße.y );
+            sAf->setSize( innenSize.x, innenSize.y );
             sAf->render( zRObj );
         }
         int kbr = 0;
         if( sKasten )
         {
             if( sTxt && schrift )
-                zRObj.drawBild( 0, ( gr.y / 2 - sKasten->getHöhe() / 2 ) < 0 ? 0 : ( gr.y / 2 - sKasten->getHöhe() / 2 ), innenGröße.x, innenGröße.y, *sKasten );
+                zRObj.drawBild( 0, ( gr.y / 2 - sKasten->getHeight() / 2 ) < 0 ? 0 : ( gr.y / 2 - sKasten->getHeight() / 2 ), innenSize.x, innenSize.y, *sKasten );
             else
-                zRObj.drawBild( gr.x / 2 - sKasten->getBreite() / 2, ( gr.y / 2 - sKasten->getHöhe() / 2 ) < 0 ? 0 : ( gr.y / 2 - sKasten->getHöhe() / 2 ), innenGröße.x, innenGröße.y, *sKasten );
+                zRObj.drawBild( gr.x / 2 - sKasten->getBreite() / 2, ( gr.y / 2 - sKasten->getHeight() / 2 ) < 0 ? 0 : ( gr.y / 2 - sKasten->getHeight() / 2 ), innenSize.x, innenSize.y, *sKasten );
             kbr = sKasten->getBreite();
         }
         if( sTxt && schrift )
         {
-            schrift->setSchriftGröße( sGr );
-            schrift->setDrawPosition( kbr + 5, gr.y / 2 - schrift->getTextHöhe( sTxt ) / 2 );
+            schrift->setSchriftSize( sGr );
+            schrift->setDrawPosition( kbr + 5, gr.y / 2 - schrift->getTextHeight( sTxt ) / 2 );
             schrift->renderText( sTxt, zRObj, sF );
         }
     }
@@ -747,15 +747,15 @@ void KontrollKnopf::render( Bild &zRObj ) // zeichnet nach zRObj
         if( kasten )
         {
             if( txt && schrift )
-                zRObj.drawBild( 0, ( gr.y / 2 - kasten->getHöhe() / 2 ) < 0 ? 0 : ( gr.y / 2 - kasten->getHöhe() / 2 ), innenGröße.x, innenGröße.y, *kasten );
+                zRObj.drawBild( 0, ( gr.y / 2 - kasten->getHeight() / 2 ) < 0 ? 0 : ( gr.y / 2 - kasten->getHeight() / 2 ), innenSize.x, innenSize.y, *kasten );
             else
-                zRObj.drawBild( gr.x / 2 - kasten->getBreite() / 2, ( gr.y / 2 - kasten->getHöhe() / 2 ) < 0 ? 0 : ( gr.y / 2 - kasten->getHöhe() / 2 ), innenGröße.x, innenGröße.y, *kasten );
+                zRObj.drawBild( gr.x / 2 - kasten->getBreite() / 2, ( gr.y / 2 - kasten->getHeight() / 2 ) < 0 ? 0 : ( gr.y / 2 - kasten->getHeight() / 2 ), innenSize.x, innenSize.y, *kasten );
             kbr = kasten->getBreite();
         }
         if( txt && schrift )
         {
-            schrift->setSchriftGröße( sGr );
-            schrift->setDrawPosition( kbr + 5, gr.y / 2 - schrift->getTextHöhe( txt ) / 2 );
+            schrift->setSchriftSize( sGr );
+            schrift->setDrawPosition( kbr + 5, gr.y / 2 - schrift->getTextHeight( txt ) / 2 );
             schrift->renderText( txt, zRObj, sF );
         }
     }
@@ -799,7 +799,7 @@ int KontrollKnopf::getSFarbe() const // gibt die Schrift Farbe zurück
     return sF;
 }
 
-int KontrollKnopf::getSGröße() const // gibt die Schrift Größe zurück
+int KontrollKnopf::getSSize() const // gibt die Schrift Größe zurück
 {
     return sGr;
 }

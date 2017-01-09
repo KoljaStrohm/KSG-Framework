@@ -1,9 +1,9 @@
 #include "Cube.h"
-#include "DXBuffer.h"
 #include "Textur.h"
 #include "Globals.h"
 #include "Model3DList.h"
 #include "TexturList.h"
+#include "DXBuffer.h"
 
 using namespace Framework;
 
@@ -14,12 +14,12 @@ using namespace Framework;
 Cube::Cube( float size )
     : Model3D()
 {
-    if( m3dRegister->hatModel( Standart3DTypes::würfel ) )
-        model = m3dRegister->getModel( Standart3DTypes::würfel );
+    if( m3dRegister->hatModel( Standart3DTypes::cube ) )
+        model = m3dRegister->getModel( Standart3DTypes::cube );
     else
     {
         model = new Model3DData();
-        m3dRegister->addModel( model->getThis(), Standart3DTypes::würfel );
+        m3dRegister->addModel( model->getThis(), Standart3DTypes::cube );
         float stdSize = 100;
         float left, right, top, bottom;
         // Calculate the screen coordinates of the left side of the bitmap.
@@ -93,7 +93,7 @@ Cube::Cube( float size )
         Polygon3D *p = new Polygon3D();
         p->indexAnz = 6;
         p->indexList = new int[ p->indexAnz ];
-        p->indexBuffer->setLänge( p->indexAnz * 4 );
+        p->indexBuffer->setLength( p->indexAnz * 4 );
         p->indexBuffer->setData( p->indexList );
         p->indexList[ 0 ] = 0;
         p->indexList[ 1 ] = 3;
@@ -106,7 +106,7 @@ Cube::Cube( float size )
         p = new Polygon3D();
         p->indexAnz = 6;
         p->indexList = new int[ p->indexAnz ];
-        p->indexBuffer->setLänge( p->indexAnz * 4 );
+        p->indexBuffer->setLength( p->indexAnz * 4 );
         p->indexBuffer->setData( p->indexList );
         p->indexList[ 0 ] = 4;
         p->indexList[ 1 ] = 6;
@@ -119,7 +119,7 @@ Cube::Cube( float size )
         p = new Polygon3D();
         p->indexAnz = 6;
         p->indexList = new int[ p->indexAnz ];
-        p->indexBuffer->setLänge( p->indexAnz * 4 );
+        p->indexBuffer->setLength( p->indexAnz * 4 );
         p->indexBuffer->setData( p->indexList );
         p->indexList[ 0 ] = 1 + 8;
         p->indexList[ 1 ] = 7 + 8;
@@ -132,7 +132,7 @@ Cube::Cube( float size )
         p = new Polygon3D();
         p->indexAnz = 6;
         p->indexList = new int[ p->indexAnz ];
-        p->indexBuffer->setLänge( p->indexAnz * 4 );
+        p->indexBuffer->setLength( p->indexAnz * 4 );
         p->indexBuffer->setData( p->indexList );
         p->indexList[ 0 ] = 0 + 8;
         p->indexList[ 1 ] = 2 + 8;
@@ -145,7 +145,7 @@ Cube::Cube( float size )
         p = new Polygon3D();
         p->indexAnz = 6;
         p->indexList = new int[ p->indexAnz ];
-        p->indexBuffer->setLänge( p->indexAnz * 4 );
+        p->indexBuffer->setLength( p->indexAnz * 4 );
         p->indexBuffer->setData( p->indexList );
         p->indexList[ 0 ] = 4 + 16;
         p->indexList[ 1 ] = 1 + 16;
@@ -158,7 +158,7 @@ Cube::Cube( float size )
         p = new Polygon3D();
         p->indexAnz = 6;
         p->indexList = new int[ p->indexAnz ];
-        p->indexBuffer->setLänge( p->indexAnz * 4 );
+        p->indexBuffer->setLength( p->indexAnz * 4 );
         p->indexBuffer->setData( p->indexList );
         p->indexList[ 0 ] = 6 + 16;
         p->indexList[ 1 ] = 2 + 16;

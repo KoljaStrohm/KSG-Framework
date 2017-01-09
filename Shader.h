@@ -28,7 +28,7 @@ namespace Framework
         ID3D10Blob *shaderBuffer;
         ShaderType type;
         ID3D11Buffer *constBuffers[ 14 ];
-        int buffLän[ 14 ];
+        int buffLen[ 14 ];
         int buffAnz;
         int ref;
 
@@ -56,18 +56,18 @@ namespace Framework
         // erstellt ein constanten Buffer, der constante daten an den Shader übergibt
         // es können maximal 14 Buffer erstellt werden
         //  zD3d11Device: Das Device, mit dem der Buffer erstellt werden soll
-        //  größe: Die größe des buffers in byte
+        //  size: Die größe des buffers in byte
         //  index: Die position des Buffers im Buffer Array. Bereits vorhanderner Buffer wird ersetzt. Buffer 1 kann nicht erstellt werden, wenn Buffer 0 noch nicht erstellt wurde usw.
-        bool erstelleConstBuffer( ID3D11Device *zD3d11Device, int größe, int index );
+        bool erstelleConstBuffer( ID3D11Device *zD3d11Device, int size, int index );
         // Löscht einen constanten Buffer
         //  index: der Index des Buffers, der gelöscht werden soll. Buffer 0 kann nicht gelöscht werden, solange Buffer 1 noch existiert usw.
-        bool löscheConstBuffer( int index );
+        bool removeConstBuffer( int index );
         // Kopiert daten in einen constanten buffer
         //  zD3d11Context: Das Context Objekt, das zum kopieren verwendt werden soll
         //  data: Einen zeiger auf en byte Array der größe des Buffers
         //  index: Der Index des Buffers
-        //  län: Die Länge der Daten in Bytes (-1 für die maximale größe des Buffers)
-        bool füllConstBuffer( ID3D11DeviceContext *zD3d11Context, char *data, int index, int län = -1 );
+        //  len: Die Länge der Daten in Bytes (-1 für die maximale größe des Buffers)
+        bool füllConstBuffer( ID3D11DeviceContext *zD3d11Context, char *data, int index, int len = -1 );
         // Gibt die Länge eines constanten Buffers zurück
         //  index: Der Index des Buffers
         int getConstBufferLänge( int index ) const;

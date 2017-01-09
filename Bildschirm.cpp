@@ -8,23 +8,25 @@
 #include "ToolTip.h"
 #include "MausEreignis.h"
 #include <iostream>
-#include <DirectXMath.h>
-#include <D3Dcompiler.h>
 #include "Datei.h"
-#include "DefaultShader.h"
-#include "comdef.h"
 #include "Zeichnung3D.h"
-#include "Shader.h"
-#include "Kam3D.h"
-#include "Render3D.h"
 #include "Mat3.h"
-#include "DXBuffer.h"
 #include "Model3D.h"
 #include "Textur.h"
 #include "TexturModel.h"
 #include "TexturList.h"
+#ifdef WIN32
+#include "Kam3D.h"
+#include "DefaultShader.h"
+#include <DirectXMath.h>
+#include <D3Dcompiler.h>
 #include <d3d11.h>
 #include <d3d9.h>
+#include "comdef.h"
+#include "DXBuffer.h"
+#include "Shader.h"
+#include "Render3D.h"
+#endif
 
 using namespace Framework;
 
@@ -35,7 +37,7 @@ Bildschirm::Bildschirm( WFenster *f )
     renderB( new Bild( 1 ) ),
     ref( 1 ),
     members( new ZeichnungArray() ),
-    füllFarbe( 0xFF000000 ),
+    fillColor( 0xFF000000 ),
     deckFarbe( 0 ),
     onTop( 0 ),
     renderOnTop( 0 ),
@@ -43,11 +45,11 @@ Bildschirm::Bildschirm( WFenster *f )
     vollbild( 0 ),
     rendering( 0 ),
     renderZeit( new ZeitMesser() ),
-    backBufferGröße( 0, 0 ),
+    backBufferSize( 0, 0 ),
     tips( new RCArray< ToolTip >() ),
     tipAnzahl( 0 ),
     testRend( 1 ),
-    füll( 1 ),
+    fill( 1 ),
     rend( 0 )
 {
     InitializeCriticalSection( &cs );
@@ -59,8 +61,10 @@ Bildschirm::~Bildschirm()
     lock();
     if( renderB )
         renderB->release();
+#ifdef Win32
     if( fenster )
         fenster->release();
+#endif
     delete members;
     tipAnzahl = 0;
     tips->release();
@@ -80,9 +84,9 @@ void Bildschirm::unlock()
     LeaveCriticalSection( &cs );
 }
 
-void Bildschirm::setFüll( bool f )
+void Bildschirm::setFill( bool f )
 {
-    füll = f;
+    fill = f;
 }
 
 void Bildschirm::setTestRend( bool tr ) // legt fest, ob vo rendern auf updates geprüft werden soll
@@ -136,9 +140,9 @@ void Bildschirm::removeMember( Zeichnung *obj ) // Entfernt ein Zeichnung
     unlock();
 }
 
-void Bildschirm::setFüllFarbe( int f ) // setzt die Fill Farbe
+void Bildschirm::setFillFarbe( int f ) // setzt die Fill Farbe
 {
-    füllFarbe = f;
+    fillColor = f;
     rend = 1;
 }
 
@@ -168,34 +172,36 @@ void Bildschirm::tick( double tickval )
     unlock();
 }
 
-void Bildschirm::setBackBufferGröße( int breite, int höhe ) // setzt die Größe des Backbuffers
+void Bildschirm::setBackBufferSize( int breite, int height ) // setzt die Größe des Backbuffers
 {
     lock();
-    backBufferGröße.x = breite;
-    backBufferGröße.y = höhe;
+    backBufferSize.x = breite;
+    backBufferSize.y = height;
     rend = 1;
     unlock();
 }
 
-void Bildschirm::setBackBufferGröße( Punkt &größe )
+void Bildschirm::setBackBufferSize( Punkt &size )
 {
     lock();
-    backBufferGröße = größe;
+    backBufferSize = size;
     rend = 1;
     unlock();
 }
 
 void Bildschirm::doMausEreignis( MausEreignis &me ) // sendet maus Ereignis
 {
-    int fBr = backBufferGröße.x;
-    int fHö = backBufferGröße.y;
-    if( fenster )
-    {
-        fBr = fenster->getKörperBreite();
-        fHö = fenster->getKörperHöhe();
-    }
-    me.mx = (int)( me.mx * backBufferGröße.x / (double)fBr + 0.5 );
-    me.my = (int)( me.my * backBufferGröße.y / (double)fHö + 0.5 );
+    int fBr = backBufferSize.x;
+    int fHi = backBufferSize.y;
+#ifdef WIN32
+	if( fenster )
+	{
+		fBr = fenster->getKörperBreite();
+		fHi = fenster->getKörperHöhe();
+	}
+#endif
+    me.mx = (int)( me.mx * backBufferSize.x / (double)fBr + 0.5 );
+    me.my = (int)( me.my * backBufferSize.y / (double)fHi + 0.5 );
     lock();
     if( !renderOnTop )
     {
@@ -240,7 +246,7 @@ bool Bildschirm::removeToolTip( ToolTip *zTip ) // entfernt ToolTip
         ToolTip *tmp = tips->z( i );
         if( tmp == zTip )
         {
-            tips->lösche( i );
+            tips->remove( i );
             --tipAnzahl;
             gefunden = 1;
             rend = 1;
@@ -267,9 +273,9 @@ ZeichnungArray *Bildschirm::getMembers() const // gibt die Zeichnunge zurück
     return members;
 }
 
-int Bildschirm::getFüllFarbe() const // gibt die Füll Farbe zurück
+int Bildschirm::getFillFarbe() const // gibt die Füll Farbe zurück
 {
-    return füllFarbe;
+    return fillColor;
 }
 
 bool Bildschirm::istVolbild() const // gibt zurück, ob vollbild an ist
@@ -277,9 +283,9 @@ bool Bildschirm::istVolbild() const // gibt zurück, ob vollbild an ist
     return vollbild;
 }
 
-const Punkt &Bildschirm::getBackBufferGröße() const // gibt die Größe des Backbuffers zurück
+const Punkt &Bildschirm::getBackBufferSize() const // gibt die Größe des Backbuffers zurück
 {
-    return backBufferGröße;
+    return backBufferSize;
 }
 
 void Bildschirm::warteAufRendern() const // wartet auf die render Funktion
@@ -310,7 +316,7 @@ Bildschirm *Bildschirm::release()
         delete this;
     return 0;
 }
-
+#ifdef WIN32
 int MonitorEnum( HMONITOR m, HDC dc, LPRECT r, LPARAM p )
 {
     Monitor *mon = new Monitor();
@@ -318,7 +324,7 @@ int MonitorEnum( HMONITOR m, HDC dc, LPRECT r, LPARAM p )
     mon->x = r->left;
     mon->y = r->top;
     mon->breite = r->right - r->left;
-    mon->höhe = r->bottom - r->top;
+    mon->height = r->bottom - r->top;
     ( ( Array< Monitor* >* )p )->add( mon );
     return 1;
 }
@@ -349,7 +355,6 @@ Monitor Framework::getMonitor( int id )
     delete monitore;
     return m;
 }
-
 // Bildschirm2D
 // Konstruktor 
 Bildschirm2D::Bildschirm2D( WFenster *fenster )
@@ -406,14 +411,14 @@ void Bildschirm2D::update() // aktualisiert directX
     d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
     d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
     d3dpp.Flags = D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
-    if( !backBufferGröße.x || !backBufferGröße.y )
-        backBufferGröße = fenster->getKörperGröße();
-    d3dpp.BackBufferHeight = backBufferGröße.y;
-    d3dpp.BackBufferWidth = backBufferGröße.x;
+    if( !backBufferSize.x || !backBufferSize.y )
+        backBufferSize = fenster->getKörperGröße();
+    d3dpp.BackBufferHeight = backBufferSize.y;
+    d3dpp.BackBufferWidth = backBufferSize.x;
     if( renderB )
         renderB->release();
     renderB = new Bild( 1 );
-    renderB->neuBild( backBufferGröße.x, backBufferGröße.y, füllFarbe );
+    renderB->neuBild( backBufferSize.x, backBufferSize.y, fillColor );
 
     result = pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, fenster->getFensterHandle(),
                                       D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &d3dpp, &pDevice );
@@ -433,11 +438,11 @@ void Bildschirm2D::render() // Zeichnet das Bild
     {
         lock();
         renderZeit->messungStart();
-        if( füll )
-            renderB->setFarbe( füllFarbe );
+        if( fill )
+            renderB->setFarbe( fillColor );
         if( renderZeichnungen )
         {
-            if( renderOnTop && deckFarbe && ( deckFarbe & ( füllFarbe | 0xFF000000 ) ) == deckFarbe )
+            if( renderOnTop && deckFarbe && ( deckFarbe & ( fillColor | 0xFF000000 ) ) == deckFarbe )
             {
                 renderB->setAlpha( 255 - (unsigned char)( deckFarbe >> 24 ) );
                 members->render( *renderB ); // zeichnen nach zwischenbuffer
@@ -447,7 +452,7 @@ void Bildschirm2D::render() // Zeichnet das Bild
             {
                 members->render( *renderB ); // zeichnen nach zwischenbuffer
                 if( renderOnTop && deckFarbe )
-                    renderB->alphaRegion( 0, 0, renderB->getBreite(), renderB->getHöhe(), deckFarbe );
+                    renderB->alphaRegion( 0, 0, renderB->getBreite(), renderB->getHeight(), deckFarbe );
             }
             for( int i = 0; i < tipAnzahl; ++i )
                 tips->z( i )->render( *renderB );
@@ -458,13 +463,13 @@ void Bildschirm2D::render() // Zeichnet das Bild
         unlock();
         // Beginne Bild 
         HRESULT result;
-        if( !füllFarbe )
+        if( !fillColor )
             result = pDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB( 0, 0, 0 ), 0.0f, 0 );
         result = pBackBuffer->LockRect( backRect, 0, 0 );
         // kopieren zum Bildschrirm 
         int *bgBuff = tmp->getBuffer();
         int tmpBr = sizeof( D3DCOLOR )* tmp->getBreite();
-        for( int y = 0, pitch = 0, bry = 0; y < tmp->getHöhe(); ++y, pitch += backRect->Pitch, bry += tmp->getBreite() )
+        for( int y = 0, pitch = 0, bry = 0; y < tmp->getHeight(); ++y, pitch += backRect->Pitch, bry += tmp->getBreite() )
             memcpy( &( (BYTE *)backRect->pBits )[ pitch ], ( void* )&( bgBuff[ bry ] ), tmpBr );
         // Beende Bild 
         result = pBackBuffer->UnlockRect();
@@ -622,7 +627,7 @@ void Bildschirm3D::removeKamera( Kam3D *zObj ) // Entfernt ein Zeichnung
     {
         if( kameras->z( i ) == zObj )
         {
-            kameras->lösche( i );
+            kameras->remove( i );
             break;
         }
     }
@@ -653,10 +658,10 @@ void Bildschirm3D::update() // aktualisiert directX
     scd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
     scd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     scd.Windowed = !vollbild;
-    if( !backBufferGröße.x || !backBufferGröße.y )
-        backBufferGröße = fenster ? fenster->getKörperGröße() : Punkt( 0, 0 );
-    scd.BufferDesc.Width = backBufferGröße.x;
-    scd.BufferDesc.Height = backBufferGröße.y;                 // windowed/full-screen mode
+    if( !backBufferSize.x || !backBufferSize.y )
+        backBufferSize = fenster ? fenster->getKörperGröße() : Punkt( 0, 0 );
+    scd.BufferDesc.Width = backBufferSize.x;
+    scd.BufferDesc.Height = backBufferSize.y;                 // windowed/full-screen mode
     scd.BufferDesc.RefreshRate.Denominator = 1;
     scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;       // use 32-bit color
                                                               // Discard the back buffer contents after presenting.
@@ -665,7 +670,7 @@ void Bildschirm3D::update() // aktualisiert directX
         renderB->release();
     renderB = new Bild( 1 );
     renderB->setAlpha3D( 1 );
-    renderB->neuBild( backBufferGröße.x, backBufferGröße.y, füllFarbe );
+    renderB->neuBild( backBufferSize.x, backBufferSize.y, fillColor );
 
     D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_0;
     D3D_FEATURE_LEVEL support = D3D_FEATURE_LEVEL_11_0;
@@ -698,8 +703,8 @@ void Bildschirm3D::update() // aktualisiert directX
     D3D11_TEXTURE2D_DESC depthBufferDesc;
     ZeroMemory( &depthBufferDesc, sizeof( depthBufferDesc ) );
     // Set up the description of the depth buffer.
-    depthBufferDesc.Width = backBufferGröße.x;
-    depthBufferDesc.Height = backBufferGröße.y;
+    depthBufferDesc.Width = backBufferSize.x;
+    depthBufferDesc.Height = backBufferSize.y;
     depthBufferDesc.MipLevels = 1;
     depthBufferDesc.ArraySize = 1;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -750,8 +755,8 @@ void Bildschirm3D::update() // aktualisiert directX
 
     vp = new D3D11_VIEWPORT();
     memset( vp, 0, sizeof( D3D11_VIEWPORT ) );
-    vp->Width = (float)backBufferGröße.x;
-    vp->Height = (float)backBufferGröße.y;
+    vp->Width = (float)backBufferSize.x;
+    vp->Height = (float)backBufferSize.y;
     vp->MinDepth = 0.0f;
     vp->MaxDepth = 1.0f;
     vp->TopLeftX = 0.0f;
@@ -852,7 +857,7 @@ void Bildschirm3D::update() // aktualisiert directX
     frameworkTextur->setBildZ( renderB->getThis() );
     texturRegister->addTextur( frameworkTextur->getThis(), "f_Render_Bild" );
 
-    texturModel->setGröße( backBufferGröße );
+    texturModel->setSize( backBufferSize );
     texturModel->setTextur( frameworkTextur->getId() );
 
     D3D11_BLEND_DESC blendState;
@@ -928,14 +933,14 @@ void Bildschirm3D::render() // Zeichnet das Bild
         renderZeit->messungStart();
         float color[ 4 ];
         // Setup the color to clear the buffer to.
-        color[ 0 ] = ( ( füllFarbe >> 16 ) & 0xFF ) / 255.f; // R
-        color[ 1 ] = ( ( füllFarbe >> 8 ) & 0xFF ) / 255.f; // G
-        color[ 2 ] = ( füllFarbe & 0xFF ) / 255.f; // B
-        color[ 3 ] = ( ( füllFarbe >> 24 ) & 0xFF ) / 255.f; // A
+        color[ 0 ] = ( ( fillColor >> 16 ) & 0xFF ) / 255.f; // R
+        color[ 1 ] = ( ( fillColor >> 8 ) & 0xFF ) / 255.f; // G
+        color[ 2 ] = ( fillColor & 0xFF ) / 255.f; // B
+        color[ 3 ] = ( ( fillColor >> 24 ) & 0xFF ) / 255.f; // A
         // Clear the back buffer.
         if( rend3D || !testRend || rend )
         {
-            if( füll )
+            if( fill )
             {
                 d3d11Context->ClearRenderTargetView( rtview, color );
                 // Clear the depth buffer.
@@ -956,11 +961,11 @@ void Bildschirm3D::render() // Zeichnet das Bild
 
         if( rend || !testRend )
         {
-            if( füll )
-                renderB->setFarbe( füllFarbe );
+            if( fill )
+                renderB->setFarbe( fillColor );
             if( renderZeichnungen )
             {
-                if( renderOnTop && deckFarbe && ( deckFarbe & ( füllFarbe | 0xFF000000 ) ) == deckFarbe )
+                if( renderOnTop && deckFarbe && ( deckFarbe & ( fillColor | 0xFF000000 ) ) == deckFarbe )
                 {
                     renderB->setAlpha( 255 - (unsigned char)( deckFarbe >> 24 ) );
                     members->render( *renderB ); // zeichnen nach zwischenbuffer
@@ -970,7 +975,7 @@ void Bildschirm3D::render() // Zeichnet das Bild
                 {
                     members->render( *renderB ); // zeichnen nach zwischenbuffer
                     if( renderOnTop && deckFarbe )
-                        renderB->alphaRegion( 0, 0, renderB->getBreite(), renderB->getHöhe(), deckFarbe );
+                        renderB->alphaRegion( 0, 0, renderB->getBreite(), renderB->getHeight(), deckFarbe );
                 }
                 for( int i = 0; i < tipAnzahl; ++i )
                     tips->z( i )->render( *renderB );
@@ -987,9 +992,9 @@ void Bildschirm3D::render() // Zeichnet das Bild
 
         d3d11Context->RSSetViewports( 1, vp );
 
-        float screenAspect = (float)backBufferGröße.x / (float)backBufferGröße.y;
-        Mat4< float > view = view.translation( Vec3< float >( 0.f, 0.f, backBufferGröße.y * 1.2075f ) );
-        renderObj->setKameraMatrix( view, view.projektion( DirectX::XM_PI / 4.0f, screenAspect, 0.1f, 10000.f ), Vec3< float >( 0.f, 0.f, backBufferGröße.y * 1.2075f ) );
+        float screenAspect = (float)backBufferSize.x / (float)backBufferSize.y;
+        Mat4< float > view = view.translation( Vec3< float >( 0.f, 0.f, backBufferSize.y * 1.2075f ) );
+        renderObj->setKameraMatrix( view, view.projektion( DirectX::XM_PI / 4.0f, screenAspect, 0.1f, 10000.f ), Vec3< float >( 0.f, 0.f, backBufferSize.y * 1.2075f ) );
         texturModel->render( renderObj );
 
         result = d3d11SpawChain->Present( 0, 0 );
@@ -1027,3 +1032,4 @@ Bildschirm *Bildschirm3D::release()
         delete this;
     return 0;
 }
+#endif

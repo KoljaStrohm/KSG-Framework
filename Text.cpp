@@ -14,7 +14,7 @@ Text::Text()
     : txt( 0 ),
     suchGBeg( 0 ),
     suchGEnd( 0 ),
-    präzision( 0 ),
+    precision( 0 ),
     ref( 1 )
 {
     setText( "" );
@@ -24,7 +24,7 @@ Text::Text( const Text &txt )
     : txt( 0 ),
     suchGBeg( 0 ),
     suchGEnd( 0 ),
-    präzision( 0 ),
+    precision( 0 ),
     ref( 1 )
 {
     setText( txt );
@@ -34,7 +34,7 @@ Text::Text( const char *t )
     : txt( 0 ),
     suchGBeg( 0 ),
     suchGEnd( 0 ),
-    präzision( 0 ),
+    precision( 0 ),
     ref( 1 )
 {
     setText( t ); // Text setzen
@@ -44,7 +44,7 @@ Text::Text( int zahl )
     : txt( 0 ),
     suchGBeg( 0 ),
     suchGEnd( 0 ),
-    präzision( 0 ),
+    precision( 0 ),
     ref( 1 )
 {
     *this = zahl;
@@ -89,15 +89,15 @@ void Text::setText( Text *t )
     t = t->release(); // übergabe loslassen
 }
 
-void Text::anhängen( char c ) // hängt an den Text an
+void Text::append( char c ) // hängt an den Text an
 {
-    anhängen( &c, 1 );
+	append( &c, 1 );
 }
 
-void Text::anhängen( const char *t ) // hängt an den Text an
+void Text::append( const char *t ) // hängt an den Text an
 {
     int tl = (int)strlen( t ); // länge der übergabe
-    int txl = getLänge(); // länge des Textes
+    int txl = getLength(); // länge des Textes
     char *res = new char[ tl + txl + 1 ]; // neuen Text erstellen
     for( int i = 0; i < txl; ++i ) // mit jetzigem Text füllen
         res[ i ] = txt[ i ];
@@ -108,14 +108,14 @@ void Text::anhängen( const char *t ) // hängt an den Text an
     delete[] res; // Speicher freigeben
 }
 
-void Text::hexAnhängen( int num ) // hängt die zahl in hex anden Text an
+void Text::appendHex( int num ) // hängt die zahl in hex anden Text an
 {
-    int l = getLänge();
+    int l = getLength();
     char *res = new char[ l + 9 ];
     for( int i = 0; i < l; ++i )
         res[ i ] = txt[ i ];
     std::stringstream stream;
-    stream << std::setfill( '0' ) << std::setw( sizeof( int ) * 2 ) << std::hex << num;
+    stream << std::setfill( '0' ) << std::setw( (int)sizeof( int ) * 2 ) << std::hex << num;
     std::string str = stream.str();
     for( int i = l; i < l + 8; ++i )
         res[ i ] = str.c_str()[ i - l ];
@@ -124,9 +124,9 @@ void Text::hexAnhängen( int num ) // hängt die zahl in hex anden Text an
     delete[] res;
 }
 
-void Text::farbeAnhängen( int fc ) // setzt die Farbe des folgenden Textes
+void Text::appendColor( int fc ) // setzt die Farbe des folgenden Textes
 {
-    int l = getLänge();
+    int l = getLength();
     char *res = new char[ l + 12 ];
     for( int i = 0; i < l; ++i )
         res[ i ] = txt[ i ];
@@ -134,7 +134,7 @@ void Text::farbeAnhängen( int fc ) // setzt die Farbe des folgenden Textes
     res[ l + 1 ] = '0';
     res[ l + 2 ] = 'x';
     std::stringstream stream;
-    stream << std::setfill( '0' ) << std::setw( sizeof( int ) * 2 ) << std::hex << fc;
+    stream << std::setfill( '0' ) << std::setw( (int)sizeof( int ) * 2 ) << std::hex << fc;
     std::string str = stream.str();
     for( int i = l + 3; i < l + 11; ++i )
         res[ i ] = str.c_str()[ i - ( l + 3 ) ];
@@ -143,9 +143,9 @@ void Text::farbeAnhängen( int fc ) // setzt die Farbe des folgenden Textes
     delete[] res;
 }
 
-void Text::anhängen( const char *t, int l ) // hängt an den Text an
+void Text::append( const char *t, int l ) // hängt an den Text an
 {
-    int txl = getLänge(); // länge des Textes
+    int txl = getLength(); // länge des Textes
     char *res = new char[ l + txl + 1 ]; // neuen Text erstellen
     for( int i = 0; i < txl; ++i ) // mit jetzigem Text füllen
         res[ i ] = txt[ i ];
@@ -156,40 +156,40 @@ void Text::anhängen( const char *t, int l ) // hängt an den Text an
     delete[] res; // Speicher freigeben
 }
 
-void Text::anhängen( Text *t )
+void Text::append( Text *t )
 {
-    if( t->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
-        anhängen( t->getText() ); // Text anhängen
+    if( t->getLength() > 0 ) // Auf unsinnige übergabe prüfen
+        append( t->getText() ); // Text anhängen
     t = t->release(); // Übergabe loslassen
 }
 
-void Text::anhängen( int num )
+void Text::append( int num )
 {
     std::stringstream ss;
     ss << num;
-    anhängen( ss.str().c_str() );
+    append( ss.str().c_str() );
 }
 
-void Text::anhängen( unsigned int num )
+void Text::append( unsigned int num )
 {
     std::stringstream ss;
     ss << num;
-    anhängen( ss.str().c_str() );
+    append( ss.str().c_str() );
 }
 
-void Text::anhängen( double num )
+void Text::append( double num )
 {
     std::stringstream ss;
-    ss.precision( präzision );
+    ss.precision( precision );
     ss << num;
-    anhängen( ss.str().c_str() );
+    append( ss.str().c_str() );
 }
 
-void Text::einfügen( int p, char c ) // Fügt an stelle p ein
+void Text::insert( int p, char c ) // Fügt an stelle p ein
 {
-    if( p > getLänge() || p < 0 ) // Auf unsinnige übergabe prüfen
+    if( p > getLength() || p < 0 ) // Auf unsinnige übergabe prüfen
         return;
-    int txl = getLänge(); // Länge des Textes
+    int txl = getLength(); // Länge des Textes
     char *res = new char[ txl + 2 ]; // neuer Text erstellen
     for( int i = 0; i < p; ++i ) // Text füllen
         res[ i ] = txt[ i ];
@@ -201,12 +201,12 @@ void Text::einfügen( int p, char c ) // Fügt an stelle p ein
     delete[] res; // Speicher freigeben
 }
 
-void Text::einfügen( int p, const char *t ) // Fügt an stelle p ein
+void Text::insert( int p, const char *t ) // Fügt an stelle p ein
 {
-    if( p > getLänge() || p < 0 || strlen( t ) <= 0 ) // Auf unsinnige übergabe prüfen
+    if( p > getLength() || p < 0 || strlen( t ) <= 0 ) // Auf unsinnige übergabe prüfen
         return;
     int tl = (int)strlen( t ); // Länge der übergabe
-    int txl = getLänge(); // Länge des Textes
+    int txl = getLength(); // Länge des Textes
     char *res = new char[ tl + txl + 1 ]; // neuer Text erstellen
     for( int i = 0; i < p; ++i ) // Text füllen
         res[ i ] = txt[ i ];
@@ -219,10 +219,10 @@ void Text::einfügen( int p, const char *t ) // Fügt an stelle p ein
     delete[] res; // Speicher freigeben
 }
 
-void Text::einfügen( int p, Text *t )
+void Text::insert( int p, Text *t )
 {
-    if( t->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
-        einfügen( p, t->getText() ); // Text einfügen
+    if( t->getLength() > 0 ) // Auf unsinnige übergabe prüfen
+        insert( p, t->getText() ); // Text einfügen
     t = t->release(); // Übergabe loslassen
 }
 
@@ -234,13 +234,13 @@ void Text::ersetzen( int p1, int p2, const char *t ) // Ersetzt den Text von p1 
         p1 = p2;
         p2 = x;
     }
-    löschen( p1, p2 ); // Textabschnitt von p1 zu p2 löschen
-    einfügen( p1, t ); // Übergabe bei p1 einfügen
+    remove( p1, p2 ); // Textabschnitt von p1 zu p2 löschen
+    insert( p1, t ); // Übergabe bei p1 einfügen
 }
 
 void Text::ersetzen( int p1, int p2, Text *t )
 {
-    if( t->getLänge() >= 0 ) // Auf unsinnige übergabe prüfen
+    if( t->getLength() >= 0 ) // Auf unsinnige übergabe prüfen
         ersetzen( p1, p2, t->getText() ); // Text ersetzen
     t = t->release(); // Übergabe loslassen
 }
@@ -251,7 +251,7 @@ void Text::ersetzen( char c1, char c2 ) // ersetzt jedes c1 durch c2
         return;
     if( !hat( c1 ) ) // prüfen ob c1 vorhanden
         return;
-    int l = getLänge(); // Text Länge
+    int l = getLength(); // Text Länge
     int suchGCount = 0;
     for( int i = 0; i < l; ++i ) // Text durchsuchen
     {
@@ -269,7 +269,7 @@ void Text::ersetzen( char c1, char c2 ) // ersetzt jedes c1 durch c2
 
 void Text::ersetzen( const char *t1, const char *t2 ) // ersetzt jedes t1 durch t2
 {
-    int txl = getLänge(); // Text Länge
+    int txl = getLength(); // Text Länge
     int t1l = (int)strlen( t1 ); // Länge der Übergaben
     int t2l = (int)strlen( t2 );
     if( t1l > txl || t1l <= 0 ) // Auf unsinnige übergabe prüfen
@@ -321,21 +321,21 @@ void Text::ersetzen( const char *t1, const char *t2 ) // ersetzt jedes t1 durch 
 
 void Text::ersetzen( Text *t1, const char *t2 )
 {
-    if( t1->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
+    if( t1->getLength() > 0 ) // Auf unsinnige übergabe prüfen
         ersetzen( t1->getText(), t2 ); // ersetzen
     t1 = t1->release(); // Übergabe loslassen
 }
 
 void Text::ersetzen( const char *t1, Text *t2 )
 {
-    if( t2->getLänge() >= 0 ) // Auf unsinnige übergabe prüfen
+    if( t2->getLength() >= 0 ) // Auf unsinnige übergabe prüfen
         ersetzen( t1, t2->getText() ); // ersetzen
     t2 = t2->release(); // Übergabe loslassen
 }
 
 void Text::ersetzen( Text *t1, Text *t2 )
 {
-    if( t1->getLänge() > 0 && t2->getLänge() >= 0 ) // Auf unsinnige übergabe prüfen
+    if( t1->getLength() > 0 && t2->getLength() >= 0 ) // Auf unsinnige übergabe prüfen
         ersetzen( t1->getText(), t2->getText() ); // ersetzen
     t1 = t1->release(); // Übergaben loslassen
     t2 = t2->release();
@@ -355,7 +355,7 @@ void Text::ersetzen( int index, char c1, char c2 ) // ersetzt das i-te c1 durch 
 
 void Text::ersetzen( int index, const char *t1, const char *t2 ) // ersetzt das i-te t1 durch t2
 {
-    int txl = getLänge(); // Text Länge
+    int txl = getLength(); // Text Länge
     int t1l = (int)strlen( t1 ); // Länge der Übergaben
     if( t1l >= txl || t1l <= 0 || index < 0 ) // Auf unsinnige übergabe prüfen
         return;
@@ -371,39 +371,39 @@ void Text::ersetzen( int index, const char *t1, const char *t2 ) // ersetzt das 
 
 void Text::ersetzen( int i, Text *t1, const char *t2 )
 {
-    if( t1->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
+    if( t1->getLength() > 0 ) // Auf unsinnige übergabe prüfen
         ersetzen( i, t1->getText(), t2 ); // ersetzen
     t1 = t1->release(); // Übergabe loslassen
 }
 
 void Text::ersetzen( int i, const char *t1, Text *t2 )
 {
-    if( t2->getLänge() >= 0 ) // Auf unsinnige übergabe prüfen
+    if( t2->getLength() >= 0 ) // Auf unsinnige übergabe prüfen
         ersetzen( i, t1, t2->getText() ); // ersetzen
     t2 = t2->release(); // Übergabe loslassen
 }
 
 void Text::ersetzen( int i, Text *t1, Text *t2 )
 {
-    if( t1->getLänge() > 0 || t2->getLänge() >= 0 ) // Auf unsinnige übergabe prüfen
+    if( t1->getLength() > 0 || t2->getLength() >= 0 ) // Auf unsinnige übergabe prüfen
         ersetzen( i, t1->getText(), t2->getText() ); // ersetzen
     t1 = t1->release(); // Übergaben loslassen
     t2 = t2->release();
 }
 
-void Text::füllText( char c, int län ) // setzt den Text zu so vielen c wie län groß ist
+void Text::fillText( char c, int len ) // setzt den Text zu so vielen c wie län groß ist
 {
-    char *res = new char[ län + 1 ];
-    for( int i = 0; i < län; ++i )
+    char *res = new char[ len + 1 ];
+    for( int i = 0; i < len; ++i )
         res[ i ] = c;
-    res[ län ] = '\0';
+    res[ len ] = '\0';
     setText( res );
     delete[] res;
 }
 
-void Text::löschen( int p ) // löscht p
+void Text::remove( int p ) // löscht p
 {
-    int l = getLänge(); // Text Länge
+    int l = getLength(); // Text Länge
     if( p < 0 || p >= l ) // Auf unsinnige übergabe prüfen
         return;
     char *res = new char[ l ]; // neuen Text anlegen
@@ -416,7 +416,7 @@ void Text::löschen( int p ) // löscht p
     delete[] res; // Speicher freigeben
 }
 
-void Text::löschen( int p1, int p2 ) // löscht von p1 zu p2 ( p2 bleibt )
+void Text::remove( int p1, int p2 ) // löscht von p1 zu p2 ( p2 bleibt )
 {
     if( p1 > p2 ) // p1 und p2 tauschen
     {
@@ -424,7 +424,7 @@ void Text::löschen( int p1, int p2 ) // löscht von p1 zu p2 ( p2 bleibt )
         p1 = p2;
         p2 = x;
     }
-    int l = getLänge(); // Länge des Testes
+    int l = getLength(); // Länge des Testes
     if( p1 < 0 || p2 > l ) // Auf unsinnige übergabe prüfen
         return;
     int resl = l - ( p2 - p1 ); // Länge vom Ergebnis
@@ -438,11 +438,11 @@ void Text::löschen( int p1, int p2 ) // löscht von p1 zu p2 ( p2 bleibt )
     delete[] res; // Speicher freigeben
 }
 
-void Text::löschen( char c ) // löscht jetes c
+void Text::remove( char c ) // löscht jetes c
 {
     if( !hat( c ) ) // prüfen ob c vorhanden
         return;
-    int l = getLänge(); // Länge des Textes
+    int l = getLength(); // Länge des Textes
     int anz = anzahlVon( c ); // Anzahl von c
     char *res = new char[ l - anz + 1 ]; // neuen Text erstellen
     int anz2 = 0;
@@ -471,10 +471,10 @@ void Text::löschen( char c ) // löscht jetes c
     delete[] res; // Speicher freigeben
 }
 
-void Text::löschen( const char *t ) // löscht jetes t
+void Text::remove( const char *t ) // löscht jetes t
 {
     int tl = (int)strlen( t ); // Länge der Übergabe
-    int txl = getLänge(); // Länge des Textes
+    int txl = getLength(); // Länge des Textes
     if( tl <= 0 || tl > txl ) // Auf unsinnige übergabe prüfen
         return;
     if( !hat( t ) ) // prüfen ob Text ein t enthält
@@ -502,14 +502,14 @@ void Text::löschen( const char *t ) // löscht jetes t
     delete[] res; // Speicher freigeben
 }
 
-void Text::löschen( Text *t )
+void Text::remove( Text *t )
 {
-    if( t->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
-        löschen( t->getText() ); // löschen
+    if( t->getLength() > 0 ) // Auf unsinnige übergabe prüfen
+        remove( t->getText() ); // löschen
     t = t->release(); // Übergabe loslassen
 }
 
-void Text::löschen( int index, char c )
+void Text::remove( int index, char c )
 {
     if( index < 0 || !hat( c ) ) // Auf unsinnige übergabe prüfen
         return;
@@ -519,7 +519,7 @@ void Text::löschen( int index, char c )
     int pos = positionVon( c, index ); // Position vom i-ten c
     if( pos < 0 )
         return;
-    int l = getLänge(); // Länge des Textes
+    int l = getLength(); // Länge des Textes
     if( !l )
         return;
     char *res = new char[ l ]; // neuen Text erzeugen
@@ -532,7 +532,7 @@ void Text::löschen( int index, char c )
     delete[] res; // Speicher freigeben
 }
 
-void Text::löschen( int index, const char *t ) // löscht das i-te t
+void Text::remove( int index, const char *t ) // löscht das i-te t
 {
     int tl = (int)strlen( t ); // Länge der Übergabe
     if( index < 0 || !hat( t ) || tl <= 0 ) // Auf unsinnige übergabe prüfen
@@ -543,7 +543,7 @@ void Text::löschen( int index, const char *t ) // löscht das i-te t
     int pos = positionVon( t, index ); // Position vom i-ten c
     if( pos < 0 )
         return;
-    int l = getLänge(); // Länge des Textes
+    int l = getLength(); // Länge des Textes
     if( !l )
         return;
     char *res = new char[ l - tl + 1 ]; // neuen Text erzeugen
@@ -556,20 +556,20 @@ void Text::löschen( int index, const char *t ) // löscht das i-te t
     delete[] res; // Speicher freigeben
 }
 
-void Text::löschen( int i, Text *t )
+void Text::remove( int i, Text *t )
 {
-    if( t->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
-        löschen( i, t->getText() ); // löschen
+    if( t->getLength() > 0 ) // Auf unsinnige übergabe prüfen
+        remove( i, t->getText() ); // löschen
     t = t->release(); // Übergabe loslassen
 }
 
-void Text::setPräzision( int p ) // setzt die Anzahl der Nachkommastellen bei doubles
+void Text::setPrecision( int p ) // setzt die Anzahl der Nachkommastellen bei doubles
 {
-    präzision = p;
+    precision = p;
 }
 
 // constant 
-int Text::getLänge() const // gibt die Text länge zurück
+int Text::getLength() const // gibt die Text länge zurück
 {
     if( !txt )
         return -1;
@@ -601,18 +601,18 @@ int Text::getOKick( int pos ) const
     int lpos = 0;
     while( pos - lpos - 1 > 0 && txt[ pos - lpos - 1 ] != '\n' )
         ++lpos;
-    int vllän = 1;
-    while( pos - lpos - vllän - 1 >= 0 && txt[ pos - lpos - vllän - 1 ] != '\n' )
-        ++vllän;
-    if( vllän > lpos )
-        return pos - vllän;
+    int vllen = 1;
+    while( pos - lpos - vllen - 1 >= 0 && txt[ pos - lpos - vllen - 1 ] != '\n' )
+        ++vllen;
+    if( vllen > lpos )
+        return pos - vllen;
     else
         return pos - lpos - 1;
 }
 
 int Text::getRKick( int pos ) const
 {
-    int tl = getLänge();
+    int tl = getLength();
     if( txt[ pos ] == ' ' )
     {
         int ret = 1;
@@ -630,27 +630,27 @@ int Text::getRKick( int pos ) const
 int Text::getUKick( int pos ) const
 {
     if( !hat( '\n' ) )
-        return getLänge();
+        return getLength();
     int lpos = 0;
     while( pos - lpos > 0 && txt[ pos - lpos - 1 ] != '\n' )
         ++lpos;
-    int llän = 1;
-    while( pos + llän - 1 < getLänge() && txt[ pos + llän - 1 ] != '\n' )
-        ++llän;
-    int vllän = 1;
-    while( pos + llän + vllän - 1 < getLänge() && txt[ pos + llän + vllän - 1 ] != '\n' )
-        ++vllän;
-    if( vllän == 1 )
-        return pos + llän < getLänge() ? pos + llän : getLänge();
-    if( vllän < lpos )
-        return pos + llän + vllän - 1;
-    return pos + llän + lpos;
+    int llen = 1;
+    while( pos + llen - 1 < getLength() && txt[ pos + llen - 1 ] != '\n' )
+        ++llen;
+    int vllen = 1;
+    while( pos + llen + vllen - 1 < getLength() && txt[ pos + llen + vllen - 1 ] != '\n' )
+        ++vllen;
+    if( vllen == 1 )
+        return pos + llen < getLength() ? pos + llen : getLength();
+    if( vllen < lpos )
+        return pos + llen + vllen - 1;
+    return pos + llen + lpos;
 }
 
 bool Text::hat( Text *t ) const // enthält der Text t
 {
     bool ret = 0;
-    if( t->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
+    if( t->getLength() > 0 ) // Auf unsinnige übergabe prüfen
         ret = hat( t->getText() ); // prüfen
     t = t->release(); // Übergabe loslassen
     return ret;
@@ -659,7 +659,7 @@ bool Text::hat( Text *t ) const // enthält der Text t
 bool Text::hat( const char *t ) const
 {
     int tl = (int)strlen( t ); // Länge der Übergabe
-    int txl = getLänge(); // Länge des Textes
+    int txl = getLength(); // Länge des Textes
     if( tl <= 0 || tl > txl ) // Auf unsinnige übergabe prüfen
         return 0;
     int suchGCount = 0;
@@ -691,7 +691,7 @@ bool Text::hat( const char *t ) const
 
 bool Text::hat( char c ) const // enthält c
 {
-    int l = getLänge(); // Text Länge
+    int l = getLength(); // Text Länge
     bool ret = 0;
     int suchGCount = 0;
     for( int i = 0; i < l; ++i ) // suchen
@@ -711,7 +711,7 @@ bool Text::hat( char c ) const // enthält c
 
 bool Text::istGleich( const char *t ) const // prüft ob det Text gleich t ist
 {
-    int txl = getLänge(); // Text Länge
+    int txl = getLength(); // Text Länge
     int tl = (int)strlen( t ); // Länge der Übergabe
     if( txl != tl ) // Auf unsinniege Übergabe prüfen
         return 0;
@@ -738,7 +738,7 @@ char *Text::getText() const // gibt Text zurück
 int Text::anzahlVon( char c ) const // gibt die Anzahl von c im Text zurück
 {
     int ret = 0;
-    int l = getLänge(); // Text Länge
+    int l = getLength(); // Text Länge
     int suchGCount = 0;
     for( int i = 0; i < l; ++i ) // suchen
     {
@@ -756,7 +756,7 @@ int Text::anzahlVon( char c ) const // gibt die Anzahl von c im Text zurück
 int Text::anzahlVon( const char *t ) const // gibt die Anzahl von t im Text zurück
 {
     int tl = (int)strlen( t ); // Länge der Übergabe
-    int txl = getLänge(); // Länge des Textes
+    int txl = getLength(); // Länge des Textes
     if( tl <= 0 || tl > txl ) // Auf unsinnige übergabe prüfen
         return 0;
     int ret = 0;
@@ -791,7 +791,7 @@ int Text::anzahlVon( const char *t ) const // gibt die Anzahl von t im Text zurü
 int Text::anzahlVon( Text *t ) const
 {
     int ret = 0;
-    if( t->getLänge() > 0 )  // Auf unsinnige übergabe prüfen
+    if( t->getLength() > 0 )  // Auf unsinnige übergabe prüfen
         ret = anzahlVon( t->getText() ); // zählen
     t = t->release(); // Übergabe loslassen
     return ret;
@@ -799,7 +799,7 @@ int Text::anzahlVon( Text *t ) const
 
 int Text::positionVon( char c ) const // gibt die Position des ersten c zurück
 {
-    int l = getLänge(); // Text Länge
+    int l = getLength(); // Text Länge
     int suchGCount = 0;
     for( int i = 0; i < l; ++i ) // suchen
     {
@@ -819,7 +819,7 @@ int Text::positionVon( char c ) const // gibt die Position des ersten c zurück
 int Text::positionVon( const char *t ) const // gibt die Position des ersten t zurück
 {
     int tl = (int)strlen( t ); // Länge der Übergabe
-    int txl = getLänge(); // Länge des Textes
+    int txl = getLength(); // Länge des Textes
     if( tl <= 0 || tl > txl ) // Auf unsinnige übergabe prüfen
         return -1;
     int suchGCount = 0;
@@ -853,7 +853,7 @@ int Text::positionVon( const char *t ) const // gibt die Position des ersten t z
 int Text::positionVon( Text *t ) const
 {
     int ret = 0;
-    if( t->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
+    if( t->getLength() > 0 ) // Auf unsinnige übergabe prüfen
         ret = positionVon( t->getText() ); // position ermitteln
     t = t->release(); // Übergabe loslassen
     return ret;
@@ -861,7 +861,7 @@ int Text::positionVon( Text *t ) const
 
 int Text::positionVon( char c, int index ) const // gibt die Position des i-ten c zurück
 {
-    int l = getLänge(); // Text Länge
+    int l = getLength(); // Text Länge
     int ii = 0;
     int suchGCount = 0;
     for( int i = 0; i < l; ++i ) // suchen
@@ -892,7 +892,7 @@ int Text::positionVon( char c, int index ) const // gibt die Position des i-ten 
 int Text::positionVon( const char *t, int index ) const // gibt die Position des i-ten t zurück
 {
     int tl = (int)strlen( t ); // Länge der Übergabe
-    int txl = getLänge(); // Länge des Textes
+    int txl = getLength(); // Länge des Textes
     if( tl <= 0 || tl > txl ) // Auf unsinnige übergabe prüfen
         return 0;
     int i2 = 0;
@@ -937,7 +937,7 @@ int Text::positionVon( const char *t, int index ) const // gibt die Position des
 int Text::positionVon( Text *t, int i ) const
 {
     int ret = 0;
-    if( t->getLänge() > 0 ) // Auf unsinnige übergabe prüfen
+    if( t->getLength() > 0 ) // Auf unsinnige übergabe prüfen
         ret = positionVon( t->getText(), i ); // position ermitteln
     t = t->release(); // Übergabe loslassen
     return ret;
@@ -951,7 +951,7 @@ Text *Text::getTeilText( int p1, int p2 ) const // gibt den Text von p1 bis p2 z
         p1 = p2;
         p2 = x;
     }
-    int l = getLänge(); // Text Länge
+    int l = getLength(); // Text Länge
     if( p1 < 0 || p2 > l ) // Auf unsinnige übergabe prüfen
         return new Text( "" );
     char *cp = new char[ p2 - p1 + 1 ]; // neuen Text erstellen
@@ -967,7 +967,7 @@ Text *Text::getTeilText( int p1, int p2 ) const // gibt den Text von p1 bis p2 z
 
 Text *Text::getTeilText( int p ) const // gibt den Text von p bis zum Ende zurück
 {
-    return getTeilText( p, getLänge() ); // Text zurückgeben
+    return getTeilText( p, getLength() ); // Text zurückgeben
 }
 
 // Reference Counting
@@ -988,39 +988,39 @@ Text *Text::release()
 // Operatoren
 Text &Text::operator+=( const int num )
 {
-    anhängen( num );
+    append( num );
     return *this;
 }
 
 Text &Text::operator+=( const double num )
 {
-    anhängen( num );
+    append( num );
     return *this;
 }
 
 Text &Text::operator+=( const char *txt )
 {
-    anhängen( txt );
+    append( txt );
     return *this;
 }
 
 Text &Text::operator+=( const Text &txt )
 {
-    anhängen( txt.getText() );
+    append( txt.getText() );
     return *this;
 }
 
 Text &Text::operator=( const int num )
 {
     setText( "" );
-    anhängen( num );
+    append( num );
     return *this;
 }
 
 Text &Text::operator=( const double num )
 {
     setText( "" );
-    anhängen( num );
+    append( num );
     return *this;
 }
 
@@ -1057,34 +1057,34 @@ Text::operator double() const
 
 bool Text::operator>( Text &t ) const
 {
-    int län1 = getLänge();
-    int län2 = t.getLänge();
+    int len1 = getLength();
+    int len2 = t.getLength();
     char *txt2 = t;
-    for( int i = 0; i < län1 && i < län2; ++i )
+    for( int i = 0; i < len1 && i < len2; ++i )
     {
         if( txt[ i ] > txt2[ i ] )
             return 1;
         if( txt[ i ] < txt2[ i ] )
             return 0;
     }
-    if( län1 > län2 )
+    if( len1 > len2 )
         return 1;
     return 0;
 }
 
 bool Text::operator<( Text &t ) const
 {
-    int län1 = getLänge();
-    int län2 = t.getLänge();
+    int len1 = getLength();
+    int len2 = t.getLength();
     char *txt2 = t;
-    for( int i = 0; i < län1 && i < län2; ++i )
+    for( int i = 0; i < len1 && i < len2; ++i )
     {
         if( txt[ i ] < txt2[ i ] )
             return 1;
         if( txt[ i ] > txt2[ i ] )
             return 0;
     }
-    if( län1 < län2 )
+    if( len1 < len2 )
         return 1;
     return 0;
 }
@@ -1116,8 +1116,8 @@ int Framework::stringPositionVonString( char *string, char *suche, int sBegPos )
             return -1;
         ++string;
     }
-    int tl = textLänge( suche ); // Länge der Übergabe
-    int txl = textLänge( string ); // Länge des Textes
+    int tl = textLength( suche ); // Länge der Übergabe
+    int txl = textLength( string ); // Länge des Textes
     if( tl <= 0 || tl > txl ) // Auf unsinnige übergabe prüfen
         return -1;
     for( int i = 0; i + tl <= txl; ++i ) // suchen
@@ -1136,7 +1136,7 @@ int Framework::stringPositionVonString( char *string, char *suche, int sBegPos )
 void Framework::TextKopieren( const char *txt ) // kopiert den Text in den Zwischenspeicher
 {
 #ifdef WIN32
-    int län = textLänge( txt ) + 1;
+    int län = textLength( txt ) + 1;
     if( län == 1 )
         return;
     HGLOBAL hMem = GlobalAlloc( GMEM_MOVEABLE, län );
@@ -1151,7 +1151,7 @@ void Framework::TextKopieren( const char *txt ) // kopiert den Text in den Zwisc
 #endif
 }
 
-char *Framework::TextEinfügen() // gibt den Text aus der Zwischenablage zurück
+char *Framework::TextInsert() // gibt den Text aus der Zwischenablage zurück
 {
 #ifdef WIN32
     if( !OpenClipboard( 0 ) )
@@ -1166,7 +1166,7 @@ char *Framework::TextEinfügen() // gibt den Text aus der Zwischenablage zurück
 #endif
 }
 
-char Framework::KleinOrGroß( char c, bool gr )
+char Framework::smallOrBig( char c, bool gr )
 {
     int ret = c;
     if( gr )
@@ -1279,7 +1279,7 @@ char Framework::KleinOrGroß( char c, bool gr )
             }
         }
     }
-    return ret;
+    return (char)ret;
 }
 
 bool Framework::istSchreibbar( unsigned char zeichen ) // prüft, ob zeichen ein Schreibbarer Buchstabe ist
@@ -1312,15 +1312,15 @@ bool Framework::istSchreibbar( unsigned char zeichen ) // prüft, ob zeichen ein 
 unsigned int Framework::TextZuInt( char *c, int system ) // Konvertiert c zu int
 {
     if( system == 16 )
-        return strtoul( c, 0, system );
-    return strtol( c, 0, system );
+        return (unsigned int)strtoul( c, 0, system );
+    return (unsigned int)strtol( c, 0, system );
 }
 
 unsigned int Framework::TextZuInt( char *c, char **c_ende, int system )
 {
     if( system == 16 )
-        return strtoul( c, c_ende, system );
-    return strtol( c, c_ende, system );
+        return (unsigned int)strtoul( c, c_ende, system );
+    return (unsigned int)strtol( c, c_ende, system );
 }
 
 double Framework::TextZuDouble( char *c ) // Konvertiert c zu double
@@ -1333,7 +1333,7 @@ double Framework::TextZuDouble( char *c, char **c_ende )
     return strtod( c, c_ende );
 }
 
-int Framework::textLänge( const char *txt ) // gibt die Länge von txt zurück
+int Framework::textLength( const char *txt ) // gibt die Länge von txt zurück
 {
     if( !txt )
         return 0;

@@ -134,9 +134,9 @@ int Uhrzeit::setUhrzeit( int stunde, int minute, int sekunde )
 
 int Uhrzeit::setUhrzeit( const char *format, const char *zeit ) // format Beispiele: "H:i:s", "H-i-s" (H=stunde,i=minute,s=sekunde)
 {
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -206,9 +206,9 @@ int Uhrzeit::plusUhrzeit( int stunde, int minute, int sekunde )
 
 int Uhrzeit::plusUhrzeit( const char *format, const char *zeit )
 {
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -279,9 +279,9 @@ int Uhrzeit::minusUhrzeit( int stunde, int minute, int sekunde )
 
 int Uhrzeit::minusUhrzeit( const char *format, const char *zeit )
 {
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -352,22 +352,22 @@ int Uhrzeit::getSekunde() const // gibt die Sekunde zurück
 Text *Uhrzeit::getUhrzeit( const char *format ) const // gibt die Uhrzeit als Text formatiert zurück
 {
     Text *ret = new Text( "" );
-    int flän = textLänge( format );
-    for( const char *f = format; f < format + flän; ++f )
+    int flen = textLength( format );
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
         case 'h':
-            ret->anhängen( stunde );
+            ret->append( stunde );
             break;
         case 'i':
-            ret->anhängen( minute );
+            ret->append( minute );
             break;
         case 's':
-            ret->anhängen( sekunde );
+            ret->append( sekunde );
             break;
         default:
-            ret->anhängen( f, 1 );
+            ret->append( f, 1 );
             break;
         }
     }
@@ -386,9 +386,9 @@ bool Uhrzeit::istGleich( Uhrzeit *zeit ) const // prüft, ob die Uhrzeit gleich z
 bool Uhrzeit::istGleich( const char *format, const char *zeit ) const
 {
     int st = stunde, min = minute, sek = sekunde;
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -481,9 +481,9 @@ bool Uhrzeit::istKleiner( int stunde, int minute, int sekunde ) const
 bool Uhrzeit::istKleiner( const char *format, const char *zeit ) const
 {
     int st = stunde, min = minute, sek = sekunde;
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -517,14 +517,14 @@ bool Uhrzeit::istKleiner( const char *format, Text *zeit ) const
     return ret;
 }
 
-bool Uhrzeit::istGrößer( Uhrzeit *zeit ) const // prüft, ob die Zeit größer als zeit ist
+bool Uhrzeit::istLater( Uhrzeit *zeit ) const // prüft, ob die Zeit größer als zeit ist
 {
-    bool ret = istGrößer( zeit->getStunde(), zeit->getMinute(), zeit->getSekunde() );
+    bool ret = istLater( zeit->getStunde(), zeit->getMinute(), zeit->getSekunde() );
     zeit->release();
     return ret;
 }
 
-bool Uhrzeit::istGrößer( int stunde, int minute, int sekunde ) const
+bool Uhrzeit::istLater( int stunde, int minute, int sekunde ) const
 {
     if( this->stunde > stunde )
         return 1;
@@ -548,12 +548,12 @@ bool Uhrzeit::istGrößer( int stunde, int minute, int sekunde ) const
         return 0;
 }
 
-bool Uhrzeit::istGrößer( const char *format, const char *zeit ) const
+bool Uhrzeit::istLater( const char *format, const char *zeit ) const
 {
     int st = stunde, min = minute, sek = sekunde;
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -577,12 +577,12 @@ bool Uhrzeit::istGrößer( const char *format, const char *zeit ) const
             break;
         }
     }
-    return istGrößer( st, min, sek );
+    return istLater( st, min, sek );
 }
 
-bool Uhrzeit::istGrößer( const char *format, Text *zeit ) const
+bool Uhrzeit::istLater( const char *format, Text *zeit ) const
 {
-    bool ret = istGrößer( format, zeit->getText() );
+    bool ret = istLater( format, zeit->getText() );
     zeit->release();
     return ret;
 }
@@ -688,9 +688,9 @@ void Datum::setDatum( int jahr, int monat, int tag )
 
 void Datum::setDatum( const char *format, const char *datum ) // format Beispiele: "Y:m:d", "Y-m-d" (Y=Jahr,m=Monat,d=tag)
 {
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -760,9 +760,9 @@ void Datum::plusDatum( int jahr, int monat, int tag )
 
 void Datum::plusDatum( const char *format, const char *datum )
 {
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -832,9 +832,9 @@ void Datum::minusDatum( int jahr, int monat, int tag )
 
 void Datum::minusDatum( const char *format, const char *datum )
 {
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -904,22 +904,22 @@ int Datum::getTag() const // gibt der Tag zurück
 Text *Datum::getDatum( const char *format ) const // gibt das Datum als Text formatiert zurück
 {
     Text *ret = new Text( "" );
-    int flän = textLänge( format );
-    for( const char *f = format; f < format + flän; ++f )
+    int flen = textLength( format );
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
         case 'y':
-            ret->anhängen( jahr );
+            ret->append( jahr );
             break;
         case 'm':
-            ret->anhängen( monat );
+            ret->append( monat );
             break;
         case 'd':
-            ret->anhängen( tag );
+            ret->append( tag );
             break;
         default:
-            ret->anhängen( f, 1 );
+            ret->append( f, 1 );
             break;
         }
     }
@@ -938,9 +938,9 @@ bool Datum::istGleich( Datum *datum ) const // prüft, ob das Datum gleich datum 
 bool Datum::istGleich( const char *format, const char *datum ) const
 {
     int j = jahr, m = monat, t = tag;
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1033,9 +1033,9 @@ bool Datum::istKleiner( int jahr, int monat, int tag ) const
 bool Datum::istKleiner( const char *format, const char *datum ) const
 {
     int j = jahr, m = monat, t = tag;
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1069,14 +1069,14 @@ bool Datum::istKleiner( const char *format, Text *datum ) const
     return ret;
 }
 
-bool Datum::istGrößer( Datum *datum ) const // prüft, ob die Datum größer als datum ist
+bool Datum::istLater( Datum *datum ) const // prüft, ob die Datum größer als datum ist
 {
-    bool ret = istGrößer( datum->getJahr(), datum->getMonat(), datum->getTag() );
+    bool ret = istLater( datum->getJahr(), datum->getMonat(), datum->getTag() );
     datum->release();
     return ret;
 }
 
-bool Datum::istGrößer( int jahr, int monat, int tag ) const
+bool Datum::istLater( int jahr, int monat, int tag ) const
 {
     if( this->jahr > jahr )
         return 1;
@@ -1100,12 +1100,12 @@ bool Datum::istGrößer( int jahr, int monat, int tag ) const
         return 0;
 }
 
-bool Datum::istGrößer( const char *format, const char *datum ) const
+bool Datum::istLater( const char *format, const char *datum ) const
 {
     int j = jahr, m = monat, t = tag;
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1129,12 +1129,12 @@ bool Datum::istGrößer( const char *format, const char *datum ) const
             break;
         }
     }
-    return istGrößer( j, m, t );
+    return istLater( j, m, t );
 }
 
-bool Datum::istGrößer( const char *format, Text *datum ) const
+bool Datum::istLater( const char *format, Text *datum ) const
 {
-    bool ret = istGrößer( format, datum->getText() );
+    bool ret = istLater( format, datum->getText() );
     datum->release();
     return ret;
 }
@@ -1192,9 +1192,9 @@ void Zeit::setZeit( const char *format, const char *zeit ) // format Beispiele: 
     int i = uhrzeit->getMinute();
     int s = uhrzeit->getSekunde();
 
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1295,9 +1295,9 @@ void Zeit::plusZeit( const char *format, const char *zeit )
     int i = uhrzeit->getMinute();
     int s = uhrzeit->getSekunde();
 
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1398,9 +1398,9 @@ void Zeit::minusZeit( const char *format, const char *zeit )
     int i = uhrzeit->getMinute();
     int s = uhrzeit->getSekunde();
 
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1483,31 +1483,31 @@ void Zeit::minusSekunde( int sekunde ) // subtrahiert sekunde Sekunden
 Text *Zeit::getZeit( const char *format ) const // gibt die Zeit als Text formatiert zurück
 {
     Text *ret = new Text( "" );
-    int flän = textLänge( format );
-    for( const char *f = format; f < format + flän; ++f )
+    int flen = textLength( format );
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
         case 'y':
-            ret->anhängen( datum->getJahr() );
+            ret->append( datum->getJahr() );
             break;
         case 'm':
-            ret->anhängen( datum->getMonat() );
+            ret->append( datum->getMonat() );
             break;
         case 'd':
-            ret->anhängen( datum->getTag() );
+            ret->append( datum->getTag() );
             break;
         case 'h':
-            ret->anhängen( uhrzeit->getStunde() );
+            ret->append( uhrzeit->getStunde() );
             break;
         case 'i':
-            ret->anhängen( uhrzeit->getMinute() );
+            ret->append( uhrzeit->getMinute() );
             break;
         case 's':
-            ret->anhängen( uhrzeit->getSekunde() );
+            ret->append( uhrzeit->getSekunde() );
             break;
         default:
-            ret->anhängen( f, 1 );
+            ret->append( f, 1 );
         }
     }
     return ret;
@@ -1529,9 +1529,9 @@ bool Zeit::istGleich( const char *format, const char *zeit ) const
     int i = uhrzeit->getMinute();
     int s = uhrzeit->getSekunde();
 
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1656,9 +1656,9 @@ bool Zeit::istKleiner( const char *format, const char *zeit ) const
     int i = uhrzeit->getMinute();
     int s = uhrzeit->getSekunde();
 
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1717,16 +1717,16 @@ bool Zeit::istKleiner( const char *format, Text *zeit ) const
     return ret;
 }
 
-bool Zeit::istGrößer( Zeit *zeit ) const // prüft, ob die Zeit größer als zeit ist
+bool Zeit::istLater( Zeit *zeit ) const // prüft, ob die Zeit größer als zeit ist
 {
-    if( datum->istGrößer( zeit->getDatum() ) )
+    if( datum->istLater( zeit->getDatum() ) )
     {
         zeit->release();
         return 1;
     }
     else if( datum->istGleich( zeit->getDatum() ) )
     {
-        if( uhrzeit->istGrößer( zeit->getUhrzeit() ) )
+        if( uhrzeit->istLater( zeit->getUhrzeit() ) )
         {
             zeit->release();
             return 1;
@@ -1744,13 +1744,13 @@ bool Zeit::istGrößer( Zeit *zeit ) const // prüft, ob die Zeit größer als zeit i
     }
 }
 
-bool Zeit::istGrößer( int jahr, int monat, int tag, int stunde, int minute, int sekunde ) const
+bool Zeit::istLater( int jahr, int monat, int tag, int stunde, int minute, int sekunde ) const
 {
-    if( datum->istGrößer( jahr, monat, tag ) )
+    if( datum->istLater( jahr, monat, tag ) )
         return 1;
     else if( datum->istGleich( jahr, monat, tag ) )
     {
-        if( uhrzeit->istGrößer( stunde, minute, sekunde ) )
+        if( uhrzeit->istLater( stunde, minute, sekunde ) )
             return 1;
         else
             return 0;
@@ -1759,7 +1759,7 @@ bool Zeit::istGrößer( int jahr, int monat, int tag, int stunde, int minute, int 
         return 0;
 }
 
-bool Zeit::istGrößer( const char *format, const char *zeit ) const
+bool Zeit::istLater( const char *format, const char *zeit ) const
 {
     int y = datum->getJahr();
     int m = datum->getMonat();
@@ -1768,9 +1768,9 @@ bool Zeit::istGrößer( const char *format, const char *zeit ) const
     int i = uhrzeit->getMinute();
     int s = uhrzeit->getSekunde();
 
-    int flän = textLänge( format );
+    int flen = textLength( format );
     char *ende = 0;
-    for( const char *f = format; f < format + flän; ++f )
+    for( const char *f = format; f < format + flen; ++f )
     {
         switch( *f )
         {
@@ -1809,11 +1809,11 @@ bool Zeit::istGrößer( const char *format, const char *zeit ) const
             break;
         }
     }
-    if( datum->istGrößer( y, m, d ) )
+    if( datum->istLater( y, m, d ) )
         return 1;
     else if( datum->istGleich( y, m, d ) )
     {
-        if( uhrzeit->istGrößer( h, i, s ) )
+        if( uhrzeit->istLater( h, i, s ) )
             return 1;
         else
             return 0;
@@ -1822,9 +1822,9 @@ bool Zeit::istGrößer( const char *format, const char *zeit ) const
         return 0;
 }
 
-bool Zeit::istGrößer( const char *format, Text *zeit ) const
+bool Zeit::istLater( const char *format, Text *zeit ) const
 {
-    bool ret = istGrößer( format, zeit->getText() );
+    bool ret = istLater( format, zeit->getText() );
     zeit->release();
     return ret;
 }
@@ -1864,14 +1864,14 @@ void ZeitMesser::messungStart() // legt des Startpunkt der Zeitmessung fest
 {
     timeval tv;
     gettimeofday( &tv, 0 );
-    start = tv.tv_sec + tv.tv_usec / 1000000.0;
+    start = (double)tv.tv_sec + (double)tv.tv_usec / 1000000.0;
 }
 
 void ZeitMesser::messungEnde() // legt des Endpunkt der Zeitmessung fest
 {
     timeval tv;
     gettimeofday( &tv, 0 );
-    ende = tv.tv_sec + tv.tv_usec / 1000000.0;
+    ende = (double)tv.tv_sec + (double)tv.tv_usec / 1000000.0;
     messung = ende - start;
 }
 

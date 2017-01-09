@@ -33,10 +33,10 @@ namespace Framework
         // Skalliert den Vektor, so dass er die Länge 1 hat
         inline Vec3 &normalize()
         {
-            const T länge = län();
-            x /= länge;
-            y /= länge;
-            z /= länge;
+            const T length = getLength();
+            x /= length;
+            y /= length;
+            z /= length;
             return *this;
         }
         // Vertaucht die Werte des Vektors mit denen eines anderen Vektor
@@ -117,14 +117,14 @@ namespace Framework
             return{ (T2)x, (T2)y, (T2)z };
         }
         // Errechnet das Quadrat der Länge des Vektors
-        inline T länSq() const
+        inline T getLengthSq() const
         {
             return *this * *this;
         }
         // Errechnet due Länge des Vektors
-        inline T län() const
+        inline T getLength() const
         {
-            return sqrt( länSq() );
+            return (T)sqrt( getLengthSq() );
         }
         // Bildet das Skalarprodukt zwischen zwei Vektoren
         //  r: Der andere Vektor

@@ -43,13 +43,13 @@ namespace Framework
         // Konstruktor 
         __declspec( dllexport ) SLDiag();
         // Destruktor 
-        __declspec( dllexport ) ~SLDiag();
+        __declspec( dllexport ) virtual ~SLDiag();
         // Setzt einen Zeiger zur verwendeten Schrift
         //  schrift: Die Schrift
         __declspec( dllexport ) void setSchriftZ( Schrift *schrift );
         // Setzt die Abstände zwischen den Linien des Gitters
         //  gr: Für x den Abstand zwischen jeder vertikalen Linie in Pixeln und für y den Abstand zwischen jeder Horizontalen Linie in den dargestellen y Werten
-        __declspec( dllexport ) void setGGröße( Punkt &gr );
+        __declspec( dllexport ) void setGSize( Punkt &gr );
         // Setzt die Farbe der Raster Linien
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setGFarbe( int f );
@@ -79,7 +79,7 @@ namespace Framework
         // Gibt die verwendete Schrift ohne erhöhten Reference Counter zurück
         __declspec( dllexport ) Schrift *zSchrift() const;
         // Gibt die Größe eines Quadrats des Gitters zurück, wobei die Braite in Pixeln und die Höhe in Werten der y Achse ist
-        __declspec( dllexport ) const Punkt &getGGröße() const;
+        __declspec( dllexport ) const Punkt &getGSize() const;
         // Gibt die Farbe des Gitters in A8R8G8B8 Format zurück
         __declspec( dllexport ) int getGFarbe() const;
         // Gibt den Index eines Graphen zurück
@@ -95,10 +95,10 @@ namespace Framework
         //  lNum: Der Index des Graphen
         __declspec( dllexport ) Text *zLinienNamen( int lNum ) const;
         // Gibt den Höchsten y Wert von allen Graphen zurück
-        __declspec( dllexport ) int getHöchstValue() const;
+        __declspec( dllexport ) int getHighestValue() const;
         // Gibt den Höchsten y Wert von einem Bestimmten Graphen zurück
         //  lNum: Der Index des Graphen
-        __declspec( dllexport ) int getHöchstValue( int lNum ) const;
+        __declspec( dllexport ) int getHighestValue( int lNum ) const;
         // Gibt den Durchschnittswert aller im Diagramm gespeicherten Punkten eines Graphen zurück
         //  lNum: Der Index des Graphen
         __declspec( dllexport ) int getMedian( int lNum ) const;
@@ -173,19 +173,19 @@ namespace Framework
             const static int Sichtbar = 0x0001; // Legt Fest, ob die Daten sichtbar sein sollen
             const static int Raster = 0x0002; // Legt fest, ob ein Raster zur Orientierung angezeigt werden soll
             const static int RasterAlpha = 0x0004; // Legt fest, ob zum Zeichnen des Rasters Alphablending verwendet werden soll
-            const static int AutoIntervallHöhe = 0x0008; // Legt fest, dass alle Werte automatisch so auf der y Achse Skalliert werden, dass immer die komplette Höhe des Diagramms genutzt wird
+            const static int AutoIntervallHeight = 0x0008; // Legt fest, dass alle Werte automatisch so auf der y Achse Skalliert werden, dass immer die komplette Höhe des Diagramms genutzt wird
             const static int AutoIntervallBreite = 0x0010; // Legt fest, dass alle Wert automatisch so auf der x Achse Skalliert werden, dass immer die komplette Breite des Diagramms genutzt wird
             const static int HIntervall = 0x0020; // Legt fest, ob die X Achse gezeichnet werden soll
             const static int VIntervall = 0x0040; // Legt fest, ob die Y Achse gezeichnet werden soll
             const static int HIntervallTexte = 0x0200; // Legt fest, ob spezielle Texte für die Werte der X Achse gezeichnet werden sollen
             const static int VIntervallTexte = 0x0400; // Left fest, ob spezielle Texte für die Werte der Y Achse gezeichnet werden sollen
             const static int AutoRasterBreite = 0x0800; // Legt fest, ob der Abstand zwischen den Vertikalen Linien des Rasters automatisch gewählt werden soll
-            const static int AutoRasterHöhe = 0x1000; // Legt fest, ob der Abstand zwischen den Horizontalen Rasterlinien automatisch gewählt werden soll
+            const static int AutoRasterHeight = 0x1000; // Legt fest, ob der Abstand zwischen den Horizontalen Rasterlinien automatisch gewählt werden soll
 
             const static int intervalle = HIntervall | VIntervall; // Vereiniegt die Flags HIntervall, VIntervall
             const static int intervallTexte = HIntervallTexte | VIntervallTexte; // Vereint die Flags HIntervallTexte, VIntervallTexte
-            const static int autoRaster = AutoRasterHöhe | AutoRasterBreite | Raster; // Vereint die Flags AutoRasterHöhe, AutoRasterBreite, Raster
-            const static int autoIntervall = AutoIntervallHöhe | AutoIntervallBreite; // Vereint die Flags AutoIntervallHöhe, AutoIntervallBreite
+            const static int autoRaster = AutoRasterHeight | AutoRasterBreite | Raster; // Vereint die Flags AutoRasterHöhe, AutoRasterBreite, Raster
+            const static int autoIntervall = AutoIntervallHeight | AutoIntervallBreite; // Vereint die Flags AutoIntervallHöhe, AutoIntervallBreite
         };
         // Style eines Diagramms
         int style;
@@ -194,7 +194,7 @@ namespace Framework
         // Breite eines Rasterkästchens
         double rasterBreite;
         // Höhe eines Rasterkästchens
-        double rasterHöhe;
+        double rasterHeight;
         // Farbe des Rasters
         int rasterFarbe;
         // Schriftfarbe des Horizontalen Intervalls
@@ -216,7 +216,7 @@ namespace Framework
         // Breite des Wertes 1 in Pixeln bei dem horizontalen Intervall ( wird durch das setzen von AutoIntervallBreite überschrieben )
         double hIntervallBreite;
         // Höhe des Wertes 1 in Pixeln bei dem vertikalen Intervall ( wird durch das setzen von AutoIntervallHöhe überschrieben )
-        double vIntervallHöhe;
+        double vIntervallHeight;
         // Werte, die in dem Diagramm visualisiert werden
         RCArray< DiagWert > *werte;
 
@@ -250,7 +250,7 @@ namespace Framework
         //  lock: Ein Zeiger zur CRITICAL_SECTION, mit der die Diagramm Klasse, die von dieser Klasse erbt Multithread sicher gemacht wird
         __declspec( dllexport ) BaseDiag( CRITICAL_SECTION *lock );
         // Destruktor
-        __declspec( dllexport ) ~BaseDiag();
+        __declspec( dllexport ) virtual ~BaseDiag();
         // Setzt einen Zeiger auf die Daten des Diagramms
         //  dd: Die Daten
         __declspec( dllexport ) void setDiagDatenZ( DiagDaten *dd );
@@ -264,8 +264,8 @@ namespace Framework
         //  br: Der Abstand zwischen zwei Vertikalen Rasterlinien in Pixeln
         __declspec( dllexport ) void setRasterBreite( int br );
         // Rasterhöhe setzen
-        //  hö: Der Abstand zwischen zwei Horizontalen Rasterlinien in Pixeln
-        __declspec( dllexport ) void setRasterHöhe( int hö );
+        //  hi: Der Abstand zwischen zwei Horizontalen Rasterlinien in Pixeln
+        __declspec( dllexport ) void setRasterHeight( int hi );
         // Rasterfarbe setzen
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setRasterFarbe( int f );
@@ -273,8 +273,8 @@ namespace Framework
         //  br: Der Abstand zwischen den Werten 0 und 1 auf der X Achse in Pixeln
         __declspec( dllexport ) void setHIntervallBreite( double br );
         // Setzt die Intervall Höhe
-        //  hö: Der Abstand zwischen den Werten 0 und 1 auf der Y Achse in Pixeln
-        __declspec( dllexport ) void setVIntervallHöhe( double hö );
+        //  hi: Der Abstand zwischen den Werten 0 und 1 auf der Y Achse in Pixeln
+        __declspec( dllexport ) void setVIntervallHeight( double hi );
         // Setzt die Farbe der X Achse
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setHIntervallFarbe( int f );
@@ -315,7 +315,7 @@ namespace Framework
         __declspec( dllexport ) void setHIntervallText( double hIntervall, char *text );
         // Entfernt eine Beschriftung in einen Betimmten Wert der X Achse, falls der Flag HIntervallTexte in den DiagDaten gesetzt wurde
         //  hIntervall: Der Wert, der nicht mehr beschriftet sein soll
-        __declspec( dllexport ) void löscheHIntervallText( double hIntervall );
+        __declspec( dllexport ) void removeHIntervallText( double hIntervall );
         // Beschriftet einen Betimmten Wert der Y Achse, falls der Flag VIntervallTexte in den DiagDaten gesetzt wurde
         //  vIntervall: Der Wert, der beschriftet werden soll
         //  text: Die Beschriftung
@@ -338,7 +338,7 @@ namespace Framework
         __declspec( dllexport ) void setVIntervallText( double vIntervall, char *text );
         // Entfernt eine Beschriftung in einen Betimmten Wert der Y Achse, falls der Flag VIntervallTexte in den DiagDaten gesetzt wurde
         //  vIntervall: Der Wert, der nicht mehr beschriftet sein soll
-        __declspec( dllexport ) void löscheVIntervallText( double vIntervall );
+        __declspec( dllexport ) void removeVIntervallText( double vIntervall );
         // Fügt einen im Diagramm dargestellten Wert (Graph) hinzu
         //  w: Der neue Wert
         __declspec( dllexport ) void addWertZ( DiagWert *w );
@@ -403,11 +403,11 @@ namespace Framework
         // Löscht einen vorhandenen Punkt
         //  wNum: Der Index des Wertes
         //  hI: Der Wert auf der X Achse des Punktes, der gelöscht werden soll
-        __declspec( dllexport ) void löschePunkt( int wNum, double hI );
+        __declspec( dllexport ) void removePunkt( int wNum, double hI );
         // Löscht einen vorhandenen Punkt
         //  wNum: Der Index des Wertes
         //  pNum: Der Index des Punktes im Wert
-        __declspec( dllexport ) void löschePunkt( int wNum, int pNum );
+        __declspec( dllexport ) void removePunkt( int wNum, int pNum );
         // entfernt einen Wert
         //  wNum: Der Index des Wertes
         __declspec( dllexport ) void removeWert( int wNum );
@@ -429,7 +429,7 @@ namespace Framework
         __declspec( dllexport ) void setDatenStyle( int style, bool addRemove );
         // Entfernt Styles der DiagDaten
         //  style: Die Styles, die entfernt werden sollen
-        __declspec( dllexport ) void löscheDatenStyle( int style );
+        __declspec( dllexport ) void removeDatenStyle( int style );
         // Fügt einem bestimmten Wert bestimmte Styles hinzu
         //  wNum: Der Index des Wertes
         //  style: Die neuen Styles
@@ -446,7 +446,7 @@ namespace Framework
         // Entfernt Styles eines Bestimmten Wertes
         //  wNum: Der Index des Wertes
         //  style: Die Styles, die entfernt werden sollen
-        __declspec( dllexport ) void löscheWertStyle( int wNum, int style );
+        __declspec( dllexport ) void removeWertStyle( int wNum, int style );
         // Gibt die Daten des Diagramms zurück
         __declspec( dllexport ) DiagDaten *getDiagDaten() const;
         // Gibt die Daten des Diagramms ohne erhöhten Reference Counter zurück
@@ -526,13 +526,13 @@ namespace Framework
         // Konstruktor
         __declspec( dllexport ) LDiag();
         // Destruktor
-        __declspec( dllexport ) ~LDiag();
+        __declspec( dllexport ) virtual ~LDiag();
         // Setzt die Schrift
         //  schrift: Die Schrift
         __declspec( dllexport ) void setSchriftZ( Schrift *schrift );
         // Setzt die größe der Schrift
         //  gr: Die Höhe einer Zeile in Pixeln
-        __declspec( dllexport ) void setSchriftGröße( int gr );
+        __declspec( dllexport ) void setSchriftSize( int gr );
         // Setzt den inneren Rahmen um das eigentliche Diagramm (Rahmen um die Daten)
         //  ram: Der Rahmen
         __declspec( dllexport ) void setDatenRahmenZ( LRahmen *ram );
@@ -560,7 +560,7 @@ namespace Framework
         __declspec( dllexport ) void setDatenAlphaFeldFarbe( int fc );
         // Setzt die FaStärkerbe des Farbübergangs des eigentlichen Diagramms (Farbübergang der Daten)
         //  st: Die Stärke
-        __declspec( dllexport ) void setDatenAlphaFeldStärke( int st );
+        __declspec( dllexport ) void setDatenAlphaFeldStrength( int st );
         // Verarbeitet Maus Nachrichten
         //  me: Das Ereignis, was durch die Mauseingabe ausgelößt wurde
         __declspec( dllexport ) void doMausEreignis( MausEreignis &me ) override;
@@ -592,7 +592,7 @@ namespace Framework
         // Gibt die Farbe des Farbübergangs des eigentlichen Diagramms im A8R8G8B8 Format zurück (Farbübergang der Daten)
         __declspec( dllexport ) int getDatenAlphaFeldFarbe() const;
         // Gibt die Stärke des Farbübergangs des eigentlichen Diagramms zurück (Farbübergang der Daten)
-        __declspec( dllexport ) int getDatenAlphaFeldStärke() const;
+        __declspec( dllexport ) int getDatenAlphaFeldStrength() const;
         // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Objekt automatisch gelöscht.
         //  return: 0.
         __declspec( dllexport ) BaseDiag *release() override;

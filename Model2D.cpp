@@ -2,9 +2,7 @@
 #include "Bild.h"
 #include "FrameworkMath.h"
 #include "Mat3.h"
-#ifdef WIN32
 #include "MausEreignis.h"
-#endif
 
 using namespace Framework;
 
@@ -27,10 +25,8 @@ Model2DData::~Model2DData()
         int anz = polygons->getEintragAnzahl();
         for( int i = 0; i < anz; i++ )
         {
-#ifdef WIN32
             if( polygons->get( i ).tKordinaten )
                 polygons->get( i ).tKordinaten->release();
-#endif
             if( polygons->get( i ).vertex )
                 polygons->get( i ).vertex->release();
         }
@@ -128,22 +124,22 @@ bool Model2DData::istLinieInnen( Vertex a, Vertex b, int polygonId ) const
                 return 1;
             j = i;
         }
-        Vertex län = b - a;
-        Vertex speed( län.x > 0 ? 1 : -1.f, län.y > 0 ? 1 : -1.f );
-        int mLän = 0;
-        if( fabs( län.x ) > fabs( län.y ) )
+        Vertex len = b - a;
+        Vertex speed( len.x > 0 ? 1 : -1.f, len.y > 0 ? 1 : -1.f );
+        int mLen = 0;
+        if( fabs( len.x ) > fabs( len.y ) )
         {
-            mLän = (int)fabs( län.x );
-            speed.y = län.y / (float)fabs( län.x );
+            mLen = (int)fabs( len.x );
+            speed.y = len.y / (float)fabs( len.x );
         }
         else
         {
-            mLän = (int)fabs( län.y );
-            speed.x = län.x / (float)fabs( län.y );
+            mLen = (int)fabs( len.y );
+            speed.x = len.x / (float)fabs( len.y );
         }
         int i = 1;
         bool inside = 1;
-        for( Vertex vp = speed + a; (Punkt)vp != (Punkt)( b - speed ) && inside && i < mLän - 1; vp += speed, i++ )
+        for( Vertex vp = speed + a; (Punkt)vp != (Punkt)( b - speed ) && inside && i < mLen - 1; vp += speed, i++ )
             inside &= istPunktInnen( vp, p );
         if( inside )
             return 1;
@@ -154,7 +150,7 @@ bool Model2DData::istLinieInnen( Vertex a, Vertex b, int polygonId ) const
 // nicht constant
 bool Model2DData::erstelleModell( Array< Polygon2D > *polygons )
 {
-    löscheModell();
+    removeModell();
     if( !polygons || !polygons->getEintragAnzahl() )
     {
         this->polygons = polygons;
@@ -243,10 +239,10 @@ bool Model2DData::erstelleModell( Array< Polygon2D > *polygons )
                 if( istLinieInnen( a, b, p ) )
                 {
                     DreieckListe< Vertex > *lowL = new DreieckListe< Vertex >();
-                    DreieckListe< Vertex > *hightL = new DreieckListe< Vertex >();
+                    DreieckListe< Vertex > *heightL = new DreieckListe< Vertex >();
                     lowL->addPunkt( new Vertex( pg.vertex->get( i ) ), textur ? new Punkt( pg.tKordinaten->get( i ) ) : 0 );
-                    hightL->addPunkt( new Vertex( pg.vertex->get( i ) ), textur ? new Punkt( pg.tKordinaten->get( i ) ) : 0 );
-                    int hight = i + 1;
+                    heightL->addPunkt( new Vertex( pg.vertex->get( i ) ), textur ? new Punkt( pg.tKordinaten->get( i ) ) : 0 );
+                    int height = i + 1;
                     int low = i - 1;
                     Punkt outL( 0, 0 );
                     Punkt outH( 0, 0 );
@@ -255,8 +251,8 @@ bool Model2DData::erstelleModell( Array< Polygon2D > *polygons )
                         bool lowp = !k;
                         while( 1 )
                         {
-                            if( hight >= vAnz )
-                                hight = 0;
+                            if( height >= vAnz )
+                                height = 0;
                             if( low < 0 )
                                 low = vAnz - 1;
                             for( int j = 0; j <= lauf; j++ )
@@ -264,60 +260,60 @@ bool Model2DData::erstelleModell( Array< Polygon2D > *polygons )
                                 Punkt out = outList.z( p )->get( j );
                                 if( out.x < out.y )
                                 {
-                                    if( hight > out.x && hight < out.y )
-                                        hight = out.y;
+                                    if( height > out.x && height < out.y )
+                                        height = out.y;
                                     if( low > out.x && low < out.y )
                                         low = out.x;
                                 }
                                 if( out.x > out.y )
                                 {
-                                    if( hight > out.x || hight < out.y )
-                                        hight = out.y;
+                                    if( height > out.x || height < out.y )
+                                        height = out.y;
                                     if( low > out.x || low < out.y )
                                         low = out.x;
                                 }
                             }
-                            Vertex a = pg.vertex->get( hight );
+                            Vertex a = pg.vertex->get( height );
                             Vertex b = pg.vertex->get( low );
-                            if( low == hight )
+                            if( low == height )
                             {
                                 fertig = 1;
                                 outList.z( p )->set( Punkt( 0, 0 ), lauf );
                                 if( !k )
                                     lowL->addPunkt( new Vertex( b ), textur ? new Punkt( pg.tKordinaten->get( low ) ) : 0 );
                                 else
-                                    hightL->addPunkt( new Vertex( b ), textur ? new Punkt( pg.tKordinaten->get( low ) ) : 0 );
+                                    heightL->addPunkt( new Vertex( b ), textur ? new Punkt( pg.tKordinaten->get( low ) ) : 0 );
                                 break;
                             }
                             bool inside = istLinieInnen( a, b, p );
                             if( inside )
                             {
                                 if( !k )
-                                    outL = Punkt( low, hight );
+                                    outL = Punkt( low, height );
                                 else
-                                    outH = Punkt( low, hight );
-                                outList.z( p )->set( Punkt( low, hight ), lauf );
+                                    outH = Punkt( low, height );
+                                outList.z( p )->set( Punkt( low, height ), lauf );
                             }
                             if( lowp )
                             {
                                 if( !k )
                                     lowL->addPunkt( new Vertex( b ), textur ? new Punkt( pg.tKordinaten->get( low ) ) : 0 );
                                 else
-                                    hightL->addPunkt( new Vertex( b ), textur ? new Punkt( pg.tKordinaten->get( low ) ) : 0 );
+                                    heightL->addPunkt( new Vertex( b ), textur ? new Punkt( pg.tKordinaten->get( low ) ) : 0 );
                                 low--;
                             }
                             else
                             {
                                 if( !k )
-                                    lowL->addPunkt( new Vertex( a ), textur ? new Punkt( pg.tKordinaten->get( hight ) ) : 0 );
+                                    lowL->addPunkt( new Vertex( a ), textur ? new Punkt( pg.tKordinaten->get( height ) ) : 0 );
                                 else
-                                    hightL->addPunkt( new Vertex( a ), textur ? new Punkt( pg.tKordinaten->get( hight ) ) : 0 );
-                                hight++;
+                                    heightL->addPunkt( new Vertex( a ), textur ? new Punkt( pg.tKordinaten->get( height ) ) : 0 );
+                                height++;
                             }
                             lowp = !lowp;
                             if( !inside )
                             {
-                                hight = i + 1;
+                                height = i + 1;
                                 low = i - 1;
                                 outList.z( p )->set( Punkt( 0, 0 ), lauf );
                                 break;
@@ -326,15 +322,15 @@ bool Model2DData::erstelleModell( Array< Polygon2D > *polygons )
                         if( fertig )
                             break;
                     }
-                    if( lowL->getDreieckAnzahl() > hightL->getDreieckAnzahl() )
+                    if( lowL->getDreieckAnzahl() > heightL->getDreieckAnzahl() )
                     {
                         lists.z( lauf )->set( lowL, i );
                         tmpOutList.set( outL, i );
-                        hightL->release();
+                        heightL->release();
                     }
                     else
                     {
-                        lists.z( lauf )->set( hightL, i );
+                        lists.z( lauf )->set( heightL, i );
                         tmpOutList.set( outH, i );
                         lowL->release();
                     }
@@ -367,7 +363,7 @@ bool Model2DData::erstelleModell( Array< Polygon2D > *polygons )
     return 1;
 }
 
-void Model2DData::löscheModell() // setzt die Vertex daten zurück
+void Model2DData::removeModell() // setzt die Vertex daten zurück
 {
     if( polygons )
     {
@@ -407,20 +403,14 @@ Model2DData *Model2DData::release()
 // Inhalt der Model2D Klasse aus Model2D.h
 // Konstruktor
 Model2D::Model2D()
-#ifdef WIN32
     : Zeichnung(),
     textur( 0 )
-#endif
 {
-#ifdef WIN32
     farbe = 0;
     style = 0;
-#else
-    pos = Punkt( 0, 0 );
-#endif
     rData = 0;
     drehung = 0;
-    größe = 1;
+    size = 1;
     ref = 1;
 }
 
@@ -429,10 +419,8 @@ Model2D::~Model2D()
 {
     if( rData )
         rData->release();
-#ifdef WIN32
-    if( textur )
-        textur->release();
-#endif
+	if( textur )
+		textur->release();
 }
 
 // nicht constant
@@ -450,9 +438,7 @@ void Model2D::setDrehung( float drehung )
         this->drehung -= (float)PI * 2;
     while( this->drehung < 0 )
         this->drehung += (float)PI * 2;
-#ifdef WIN32
     rend = 1;
-#endif
 }
 
 void Model2D::addDrehung( float drehung )
@@ -462,27 +448,21 @@ void Model2D::addDrehung( float drehung )
         this->drehung -= (float)PI * 2;
     while( this->drehung < 0 )
         this->drehung += (float)PI * 2;
-#ifdef WIN32
     rend = 1;
-#endif
 }
 
-void Model2D::setGröße( float größe )
+void Model2D::setSize( float size )
 {
-    this->größe = größe;
-#ifdef WIN32
+    this->size = size;
     rend = 1;
-#endif
 }
 
-void Model2D::addGröße( float größe )
+void Model2D::addSize( float size )
 {
-    this->größe += größe;
-#ifdef WIN32
+    this->size += size;
     rend = 1;
-#endif
 }
-#ifdef WIN32
+
 void Model2D::setTextur( Bild *t )
 {
     if( textur )
@@ -519,11 +499,11 @@ void Model2D::render( Bild &zRObj )
 {
     if( !rData || hatStyleNicht( Model2D::Style::Sichtbar ) || !rData->polygons )
         return;
-    __super::render( zRObj );
+	Zeichnung::render( zRObj );
     int num = 0;
     for( auto *p = &rData->vListen->getArray(); p && p->set; p = p->next, num++ )
     {
-        Mat3< float > mat = Mat3< float >::translation( pos ) * Mat3< float >::rotation( drehung ) * Mat3< float >::scaling( größe );
+        Mat3< float > mat = Mat3< float >::translation( pos ) * Mat3< float >::rotation( drehung ) * Mat3< float >::scaling( size );
         if( hatStyle( Model2D::Style::Textur ) )
         {
             if( !textur || !rData->polygons->get( num ).tKordinaten )
@@ -608,21 +588,16 @@ void Model2D::render( Bild &zRObj )
         }
     }
 }
-#else
-void Model2D::setPosition( Punkt p )
-{
-    pos = p;
-}
-#endif
+
 // constant
 float Model2D::getDrehung() const
 {
     return drehung;
 }
 
-float Model2D::getGröße() const
+float Model2D::getSize() const
 {
-    return größe;
+    return size;
 }
 
 bool Model2D::istPunktInnen( Vertex p ) const
@@ -630,12 +605,12 @@ bool Model2D::istPunktInnen( Vertex p ) const
     if( !rData )
         return 0;
     p -= pos;
-    if( p < Mat3< float >::scaling( größe ) * rData->minP || p > Mat3< float >::scaling( größe ) * rData->maxP || !rData->polygons )
+    if( p < Mat3< float >::scaling( size ) * rData->minP || p > Mat3< float >::scaling( size ) * rData->maxP || !rData->polygons )
         return 0;
     int num = 0;
     for( auto *polygon = &rData->polygons->getArray(); polygon && polygon->set; polygon = polygon->next, num++ )
     {
-        Mat3< float > mat = Mat3< float >::rotation( drehung ) * Mat3< float >::scaling( größe );
+        Mat3< float > mat = Mat3< float >::rotation( drehung ) * Mat3< float >::scaling( size );
         int anz = polygon->var.vertex->getEintragAnzahl();
         bool c = 0;
         int j = anz - 1;
@@ -660,7 +635,7 @@ bool Model2D::istLinieInnen( Vertex a, Vertex b ) const
     int pAnz = rData->polygons->getEintragAnzahl();
     for( int p = 0; p < pAnz; p++ )
     {
-        Mat3< float > mat = Mat3< float >::rotation( drehung ) * Mat3< float >::scaling( größe );
+        Mat3< float > mat = Mat3< float >::rotation( drehung ) * Mat3< float >::scaling( size );
         int anz = rData->polygons->get( p ).vertex->getEintragAnzahl();
         int j = anz - 1;
         for( int i = 0; i < anz; i++ )
@@ -673,22 +648,22 @@ bool Model2D::istLinieInnen( Vertex a, Vertex b ) const
                 return 1;
             j = i;
         }
-        Vertex län = b - a;
-        Vertex speed( län.x > 0 ? 1 : -1.f, län.y > 0 ? 1 : -1.f );
-        int mLän = 0;
-        if( fabs( län.x ) > fabs( län.y ) )
+        Vertex len = b - a;
+        Vertex speed( len.x > 0 ? 1 : -1.f, len.y > 0 ? 1 : -1.f );
+        int mLen = 0;
+        if( fabs( len.x ) > fabs( len.y ) )
         {
-            mLän = (int)fabs( län.x );
-            speed.y = län.y / (float)fabs( län.x );
+            mLen = (int)fabs( len.x );
+            speed.y = len.y / (float)fabs( len.x );
         }
         else
         {
-            mLän = (int)fabs( län.y );
-            speed.x = län.x / (float)fabs( län.y );
+            mLen = (int)fabs( len.y );
+            speed.x = len.x / (float)fabs( len.y );
         }
         int i = 1;
         bool inside = 1;
-        for( Vertex vp = speed + a; (Punkt)vp != (Punkt)( b - speed ) && inside && i < mLän - 1; vp += speed, i++ )
+        for( Vertex vp = speed + a; (Punkt)vp != (Punkt)( b - speed ) && inside && i < mLen - 1; vp += speed, i++ )
             inside &= istPunktInnen( vp );
         if( inside )
             return 1;
@@ -700,14 +675,14 @@ bool Model2D::istModelInnen( const Model2D *zMdl, bool end ) const
 {
     if( !end )
     {
-        Vertex min = (Vertex)rData->minP * größe + pos;
-        Vertex max = (Vertex)rData->maxP * größe + pos;
-        Vertex min2 = (Vertex)zMdl->zModel()->minP * zMdl->getGröße() + zMdl->getPosition();
-        Vertex max2 = (Vertex)zMdl->zModel()->maxP * zMdl->getGröße() + zMdl->getPosition();
+        Vertex min = (Vertex)rData->minP * size + pos;
+        Vertex max = (Vertex)rData->maxP * size + pos;
+        Vertex min2 = (Vertex)zMdl->zModel()->minP * zMdl->getSize() + zMdl->getPosition();
+        Vertex max2 = (Vertex)zMdl->zModel()->maxP * zMdl->getSize() + zMdl->getPosition();
         if( max.x < min2.x || min.x > max2.x || max.y < min2.y || min.y > max2.y )
             return 0;
     }
-    Mat3< float > mat = Mat3< float >::translation( pos ) * Mat3< float >::rotation( drehung ) * Mat3< float >::scaling( größe );
+    Mat3< float > mat = Mat3< float >::translation( pos ) * Mat3< float >::rotation( drehung ) * Mat3< float >::scaling( size );
     for( auto *polygon = &rData->polygons->getArray(); polygon && polygon->set; polygon = polygon->next )
     {
         int anz = polygon->var.vertex->getEintragAnzahl();
@@ -731,12 +706,6 @@ Model2DData *Model2D::zModel() const
 {
     return rData;
 }
-#ifndef WIN32
-Punkt Model2D::getPosition() const
-{
-    return pos;
-}
-#endif
 
 // Reference Counting
 Model2D *Model2D::getThis()

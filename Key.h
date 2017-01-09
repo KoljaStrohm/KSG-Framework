@@ -1,11 +1,11 @@
-#ifndef Schluessel_H
-#define Schluessel_H
+#ifndef Key_H
+#define Key_H
 
 #include "Betriebssystem.h"
 
 namespace Framework
 {
-    namespace Verschlüsselung
+    namespace Encryption
     {
         // Speichert einen Array von bytes
         class Bytes
@@ -13,19 +13,19 @@ namespace Framework
         private:
             char *bytes;
             bool del;
-            int län;
+            int length;
             int ref;
 
         public:
             // Erzeugt einen lehren Byte Array
             __declspec( dllexport ) Bytes();
             // Erzeugt einen neuen Byte Array mit bestimmter Länge
-            //  län: Die Länge des Arrays
-            __declspec( dllexport ) Bytes( int län );
+            //  length: Die Länge des Arrays
+            __declspec( dllexport ) Bytes( int length );
             // Erzeugt ein neuen Byte Array durch kopieren der bytes
             //  daten: Die Bytes, die kopiert werden sollen
-            //  län: Die Anzahl der Bytes die kopiert werden sollen
-            __declspec( dllexport ) Bytes( const char *daten, int län );
+            //  length: Die Anzahl der Bytes die kopiert werden sollen
+            __declspec( dllexport ) Bytes( const char *daten, int length );
             // Löscht den Array
             __declspec( dllexport ) ~Bytes();
             // Befüllt den Bytearray durch kopieren der Bytes
@@ -33,34 +33,34 @@ namespace Framework
             __declspec( dllexport ) void setBytes( const char *daten );
             // Löscht den Array und erzeugt einen neuen
             //  daten: Die Bytes, die kopiert werden sollen
-            //  län: Die nänge des Arrays
-            __declspec( dllexport ) void setBytes( const char *daten, int län );
+            //  length: Die nänge des Arrays
+            __declspec( dllexport ) void setBytes( const char *daten, int length );
             // Löscht den Array und übernimmt den übergebenen ohne zu kopieren
             //  daten: Der neue Byte Array
-            //  län: Die nänge des Arrays
-            __declspec( dllexport ) void setBytesZ( char *daten, int län );
+            //  length: Die nänge des Arrays
+            __declspec( dllexport ) void setBytesZ( char *daten, int length );
             // Setzt alle Bytes des Arrays auf einen bestimmten Wert
             //  c: Der Wert, auf den die Bytes gesetzt werden sollen
-            __declspec( dllexport ) void füll( const char c );
+            __declspec( dllexport ) void fill( const char c );
             // Setzt eine bestimmte Anzahl von Bytes des Arrays auf einen bestimmten Wert
             //  c: Der Wert, auf den die Bytes gesetzt werden sollen
-            //  län: Die Anzahl der Bytes die gesetzt werden sollen
-            __declspec( dllexport ) void füll( const char c, int län );
+            //  len: Die Anzahl der Bytes die gesetzt werden sollen
+            __declspec( dllexport ) void fill( const char c, int len );
             // Setzt einen bestimmte Abschnitt von Bytes des Arrays auf einen bestimmten Wert
             //  c: Der Wert, auf den die Bytes gesetzt werden sollen
             //  beg: Die Startposition des zu setzenden Abschnittes
             //  end: Die Endposition des zu setzenden Abschnittes (nicht enthalten)
-            __declspec( dllexport ) void füll( const char c, int beg, int end );
+            __declspec( dllexport ) void fill( const char c, int beg, int end );
             // Kopiert bestimmte bytes in den Array
             //  c: Die Bytes, die kopiert werden sollen
-            //  cLän: Die Anzahl an Bytes, die gesetzt werden sollen
-            __declspec( dllexport ) void füll( const char *c, int cLän );
+            //  cLength: Die Anzahl an Bytes, die gesetzt werden sollen
+            __declspec( dllexport ) void fill( const char *c, int cLength );
             // Setzt ein bestimmtes Byte auf einen Wert
             //  c: Der Wert, auf den das Byte gesetzt werden soll
             //  pos: Die Position des Bytes im Array
             __declspec( dllexport ) void set( const char c, int pos );
             // Gibt die Länge des Arrays zurück
-            __declspec( dllexport ) int getLänge() const;
+            __declspec( dllexport ) int getLength() const;
             // Gibt den Array von Bytes zurück
             __declspec( dllexport ) char *getBytes() const;
             // Erhöht den Reference Counting Zähler.
@@ -72,30 +72,30 @@ namespace Framework
         };
 
         // Kann Bytesequenzen mit bestimmten Schlüsseln verschlüsseln und entschlüsseln
-        class Schlüssel
+        class Key
         {
         private:
-            unsigned char *schlüssel;
-            int län;
+            unsigned char *key;
+            int length;
             int pos;
             int ref;
 
         public:
             // Erzeugt ein leeres Zeichnung
-            __declspec( dllexport ) Schlüssel();
+            __declspec( dllexport ) Key();
             // Erzeugt ein neues Zeichnung mi einem Schlüssel
             //  s: Der Schlüssel, der zum verschlüsseln und entchlüsseln verwendet werden soll
-            //  län: Die Länge des Schlüssels
-            __declspec( dllexport ) Schlüssel( const char *s, int län );
+            //  length: Die Länge des Schlüssels
+            __declspec( dllexport ) Key( const char *s, int length );
             // Löscht das Zeichnung
-            __declspec( dllexport ) ~Schlüssel();
+            __declspec( dllexport ) ~Key();
             // Setzt die Position im Schlüssel, wo mit dem verschlüsseln und entschlüsseln begonnen werden soll
             //  p: Die Position im Schlüssel
-            __declspec( dllexport ) void setPos( int p );
+            __declspec( dllexport ) void setPos( __int64 p );
             // Setzt den Schlüssel, der zum ver- und entschlüsseln verwendet werden soll
             //  s: Der Schlüssel
-            //  län: Die Länge des Schlüssels
-            __declspec( dllexport ) void setSchlüssel( const char *s, int län );
+            //  length: Die Länge des Schlüssels
+            __declspec( dllexport ) void setKey( const char *s, int length );
             // Verschlüsselt einen Byte Array mit dem gesetzten Schlüssel
             //  daten: Der Byte Array, der verschlüsselt werden soll. Wird von der Funktion verändert
             __declspec( dllexport ) void codieren( Bytes *daten );
@@ -104,10 +104,10 @@ namespace Framework
             __declspec( dllexport ) void decodieren( Bytes *daten );
             // Erhöht den Reference Counting Zähler.
             //  return: this.
-            __declspec( dllexport ) Schlüssel *getThis();
+            __declspec( dllexport ) Key *getThis();
             // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
             //  return: 0.
-            __declspec( dllexport ) Schlüssel *release();
+            __declspec( dllexport ) Key *release();
         };
     }
 }

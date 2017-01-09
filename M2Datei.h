@@ -50,11 +50,11 @@ namespace Framework
         // Löscht ein 2D Modell aus der Datei
         //  name: Der Name des Modells
         //  return: 1, wenn das Modell gelöscht wurde. 0, wenn das Modell nicht gefunden wurde, oder ein fehler beim speichern auftrat
-        __declspec( dllexport ) bool löscheModel( Text *name );
+        __declspec( dllexport ) bool removeModel( Text *name );
         // Löscht ein 2D Modell aus der Datei
         //  name: Der Name des Modells
         //  return: 1, wenn das Modell gelöscht wurde. 0, wenn das Modell nicht gefunden wurde, oder ein fehler beim speichern auftrat
-        __declspec( dllexport ) bool löscheModel( const char *name );
+        __declspec( dllexport ) bool removeModel( const char *name );
         // Lähd ein 2D Modell aus der Datei
         //  name: Der name des zu ladenden Modells
         //  return: Die geladenen Daten

@@ -65,9 +65,9 @@ void ScrollBar::setKlickScroll( int ks )
     rend = 1;
 }
 
-void ScrollBar::scroll( int höhe )
+void ScrollBar::scroll( int height )
 {
-    data->scrollPos = höhe;
+    data->scrollPos = height;
     if( data->scrollPos > data->max - data->anzeige )
         data->scrollPos = data->max - data->anzeige;
     if( data->scrollPos < 0 )
@@ -150,9 +150,13 @@ VScrollBar::VScrollBar()
     : ScrollBar()
 {}
 
-bool VScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
+// Destruktor 
+VScrollBar::~VScrollBar()
+{}
+
+bool VScrollBar::doMausMessage( int x, int y, int br, int hi, MausEreignis &me )
 {
-    bool ret = me.mx >= x && me.mx <= x + br && me.my >= y && me.my <= y + hö;
+    bool ret = me.mx >= x && me.mx <= x + br && me.my >= y && me.my <= y + hi;
     knopfdruck = 0;
     if( me.verarbeitet )
     {
@@ -195,13 +199,13 @@ bool VScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
                 knopfdruck = 1;
                 data->scrollPos -= klickScroll;
             }
-            else if( my > hö - br )
+            else if( my > hi - br )
             {
                 knopfdruck = 2;
                 data->scrollPos += klickScroll;
             }
             else
-                data->scrollPos = (int)( ( data->max / ( hö - 2.0 * br ) ) * ( my - br ) ) - data->anzeige / 2;
+                data->scrollPos = (int)( ( data->max / ( hi - 2.0 * br ) ) * ( my - br ) ) - data->anzeige / 2;
             if( data->scrollPos > data->max - data->anzeige )
                 data->scrollPos = data->max - data->anzeige;
             if( data->scrollPos < 0 )
@@ -212,30 +216,30 @@ bool VScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
     return ret;
 }
 
-void VScrollBar::render( int x, int y, int br, int hö, Bild &zRObj ) const
+void VScrollBar::render( int x, int y, int br, int hi, Bild &zRObj ) const
 {
     if( bg )
-        zRObj.alphaRegion( x, y, br, hö, bgFarbe );
+        zRObj.alphaRegion( x, y, br, hi, bgFarbe );
     --br;
-    --hö;
+    --hi;
     zRObj.drawLinieH( x, y, br + 1, farbe );
-    zRObj.drawLinieH( x, y + hö, br + 1, farbe );
-    zRObj.drawLinieV( x, y + 1, hö - 1, farbe );
-    zRObj.drawLinieV( x + br, y + 1, hö - 1, farbe );
+    zRObj.drawLinieH( x, y + hi, br + 1, farbe );
+    zRObj.drawLinieV( x, y + 1, hi - 1, farbe );
+    zRObj.drawLinieV( x + br, y + 1, hi - 1, farbe );
     zRObj.drawLinieH( x + 1, y + br, br - 1, farbe );
-    zRObj.drawLinieH( x + 1, y + hö - br, br - 1, farbe );
+    zRObj.drawLinieH( x + 1, y + hi - br, br - 1, farbe );
     ++br;
-    ++hö;
-    int st = (int)( data->scrollPos / ( data->max / ( hö - br * 2.0 ) ) );
-    int end = (int)( ( hö - 2.0 * br ) / ( (double)data->max / data->anzeige ) );
+    ++hi;
+    int st = (int)( data->scrollPos / ( data->max / ( hi - br * 2.0 ) ) );
+    int end = (int)( ( hi - 2.0 * br ) / ( (double)data->max / data->anzeige ) );
     if( data->scrollPos > data->max - data->anzeige )
         data->scrollPos = data->max - data->anzeige;
     if( data->scrollPos < 0 )
     {
         data->scrollPos = 0;
-        end = hö - br * 2;
+        end = hi - br * 2;
     }
-    zRObj.füllRegion( x + 1, y + br + st, br - 1, end, farbe );
+    zRObj.fillRegion( x + 1, y + br + st, br - 1, end, farbe );
 }
 
 ScrollBar *VScrollBar::release()
@@ -252,10 +256,14 @@ HScrollBar::HScrollBar()
     : ScrollBar()
 {}
 
+// Destruktor 
+HScrollBar::~HScrollBar()
+{}
+
 // nicht constant
-bool HScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
+bool HScrollBar::doMausMessage( int x, int y, int br, int hi, MausEreignis &me )
 {
-    bool ret = me.mx >= x && me.mx <= x + br && me.my >= y && me.my <= y + hö;
+    bool ret = me.mx >= x && me.mx <= x + br && me.my >= y && me.my <= y + hi;
     knopfdruck = 0;
     if( me.verarbeitet )
     {
@@ -293,18 +301,18 @@ bool HScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
     {
         if( mx >= 0 && my >= 0 )
         {
-            if( mx < hö )
+            if( mx < hi )
             {
                 knopfdruck = 1;
                 data->scrollPos -= klickScroll;
             }
-            else if( mx > br - hö )
+            else if( mx > br - hi )
             {
                 knopfdruck = 2;
                 data->scrollPos += klickScroll;
             }
             else
-                data->scrollPos = (int)( ( data->max / ( br - 2.0 * hö ) ) * ( mx - hö ) ) - data->anzeige / 2;
+                data->scrollPos = (int)( ( data->max / ( br - 2.0 * hi ) ) * ( mx - hi ) ) - data->anzeige / 2;
             if( data->scrollPos > data->max - data->anzeige )
                 data->scrollPos = data->max - data->anzeige;
             if( data->scrollPos < 0 )
@@ -315,30 +323,30 @@ bool HScrollBar::doMausMessage( int x, int y, int br, int hö, MausEreignis &me )
     return ret;
 }
 
-void HScrollBar::render( int x, int y, int br, int hö, Bild &zRObj ) const
+void HScrollBar::render( int x, int y, int br, int hi, Bild &zRObj ) const
 {
     if( bg )
-        zRObj.alphaRegion( x, y, br, hö, bgFarbe );
+        zRObj.alphaRegion( x, y, br, hi, bgFarbe );
     --br;
-    --hö;
-    zRObj.drawLinieV( x, y, hö + 1, farbe );
-    zRObj.drawLinieV( x + br, y, hö + 1, farbe );
+    --hi;
+    zRObj.drawLinieV( x, y, hi + 1, farbe );
+    zRObj.drawLinieV( x + br, y, hi + 1, farbe );
     zRObj.drawLinieH( x + 1, y, br - 1, farbe );
-    zRObj.drawLinieH( x + 1, y + hö, br - 1, farbe );
-    zRObj.drawLinieV( x + hö, y + 1, hö - 1, farbe );
-    zRObj.drawLinieV( x + br - hö, y + 1, hö - 1, farbe );
+    zRObj.drawLinieH( x + 1, y + hi, br - 1, farbe );
+    zRObj.drawLinieV( x + hi, y + 1, hi - 1, farbe );
+    zRObj.drawLinieV( x + br - hi, y + 1, hi - 1, farbe );
     ++br;
-    ++hö;
-    int st = (int)( data->scrollPos / ( data->max / ( br - hö * 2.0 ) ) );
-    int end = (int)( ( br - 2.0 * hö ) / ( (double)data->max / data->anzeige ) );
+    ++hi;
+    int st = (int)( data->scrollPos / ( data->max / ( br - hi * 2.0 ) ) );
+    int end = (int)( ( br - 2.0 * hi ) / ( (double)data->max / data->anzeige ) );
     if( data->scrollPos > data->max - data->anzeige )
         data->scrollPos = data->max - data->anzeige;
     if( data->scrollPos < 0 )
     {
         data->scrollPos = 0;
-        end = br - hö * 2;
+        end = br - hi * 2;
     }
-    zRObj.füllRegion( x + hö + st, y + 1, end, hö - 1, farbe );
+    zRObj.fillRegion( x + hi + st, y + 1, end, hi - 1, farbe );
 }
 
 ScrollBar *HScrollBar::release()

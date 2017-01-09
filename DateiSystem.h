@@ -19,7 +19,7 @@ namespace Framework
 #endif
     class LTDBPixel; // aus dieser Datei
     class LTDBKopf; // aus dieser Datei
-    class LTDBKörper; // aus dieser Datei
+    class LTDBBody; // aus dieser Datei
     class LTDBDatei; // aus dieser Datei
     class LTDSPixel; // aus dieser Datei
 #ifdef WIN32
@@ -41,11 +41,11 @@ namespace Framework
         char iR, iG, iB, iA;
         char miR, miG, miB, miA;
         char maxIndex; // Länge des Pixels
-        bool änder : 1; // Verändert sich etwas an den volgenden 5 Variablen
-        bool änderR : 1; // Ändert sich Rot
-        bool änderG : 1; // Ändert sich Grün
-        bool änderB : 1; // Ändert sich Blau
-        bool änderA : 1; // Ändert sich Alpha
+        bool change : 1; // Verändert sich etwas an den volgenden 5 Variablen
+        bool changeR : 1; // Ändert sich Rot
+        bool changeG : 1; // Ändert sich Grün
+        bool changeB : 1; // Ändert sich Blau
+        bool changeA : 1; // Ändert sich Alpha
         unsigned char komp : 3; // Komprimierung der Farbwerte
         unsigned char R; // Rot
         unsigned char G; // Grün
@@ -79,13 +79,13 @@ namespace Framework
         // Gibt den Farbwert des Pixels zurück
         __declspec( dllexport ) int zuFarbe() const;
         // Gibt zurück, ob sich der Anteil an Rot in der Farbe im Vergleich zum Pixel davor geändert hat
-        __declspec( dllexport ) bool getÄnderR() const;
+        __declspec( dllexport ) bool getChangeR() const;
         // Gibt zurück, ob sich der Anteil an Grün in der Farbe im Vergleich zum Pixel davor geändert hat
-        __declspec( dllexport ) bool getÄnderG() const;
+        __declspec( dllexport ) bool getChangeG() const;
         // Gibt zurück, ob sich der Anteil an Blau in der Farbe im Vergleich zum Pixel davor geändert hat
-        __declspec( dllexport ) bool getÄnderB() const;
+        __declspec( dllexport ) bool getChangeB() const;
         // Gibt zurück, ob sich der Anteil an Alpha in der Farbe im Vergleich zum Pixel davor geändert hat
-        __declspec( dllexport ) bool getÄnderA() const;
+        __declspec( dllexport ) bool getChangeA() const;
         // Gibt die Komprimierung des Pixels zurück
         __declspec( dllexport ) unsigned char getKomp() const;
         // Gibt den Anteil an Rot in der Farbe des Pixels zurück
@@ -192,10 +192,10 @@ namespace Framework
         __declspec( dllexport ) void laden( std::ifstream *f );
         // Setzt die Informationen die gespeichert werden sollen
         //  titel: Der Titel des Bildes
-        //  größe: Die Größe des Bildes
+        //  size: Die Größe des Bildes
         //  return: Die Anzahl der Buchstaben aus dem Titel, die im LTDB Dateiformat nicht gespeichert werden können. Erlaubt ist nur a-z und A-Z und ä ü ö ß und Ä Ü Ö und .
         // Alle großbuchstaben im Titel werden in Kleinbuchstaben umgewandelt
-        __declspec( dllexport ) int Init( Text *titel, const Punkt &größe );
+        __declspec( dllexport ) int Init( Text *titel, const Punkt &size );
         // Lähd informationen aus geladenen Bits. Wird von der laden( std::ifstream ) Funktion verwendet.
         //  BeginBit: Der Index des ersten Bits, welches ausgewertet werden soll
         //  EndBit: Der Index des letzten Bits, welches nichtmehr ausgewertet werden soll
@@ -206,11 +206,11 @@ namespace Framework
         //  f: Der geöffnete und an die richtiege Stelle zeigende ofstream der LTDB Datei
         __declspec( dllexport ) void speichern( std::ofstream *f ) const;
         // Gibt die Länge des Titels zurück
-        __declspec( dllexport ) int getTitelLänge() const;
+        __declspec( dllexport ) int getTitelLength() const;
         // Gibt den Titel des Bildes zurück
         __declspec( dllexport ) Text *getTitel() const;
         // Gibt die Größe des Bildes zurück
-        __declspec( dllexport ) Punkt getGröße() const;
+        __declspec( dllexport ) Punkt getSize() const;
         // Gibt die nächsten zu speichernden Bits zurück
         //  begin: Der Index des ersten Bits, in das gespeichert werden soll
         //  end: Der Index des letzten Bits, in das gespeichert werden soll
@@ -226,22 +226,22 @@ namespace Framework
     };
 
     // Verwaltet die Pixeldaten eines einzelnen Bildes einer LTDB Datei
-    class LTDBKörper
+    class LTDBBody
     {
     private:
         Punkt gr;
         Bild *b;
-        int dateiLänge;
+        int dateiSize;
         int ref;
 
     public:
         // Konstruktor 
-        __declspec( dllexport ) LTDBKörper();
+        __declspec( dllexport ) LTDBBody();
         // Konstruktor
         //  k: Der LTDB Kopf des Bildes, der Informationen über die Größe des Bildes enthält
-        __declspec( dllexport ) LTDBKörper( LTDBKopf *k );
+        __declspec( dllexport ) LTDBBody( LTDBKopf *k );
         // Destruktor 
-        __declspec( dllexport ) ~LTDBKörper();
+        __declspec( dllexport ) ~LTDBBody();
         // Setzt die Informationen über die Größe des Bildes. Wird zum Laden benötigt.
         //  k: Der LTDB Kopf des Bildes
         __declspec( dllexport ) void init( LTDBKopf k );
@@ -262,13 +262,13 @@ namespace Framework
         // Gibt das geladene Bild zurück
         __declspec( dllexport ) Bild *getBild() const;
         // Gibt die Größe des Bildes zurück
-        __declspec( dllexport ) const Punkt &getGröße() const;
+        __declspec( dllexport ) const Punkt &getSize() const;
         // Erhöht den Reference Counting Zähler.
         //  return: this.
-        __declspec( dllexport ) LTDBKörper *getThis();
+        __declspec( dllexport ) LTDBBody *getThis();
         // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
         //  return: 0.
-        __declspec( dllexport ) LTDBKörper *release();
+        __declspec( dllexport ) LTDBBody *release();
     };
 
     // Verwaltet eine LTDB Datei
@@ -294,11 +294,11 @@ namespace Framework
         //  zF: Ein Fortschrittsbalken, der 0 sein kann
         __declspec( dllexport ) void leseDaten( FBalken *zF );
         // Löscht die LTDB Datei
-        __declspec( dllexport ) void löschen();
+        __declspec( dllexport ) void remove();
         // Löscht ein Bild aus der LTDB Datei
         //  zF: Ein Fortschrittsbalken der 0 sein kann
         //  name: Der Name des zu löschenden Bildes
-        __declspec( dllexport ) void löschen( FBalken *zF, Text *name );
+        __declspec( dllexport ) void remove( FBalken *zF, Text *name );
         // Lädt ein Bild aus der LTDB Datei
         //  zF: Ein Fortschrittsbalken, der 0 sein kann
         //  name: Der Name des Bildes, welches geladen werden soll
@@ -428,7 +428,7 @@ namespace Framework
     {
     private:
         int ref;
-        unsigned char schriftGröße;
+        unsigned char schriftSize;
         unsigned char *zeichen;
         int *pos;
         unsigned char zeichenAnzahl;
@@ -478,7 +478,7 @@ namespace Framework
     private:
         int ref;
         unsigned char zeichen;
-        Punkt größe;
+        Punkt size;
 
     public:
         // Konstruktor 
@@ -519,7 +519,7 @@ namespace Framework
     {
     private:
         int ref;
-        Punkt größe;
+        Punkt size;
         unsigned char zeichen;
         Buchstabe *buchstabe;
 

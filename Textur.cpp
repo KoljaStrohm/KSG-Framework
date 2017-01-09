@@ -1,7 +1,9 @@
 #include "Textur.h"
 #include "Bild.h"
+#ifdef WIN32
 #include "Render3D.h"
 #include <d3d11.h>
+#endif
 
 using namespace Framework;
 
@@ -23,10 +25,12 @@ Textur::~Textur()
 {
     if( bild )
         bild->release();
+#ifdef WIN32
     if( txt )
         txt->Release();
     if( view )
         view->Release();
+#endif
 }
 
 // Setzt einen Zeiger auf das Bild, welches die Textur enthält
@@ -44,13 +48,13 @@ void Textur::setBild( Bild *b )
 {
     if( !b )
         return;
-    if( !bild || bild->getBreite() != b->getBreite() || bild->getHöhe() != b->getHöhe() )
+    if( !bild || bild->getBreite() != b->getBreite() || bild->getHeight() != b->getHeight() )
     {
         if( !bild )
             bild = new Bild();
-        bild->neuBild( b->getBreite(), b->getHöhe(), 0 );
+        bild->neuBild( b->getBreite(), b->getHeight(), 0 );
     }
-    bild->drawBild( 0, 0, bild->getBreite(), bild->getHöhe(), *b );
+    bild->drawBild( 0, 0, bild->getBreite(), bild->getHeight(), *b );
     b->release();
 }
 
@@ -60,7 +64,8 @@ bool Textur::updateTextur( Render3D *zRObj )
 {
     if( !bild )
         return 0;
-    if( !txt || lastGr != bild->getGröße() )
+#ifdef WIN32
+    if( !txt || lastGr != bild->getSize() )
     {
         if( txt )
             txt->Release();
@@ -69,7 +74,7 @@ bool Textur::updateTextur( Render3D *zRObj )
         memset( &bufferDesc, 0, sizeof( D3D11_TEXTURE2D_DESC ) );
         bufferDesc.ArraySize = 1;
         bufferDesc.Width = bild->getBreite();
-        bufferDesc.Height = bild->getHöhe();
+        bufferDesc.Height = bild->getHeight();
         bufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
         bufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
         bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -84,10 +89,10 @@ bool Textur::updateTextur( Render3D *zRObj )
     zRObj->zContext()->Map( txt, 0, D3D11_MAP::D3D11_MAP_WRITE_DISCARD, 0, &buffer );
     int *bgBuff = bild->getBuffer();
     int tmpBr = 4 * bild->getBreite();
-    for( int y = 0, pitch = 0, bry = 0; y < bild->getHöhe(); ++y, pitch += buffer.RowPitch, bry += bild->getBreite() )
+    for( int y = 0, pitch = 0, bry = 0; y < bild->getHeight(); ++y, pitch += buffer.RowPitch, bry += bild->getBreite() )
         memcpy( &( (BYTE *)buffer.pData )[ pitch ], ( void* )&( bgBuff[ bry ] ), tmpBr );
     zRObj->zContext()->Unmap( txt, 0 );
-    if( !view || lastGr != bild->getGröße() )
+    if( !view || lastGr != bild->getSize() )
     {
         if( view )
             view->Release();
@@ -101,7 +106,8 @@ bool Textur::updateTextur( Render3D *zRObj )
         if( r != S_OK )
             return 0;
     }
-    lastGr = bild->getGröße();
+    lastGr = bild->getSize();
+#endif
     return 1;
 }
 

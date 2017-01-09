@@ -29,7 +29,7 @@ DateiDialog::~DateiDialog()
 }
 
 // nicht constant
-void DateiDialog::löscheDateiTypen()
+void DateiDialog::removeDateiTypen()
 {
     typeName->leeren();
     type->leeren();
@@ -93,12 +93,12 @@ Text *DateiDialog::anzeigen( bool open ) const
                     c_rgSaveTypes = new COMDLG_FILTERSPEC[ anz ];
                     for( int i = 0; i < anz; i++ )
                     {
-                        wchar_t *n = new wchar_t[ typeName->z( i )->getLänge() + 1 ];
+                        wchar_t *n = new wchar_t[ typeName->z( i )->getLength() + 1 ];
 #pragma warning( disable : 4996 )
-                        mbstowcs( n, typeName->z( i )->getText(), typeName->z( i )->getLänge() + 1 );
-                        wchar_t *t = new wchar_t[ type->z( i )->getLänge() + 1 ];
+                        mbstowcs( n, typeName->z( i )->getText(), typeName->z( i )->getLength() + 1 );
+                        wchar_t *t = new wchar_t[ type->z( i )->getLength() + 1 ];
 #pragma warning( disable : 4996 )
-                        mbstowcs( t, type->z( i )->getText(), type->z( i )->getLänge() + 1 );
+                        mbstowcs( t, type->z( i )->getText(), type->z( i )->getLength() + 1 );
                         c_rgSaveTypes[ i ].pszName = n;
                         c_rgSaveTypes[ i ].pszSpec = t;
                     }
@@ -114,15 +114,15 @@ Text *DateiDialog::anzeigen( bool open ) const
                         {
                             if( !type->z( i )->hat( ".*" ) )
                             {
-                                txt.anhängen( type->z( i )->getTeilText( type->z( i )->positionVon( "." ) + 1 ) );
+                                txt.append( type->z( i )->getTeilText( type->z( i )->positionVon( "." ) + 1 ) );
                                 txt += ";";
                             }
                         }
-                        if( txt.getLänge() > 0 )
-                            txt.löschen( txt.getLänge() - 1 );
-                        wchar_t *defEnd = new wchar_t[ txt.getLänge() + 1 ];
+                        if( txt.getLength() > 0 )
+                            txt.remove( txt.getLength() - 1 );
+                        wchar_t *defEnd = new wchar_t[ txt.getLength() + 1 ];
 #pragma warning( disable : 4996 )
-                        mbstowcs( defEnd, txt, txt.getLänge() + 1 );
+                        mbstowcs( defEnd, txt, txt.getLength() + 1 );
                         hr = pfd->SetDefaultExtension( defEnd );
                         if( SUCCEEDED( hr ) )
                         {
@@ -196,7 +196,7 @@ DateiDialogTh::DateiDialogTh()
 {
     dialog = new DateiDialog();
     ret = 0;
-    öffnen = 0;
+    open = 0;
     ref = 1;
 }
 
@@ -215,14 +215,14 @@ DateiDialogTh::~DateiDialogTh()
 }
 
 // nicht constant
-void DateiDialogTh::setÖffnen( bool b )
+void DateiDialogTh::setOpen( bool b )
 {
-    öffnen = b;
+    open = b;
 }
 
-void DateiDialogTh::löscheDateiTypen()
+void DateiDialogTh::removeDateiTypen()
 {
-    dialog->löscheDateiTypen();
+    dialog->removeDateiTypen();
 }
 
 void DateiDialogTh::addDateiTyp( char *name, char *typ )
@@ -244,7 +244,7 @@ void DateiDialogTh::thread()
 {
     if( ret )
         ret = ret->release();
-    ret = dialog->anzeigen( öffnen );
+    ret = dialog->anzeigen( open );
 }
 
 // constant

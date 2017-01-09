@@ -39,7 +39,7 @@ namespace Framework
         // prüft, ob der Thrad aktiv ist
         // return: true, falls der Thread läuft. 
         //         false, wenn der Thread beendet, pausiert oder noch nicht gestartet wurde.
-        __declspec( dllexport ) bool läuft() const;
+        __declspec( dllexport ) bool isRunning() const;
         // wartet zeit lang auf den Thread
         //  zeit: Die Zeit, die auf den Thread gewartet werden soll. 1000 = 1 Sekunde
         __declspec( dllexport ) int warteAufThread( int zeit );

@@ -20,20 +20,20 @@ namespace Framework
         class Style : public ZeichnungHintergrund::Style
         {
         public:
-            const static __int64 SpaltenBreiteÄnderbar = 0x00001000; // Wenn dieser Flag gesetzt wird, so kann der Benutzer die Spalten mit der Maus vergrößern und verkleinern
-            const static __int64 ZeilenHöheÄnderbar = 0x00002000; // Wenn dieser Flag gesetzt wird, so kann der Benutzer die Spalten mit der Maus vergrößern und verkleinern
+            const static __int64 SpaltenBreiteChangeable = 0x00001000; // Wenn dieser Flag gesetzt wird, so kann der Benutzer die Spalten mit der Maus vergrößern und verkleinern
+            const static __int64 ZeilenHeightChangeable = 0x00002000; // Wenn dieser Flag gesetzt wird, so kann der Benutzer die Spalten mit der Maus vergrößern und verkleinern
             const static __int64 SpaltenBreiteMin = 0x00004000; // Wenn dieser Flag gesetzt wird, so kann der Nutzer trotz des Flags SpaltenBreiteÄnderbar die Spaltenbreite nicht kleiner machen als eine bestimmte Grenze
             const static __int64 SpaltenBreiteMax = 0x00008000; // Wenn dieser Flag gesetzt wird, so kann der Nutzer trotz des Flags SpaltenBreiteÄnderbar die Spaltenbreite nicht größer machen als eine bestimmte Grenze
-            const static __int64 ZeilenHöheMin = 0x00010000; // Wenn dieser Flag gesetzt wird, so kann der Nutzer trotz des Flags ZeilenHöheÄnderbar die Zeilenhöhe nicht kleiner machen als eine bestimmte Grenze
-            const static __int64 ZeilenHöheMax = 0x00020000; // Wenn dieser Flag gesetzt wird, so kann der Nutzer trotz des Flags ZeilenHöheÄnderbar die Zeilenhöhe nicht größer machen als eine bestimmte Grenze
+            const static __int64 ZeilenHeightMin = 0x00010000; // Wenn dieser Flag gesetzt wird, so kann der Nutzer trotz des Flags ZeilenHöheÄnderbar die Zeilenhöhe nicht kleiner machen als eine bestimmte Grenze
+            const static __int64 ZeilenHeightMax = 0x00020000; // Wenn dieser Flag gesetzt wird, so kann der Nutzer trotz des Flags ZeilenHöheÄnderbar die Zeilenhöhe nicht größer machen als eine bestimmte Grenze
             const static __int64 SpaltenBeweglich = 0x00040000; // Wenn dieser Flag gesetzt wird, so kann der Nutzer die Reihenfolge der Spalten bestimmen, in dem er sie per Drag and Drop verschiebt
             const static __int64 AuswahlRahmen = 0x0080000; // Wenn dieser Flag gesetzt ist, so bekommt das Feld, dass der Benutzer durch den Flag Erlaubt auswählen kann einen anderen Rahmen
             const static __int64 AuswahlBuffer = 0x00100000; // Wenn dieser Flag gesetzt ist, so bekommt das Feld, dass der Benutzer durch den Flag Erlaubt auswählen kann ein anderes AlphaFeld
             const static __int64 AuswahlMultistyled = 0x00200000; // Wenn dieser Flag gesetzt ist, so kann jedes Feld andere Rahmen und AlphaFelder beim Auswählen haben.
             const static __int64 Raster = 0x00400000; // Wenn dieser Flag gesetzt ist, so werden zwischen den Feldern Linien gezeichnet
 
-            const static __int64 beweglich = SpaltenBreiteÄnderbar | ZeilenHöheÄnderbar | SpaltenBeweglich; // Vereint die Flags: SpaltenBreiteÄnderbar, ZeilenHöheÄnderbar, SpaltenBeweglich
-            const static __int64 min_max = SpaltenBreiteMax | SpaltenBreiteMin | ZeilenHöheMax | ZeilenHöheMax; // Vereint die Flags: SpaltenBreiteMax, SpaltenBreiteMin, ZeilenHöheMax, ZeilenHöheMax
+            const static __int64 beweglich = SpaltenBreiteChangeable | ZeilenHeightChangeable | SpaltenBeweglich; // Vereint die Flags: SpaltenBreiteÄnderbar, ZeilenHöheÄnderbar, SpaltenBeweglich
+            const static __int64 min_max = SpaltenBreiteMax | SpaltenBreiteMin | ZeilenHeightMax | ZeilenHeightMax; // Vereint die Flags: SpaltenBreiteMax, SpaltenBreiteMin, ZeilenHöheMax, ZeilenHöheMax
             const static __int64 scroll = VScroll | HScroll; // Vereint die Flags: VScroll, HScroll
             const static __int64 normal = Rahmen | Erlaubt | Sichtbar | AuswahlBuffer | AuswahlRahmen | Raster; // Vereint die Flags: Rahmen, Erlaubt, Sichtbar, SpaltenBeweglich, AuswahlBuffer, AuswahlRahmen, Raster
         };
@@ -42,11 +42,11 @@ namespace Framework
         RCArray< Text > *spaltenNamen;
         RCArray< Text > *zeilenNamen;
         Array< int > *spaltenBreite;
-        Array< int > *zeilenHöhe;
+        Array< int > *zeilenHeight;
         Array< int > *minSpaltenBreite;
         Array< int > *maxSpaltenBreite;
-        Array< int > *minZeilenHöhe;
-        Array< int > *maxZeilenHöhe;
+        Array< int > *minZeilenHeight;
+        Array< int > *maxZeilenHeight;
         int spaltenAnzahl, zeilenAnzahl;
         int klickSpalte;
         double mSpalte, mZeile;
@@ -65,7 +65,7 @@ namespace Framework
         // Konstruktor 
         __declspec( dllexport ) ObjTabelle();
         // Destruktor 
-        __declspec( dllexport ) ~ObjTabelle();
+        __declspec( dllexport ) virtual ~ObjTabelle();
         // Fügt der Tabelle eine Spalte hinzu
         //  name: Der Name der Spalte
         __declspec( dllexport ) void addSpalte( const char *name );
@@ -168,16 +168,16 @@ namespace Framework
         __declspec( dllexport ) void setSpaltenBreite( Text *name, int br );
         // Setzt die Zeilen Höhe
         //  zNum: Der Index der Zeile
-        //  hö: Die Höhe in Pixeln
-        __declspec( dllexport ) void setZeilenHöhe( int zNum, int hö );
+        //  hi: Die Höhe in Pixeln
+        __declspec( dllexport ) void setZeilenHeight( int zNum, int hi );
         // Setzt die Zeilen Höhe
         //  name: Der Index der Zeile
-        //  hö: Die Höhe in Pixeln
-        __declspec( dllexport ) void setZeilenHöhe( const char *name, int hö );
+        //  hi: Die Höhe in Pixeln
+        __declspec( dllexport ) void setZeilenHeight( const char *name, int hi );
         // Setzt die Zeilen Höhe
         //  name: Der Index der Zeile
-        //  hö: Die Höhe in Pixeln
-        __declspec( dllexport ) void setZeilenHöhe( Text *name, int hö );
+        //  hi: Die Höhe in Pixeln
+        __declspec( dllexport ) void setZeilenHeight( Text *name, int hi );
         // Setzt die minimale Spalten Breite (benötigt Flag: SpaltenBreiteÄnderbar, SpaltenBreiteMin)
         //  sNum: Der Index der Spalte
         //  minBr: Die minimale Breite in Pixeln
@@ -204,28 +204,28 @@ namespace Framework
         __declspec( dllexport ) void setMaxSpaltenBreite( Text *name, int maxBr );
         // Setzt die minimale Zeilen Höhe (benötigt Flag: ZeilenHöheÄnderbar, ZeienHöheMin)
         //  zNum: Der Index der Zeile
-        //  minHö: Die minimale Höhe in Pixeln
-        __declspec( dllexport ) void setMinZeilenHöhe( int zNum, int minHö );
+        //  minHi: Die minimale Höhe in Pixeln
+        __declspec( dllexport ) void setMinZeilenHeight( int zNum, int minHi );
         // Setzt die minimale Zeilen Höhe (benötigt Flag: ZeilenHöheÄnderbar, ZeienHöheMin)
         //  name: Der Name der Zeile
-        //  minHö: Die minimale Höhe in Pixeln
-        __declspec( dllexport ) void setMinZeilenHöhe( const char *name, int minHö );
+        //  minHi: Die minimale Höhe in Pixeln
+        __declspec( dllexport ) void setMinZeilenHeight( const char *name, int minHi );
         // Setzt die minimale Zeilen Höhe (benötigt Flag: ZeilenHöheÄnderbar, ZeienHöheMin)
         //  name: Der Name der Zeile
-        //  minHö: Die minimale Höhe in Pixeln
-        __declspec( dllexport ) void setMinZeilenHöhe( Text *name, int minHö );
+        //  minHi: Die minimale Höhe in Pixeln
+        __declspec( dllexport ) void setMinZeilenHeight( Text *name, int minHi );
         // Setzt die maximale Zeilen Höhe (benötigt Flag: ZeilenHöheÄnderbar, ZeienHöheMax)
         //  zNum: Der Index der Zeile
-        //  maxHö: Die maximale Höhe in Pixeln
-        __declspec( dllexport ) void setMaxZeilenHöhe( int zNum, int maxHö );
+        //  maxHi: Die maximale Höhe in Pixeln
+        __declspec( dllexport ) void setMaxZeilenHeight( int zNum, int maxHi );
         // Setzt die maximale Zeilen Höhe (benötigt Flag: ZeilenHöheÄnderbar, ZeienHöheMax)
         //  name: Der Name der Zeile
-        //  maxHö: Die maximale Höhe in Pixeln
-        __declspec( dllexport ) void setMaxZeilenHöhe( const char *name, int maxHö );
+        //  maxHi: Die maximale Höhe in Pixeln
+        __declspec( dllexport ) void setMaxZeilenHeight( const char *name, int maxHi );
         // Setzt die maximale Zeilen Höhe (benötigt Flag: ZeilenHöheÄnderbar, ZeienHöheMax)
         //  name: Der Name der Zeile
-        //  maxHö: Die maximale Höhe in Pixeln
-        __declspec( dllexport ) void setMaxZeilenHöhe( Text *name, int maxHö );
+        //  maxHi: Die maximale Höhe in Pixeln
+        __declspec( dllexport ) void setMaxZeilenHeight( Text *name, int maxHi );
         // Legt fest, welches Feld ausgewählt ist (benötigt Flag: Erlaubt)
         //  sNum: Der Index der Spalte des Feldes
         //  zNum: Der Index der Zeile des Feldes
@@ -261,7 +261,7 @@ namespace Framework
         __declspec( dllexport ) void setAAfFarbe( int f );
         // Setzt die Stärke des AlphaFeldes, das für das ausgewählte Kästchen verwendet wird
         //  st: Die Stärke
-        __declspec( dllexport ) void setAAfStärke( int st );
+        __declspec( dllexport ) void setAAfStrength( int st );
         // Setzt einen Zeiger auf einen Rahmen, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
         //  sNum: Der Index der Spalte des Kästchens
         //  zNum: Der Index der Zeile des Kästchens
@@ -341,17 +341,17 @@ namespace Framework
         //  sNum: Der Index der Spalte des Kästchens
         //  zNum: Der Index der Zeile des Kästchens
         //  st: Die Stärke
-        __declspec( dllexport ) void setAAfStärke( int sNum, int zNum, int st );
+        __declspec( dllexport ) void setAAfStrength( int sNum, int zNum, int st );
         // Setzt die Stärke des Farbüergangs, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
         //  spaltenName: Der Name der Spalte des Kästchens
         //  zeilenName: Der Name der Zeile des Kästchens
         //  st: Die Stärke
-        __declspec( dllexport ) void setAAfStärke( const char *spaltenName, const char *zeilenName, int st );
+        __declspec( dllexport ) void setAAfStrength( const char *spaltenName, const char *zeilenName, int st );
         // Setzt die Stärke des Farbüergangs, der bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte wird
         //  spaltenName: Der Name der Spalte des Kästchens
         //  zeilenName: Der Name der Zeile des Kästchens
         //  st: Die Stärke
-        __declspec( dllexport ) void setAAfStärke( Text *spaltenName, Text *zeilenName, int st );
+        __declspec( dllexport ) void setAAfStrength( Text *spaltenName, Text *zeilenName, int st );
         // Fügt Styles hinzu, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
         //  sNum: Der Index der Spalte des Kästchens
         //  zNum: Der Index der Zeile des Kästchens
@@ -404,17 +404,17 @@ namespace Framework
         //  sNum: Der Index der Spalte des Kästchens
         //  zNum: Der Index der Zeile des Kästchens
         //  style: der Style, der entfernt werden soll
-        __declspec( dllexport ) void löscheMsStyle( int sNum, int zNum, __int64 style );
+        __declspec( dllexport ) void removeMsStyle( int sNum, int zNum, __int64 style );
         // Entfernt Styles von den Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
         //  spaltenName: Der Name der Spalte des Kästchens
         //  zeilenName: Der Name der Zeile des Kästchens
         //  style: der Style, der entfernt werden soll
-        __declspec( dllexport ) void löscheMsStyle( const char *spaltenName, const char *zeilenName, __int64 style );
+        __declspec( dllexport ) void removeMsStyle( const char *spaltenName, const char *zeilenName, __int64 style );
         // Entfernt Styles von den Styles, die bei dem Flag AuswahlMultistyled bei der Auswahl eines bestimmten Kästchens verwendte werden
         //  spaltenName: Der Name der Spalte des Kästchens
         //  zeilenName: Der Name der Zeile des Kästchens
         //  style: der Style, der entfernt werden soll
-        __declspec( dllexport ) void löscheMsStyle( Text *spaltenName, Text *zeilenName, __int64 style );
+        __declspec( dllexport ) void removeMsStyle( Text *spaltenName, Text *zeilenName, __int64 style );
         // Aktualisiert das Objekt. Wird vom Framework aufgerufen
         //  tickVal: Die Zeit in sekunden, die seit dem lezten Aufruf dieser Funktion vergangen ist
         //  return: 1, wenn sich etwas verändert hat und das Bild neu gezeichnet werden muss. 0 sonst
@@ -482,13 +482,13 @@ namespace Framework
         __declspec( dllexport ) int getSpaltenBreite( Text *name ) const;
         // Gibt die Höhe einer Zeile in Pixeln zurück
         //  num: Der Index der Zeile
-        __declspec( dllexport ) int getZeilenHöhe( int num ) const;
+        __declspec( dllexport ) int getZeilenHeight( int num ) const;
         // Gibt die Höhe einer Zeile in Pixeln zurück
         //  name: Der Name der Zeile
-        __declspec( dllexport ) int getZeilenHöhe( const char *name ) const;
+        __declspec( dllexport ) int getZeilenHeight( const char *name ) const;
         // Gibt die Höhe einer Zeile in Pixeln zurück
         //  name: Der Name der Zeile
-        __declspec( dllexport ) int getZeilenHöhe( Text *name ) const;
+        __declspec( dllexport ) int getZeilenHeight( Text *name ) const;
         // Gibt die minimale Spalten breite in Pixeln zurück
         //  num: Der Index der Spalte
         __declspec( dllexport ) int getMinSpaltenBreite( int num ) const;
@@ -509,22 +509,22 @@ namespace Framework
         __declspec( dllexport ) int getMaxSpaltenBreite( Text *name ) const;
         // Gibt die minimale Zeilen Höhe in Pixeln zurück
         //  num: Der Index der Zeile
-        __declspec( dllexport ) int getMinZeilenHöhe( int num ) const;
+        __declspec( dllexport ) int getMinZeilenHeight( int num ) const;
         // Gibt die minimale Zeilen Höhe in Pixeln zurück
         //  name: Der Name der Zeile
-        __declspec( dllexport ) int getMinZeilenHöhe( const char *name ) const;
+        __declspec( dllexport ) int getMinZeilenHeight( const char *name ) const;
         // Gibt die minimale Zeilen Höhe in Pixeln zurück
         //  name: Der Name der Zeile
-        __declspec( dllexport ) int getMinZeilenHöhe( Text *name ) const;
+        __declspec( dllexport ) int getMinZeilenHeight( Text *name ) const;
         // Gibt die maximale Zeilen Höhe in Pixeln zurück
         //  num: Der Index der Zeile
-        __declspec( dllexport ) int getMaxZeilenHöhe( int num ) const;
+        __declspec( dllexport ) int getMaxZeilenHeight( int num ) const;
         // Gibt die maximale Zeilen Höhe in Pixeln zurück
         //  name: Der Name der Zeile
-        __declspec( dllexport ) int getMaxZeilenHöhe( const char *name ) const;
+        __declspec( dllexport ) int getMaxZeilenHeight( const char *name ) const;
         // Gibt die maximale Zeilen Höhe in Pixeln zurück
         //  name: Der Name der Zeile
-        __declspec( dllexport ) int getMaxZeilenHöhe( Text *name ) const;
+        __declspec( dllexport ) int getMaxZeilenHeight( Text *name ) const;
         // Gibt den index der Splate zurück, auf die die Maus zeigt
         //  mx: Die x Koordinate der Mausposition basierend zum linken Rand der Tabelle in Pixeln
         __declspec( dllexport ) double getMausSpalte( int mx ) const;

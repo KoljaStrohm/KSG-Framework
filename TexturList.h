@@ -27,7 +27,7 @@ namespace Framework
         __declspec( dllexport ) bool addTextur( Textur *t, const char *name );
         // Entfernt eine Textur aus der Liste
         //  name: Der Name der Textur
-        __declspec( dllexport ) void löscheTextur( const char *name );
+        __declspec( dllexport ) void removeTextur( const char *name );
         // Überprüft, ob unter einem bestimmten Namen eine Textur abgespeichert wurde
         //  name: Der Name
         //  return: true, wenn eine Textur mit dem Namen existiert

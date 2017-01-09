@@ -17,7 +17,7 @@ namespace Framework
     class WFenster; // aus dieser Datei
     class WFensterArray; // aus dieser Datei
     class Fenster; // aus dieser Datei
-
+#ifdef WIN32
     // Erzeugt eine normale Fensterklasse der Windows API
     //  hInst: Die HINSTANCE des Programms (Wird vom Framework an die Start funktion in der Startparam Struktur übergeben)
     __declspec( dllexport ) WNDCLASS F_Normal( HINSTANCE hInst );
@@ -82,11 +82,11 @@ namespace Framework
         __declspec( dllexport ) void setPosition( Punkt &pos );
         // Setzt die Größe des Fensters auf dem Bildschirm
         //  größe: Die Größe in Pixeln
-        __declspec( dllexport ) void setGröße( Punkt &größe );
+        __declspec( dllexport ) void setSize( Punkt &größe );
         // Setzt die Größe des Fensters auf dem Bildschirm
         //  breite: Die Breite in Pixeln
         //  höhe: Die Höhe in Pixeln
-        __declspec( dllexport ) void setGröße( int breite, int höhe );
+        __declspec( dllexport ) void setSize( int breite, int höhe );
         // Setzt die Position und die Größe des Fensters
         //  pos: Die Position in Pixeln
         //  größe: Die Größe in Pixeln
@@ -229,7 +229,7 @@ namespace Framework
     //  meldung: Die Meldung, die im Fenster angezeigt werden soll
     //  style: Bestimmt das Icon, was im Fenster angezeigt wird. Beispiel: MB_ICONERROR, MB_ICONINFORMATION
     __declspec( dllexport ) void WMessageBox( HWND hWnd, Text *titel, Text *meldung, UINT style );
-
+#endif
     // Fenster Klasse im Programm
     class Fenster : public Zeichnung
     {
@@ -237,63 +237,63 @@ namespace Framework
         class Style : public Zeichnung::Style
         {
         public:
-            const static __int64 KörperHintergrund = 0x000000008; // Legt fest, ob der Körper des Fensters einen Hintergrund hat
-            const static __int64 KörperHAlpha = 0x000000010; // Legt fest, ob beim zeichnen des Körperhintergrundes alpha blending verwendet werden soll
-            const static __int64 KörperHBild = 0x000000020; // Legt fest, ob ein Bild als Hintergrund des Körpers verwendet werden soll
-            const static __int64 KörperBuffered = 0x000000040; // Legt fest, ob der Körper einen Farbübergang besitzt
+            const static __int64 BodyHintergrund = 0x000000008; // Legt fest, ob der Körper des Fensters einen Hintergrund hat
+            const static __int64 BodyHAlpha = 0x000000010; // Legt fest, ob beim zeichnen des Körperhintergrundes alpha blending verwendet werden soll
+            const static __int64 BodyHBild = 0x000000020; // Legt fest, ob ein Bild als Hintergrund des Körpers verwendet werden soll
+            const static __int64 BodyBuffered = 0x000000040; // Legt fest, ob der Körper einen Farbübergang besitzt
             const static __int64 Titel = 0x000000080; // Legt fest, ob das Fenster eine Titelleiste hat
             const static __int64 TitelHintergrund = 0x000000100; // Legt fest, ob die titelleiste des Fensters einen Hintergrund hat
             const static __int64 TitelHAlpha = 0x000000200; // Legt fest, ob zum zeichnen des Titel Hintergrundes alpha blending verwendet werden soll
             const static __int64 TitelHBild = 0x000000400; // Legt fest, ob für den Titelhintergrund ein Bild verwendet werden soll
             const static __int64 TitelBuffered = 0x000000800; // Legt fest, ob die Titel Leiste einen Farbübergang besitzt
-            const static __int64 Schließbar = 0x000001000; // Legt fest, ob in der Titelleiste ein Knopf zum Schließen des Fensters angezeigt werden soll
-            const static __int64 SchließHintergrund = 0x000002000; // Legt fest, ob der Schließen Knopf einen Hintergrund hat
-            const static __int64 SchließHAlpha = 0x000004000; // Legt fest, ob beim Zeichnen des Hintergrunds des Schließen Knopfes alpha blending verwendet werden soll
-            const static __int64 SchließHBild = 0x000008000; // Legt fest, ob für den Hintergrund des Schließen Knopfes ein Bild verwendet werden soll
-            const static __int64 SchließBuffer = 0x000010000; // Legt fest, ob der Schließen Knopf einen Farbübergang besitzt
-            const static __int64 SchließKlickBuffer = 0x000020000; // Legt fest, ob der Schließen Knopf einen Farbübergang besitzt, während er gedrückt wird
+            const static __int64 Closable = 0x000001000; // Legt fest, ob in der Titelleiste ein Knopf zum Schließen des Fensters angezeigt werden soll
+            const static __int64 ClosingHintergrund = 0x000002000; // Legt fest, ob der Schließen Knopf einen Hintergrund hat
+            const static __int64 ClosingHAlpha = 0x000004000; // Legt fest, ob beim Zeichnen des Hintergrunds des Schließen Knopfes alpha blending verwendet werden soll
+            const static __int64 ClosingHBild = 0x000008000; // Legt fest, ob für den Hintergrund des Schließen Knopfes ein Bild verwendet werden soll
+            const static __int64 ClosingBuffer = 0x000010000; // Legt fest, ob der Schließen Knopf einen Farbübergang besitzt
+            const static __int64 ClosingKlickBuffer = 0x000020000; // Legt fest, ob der Schließen Knopf einen Farbübergang besitzt, während er gedrückt wird
             const static __int64 Beweglich = 0x000040000; // Legt fest, ob der Benutzer das Fenster durch gedrückt halten der linken Maustaste in der Titelleiste das Fenster verschieben kann
-            const static __int64 BreiteÄnderbar = 0x000080000; // Legt fest, ob der Benutzer die Breite des Fensters durch das gedrückt halten der linken Maustaste auf dem rechten oder linken Fensterrand verändern kann
-            const static __int64 HöheÄnderbar = 0x000100000;  // Legt fest, ob der Benutzer die Höhe des Fensters durch das gedrückt halten der linken Maustaste auf dem oberen oder unteren Fensterrand verändern kann
-            const static __int64 TitelHöheÄnderbar = 0x000200000; // Legt fest, ob der Benutzer die Höhe der Titel Leiste durch gedrückt halten der linken Maustaste auf dem unteren Rand der Titelleiste verändern kann
+            const static __int64 BreiteChangeable = 0x000080000; // Legt fest, ob der Benutzer die Breite des Fensters durch das gedrückt halten der linken Maustaste auf dem rechten oder linken Fensterrand verändern kann
+            const static __int64 HeightChangeable = 0x000100000;  // Legt fest, ob der Benutzer die Höhe des Fensters durch das gedrückt halten der linken Maustaste auf dem oberen oder unteren Fensterrand verändern kann
+            const static __int64 TitelHeightChangeable = 0x000200000; // Legt fest, ob der Benutzer die Höhe der Titel Leiste durch gedrückt halten der linken Maustaste auf dem unteren Rand der Titelleiste verändern kann
             const static __int64 MinBr = 0x000400000; // Legt fest, ob es eine Minimale Breite des Fensters gibt
             const static __int64 MaxBr = 0x000800000; // Legt fest, ob es eine Maximale Breite des Fensters gibt
-            const static __int64 MinHö = 0x001000000; // Legt fest, ob es eine Minimale Höhe des Fensters gibt
-            const static __int64 MaxHö = 0x002000000; // Legt fest, ob es eine Maximale Höhe des Fensters gibt
-            const static __int64 Körper_minBr = 0x004000000; // Legt fest, ob es eine Minimale Breite des Körpers gibt
-            const static __int64 Körper_maxBr = 0x008000000; // Legt fest, ob es eine Maximale Breite des Körpers gibt
-            const static __int64 Körper_minHö = 0x010000000; // Legt fest, ob es eine Minimale Höhe des Körpers gibt
-            const static __int64 Körper_maxHö = 0x020000000; // Legt fest, ob es eine Maximale Höhe des Körpers gibt
+            const static __int64 MinHi = 0x001000000; // Legt fest, ob es eine Minimale Höhe des Fensters gibt
+            const static __int64 MaxHi = 0x002000000; // Legt fest, ob es eine Maximale Höhe des Fensters gibt
+            const static __int64 BodyMinBr = 0x004000000; // Legt fest, ob es eine Minimale Breite des Körpers gibt
+            const static __int64 BodyMaxBr = 0x008000000; // Legt fest, ob es eine Maximale Breite des Körpers gibt
+            const static __int64 BodyMinHi = 0x010000000; // Legt fest, ob es eine Minimale Höhe des Körpers gibt
+            const static __int64 BodyMaxHi = 0x020000000; // Legt fest, ob es eine Maximale Höhe des Körpers gibt
             const static __int64 VScroll = 0x040000000; // Legt fest, ob eine ScrollBar am rechten Fensterrand erscheinen soll
             const static __int64 HScroll = 0x080000000; // Legt fest, ob eine ScrollBar am unteren Fensterrand erscheinen soll
             const static __int64 METransparenz = 0x100000000; // Legt fest, ob die Mausereignisse auch noch von Zeichnungen hinter dem Fenster verarbeitet werden sollen
             const static __int64 Rahmen = 0x200000000; // Legt fest, ob das Fenster einen Rahmen haben soll
 
-            const static __int64 min_max = MinHö | MaxHö | MaxBr | MaxHö; // Vereint die Flags MinHö, MaxHö, MaxBr, MaxHö
-            const static __int64 körper_min_max = Körper_minBr | Körper_maxBr | Körper_minHö | Körper_maxBr; // Vereint die Flags Körper_minBr, Körper_maxBr, Körper_minHö, Körper_maxBr
+            const static __int64 min_max = MinHi | MaxHi | MaxBr | MaxHi; // Vereint die Flags MinHö, MaxHö, MaxBr, MaxHö
+            const static __int64 body_min_max = BodyMinBr | BodyMaxBr | BodyMinHi | BodyMaxBr; // Vereint die Flags Körper_minBr, Körper_maxBr, Körper_minHö, Körper_maxBr
             const static __int64 scroll = VScroll | HScroll; // Vereint die Flags VScroll, HScroll
-            const static __int64 nichtfixiert = TitelHöheÄnderbar | HöheÄnderbar | BreiteÄnderbar | Beweglich; // Vereint die Flags TitelHöheÄnderbar, HöheÄnderbar, BreiteÄnderbar, Beweglich
+            const static __int64 nichtfixiert = TitelHeightChangeable | HeightChangeable | BreiteChangeable | Beweglich; // Vereint die Flags TitelHöheÄnderbar, HöheÄnderbar, BreiteÄnderbar, Beweglich
 
-            const static __int64 normal = Sichtbar | Erlaubt | Rahmen | Titel | TitelBuffered | Schließbar | SchließHBild | SchließKlickBuffer | Beweglich; // Vereint die Flags Sichtbar, Erlaubt, Rahmen, Titel, TitelBuffered, Schließbar, SchließHBild, SchließKlickBuffer, Beweglich
+            const static __int64 normal = Sichtbar | Erlaubt | Rahmen | Titel | TitelBuffered | Closable | ClosingHBild | ClosingKlickBuffer | Beweglich; // Vereint die Flags Sichtbar, Erlaubt, Rahmen, Titel, TitelBuffered, Schließbar, SchließHBild, SchließKlickBuffer, Beweglich
         };
     private:
-        bool( *schließenMe )( void *, void *, MausEreignis );
-        void *schließenMeParam;
+        bool( *closingMe )( void *, void *, MausEreignis );
+        void *closingMeParam;
         LRahmen *rahmen;
         TextFeld *titel;
         ZeichnungArray *members;
-        int bgKörperFarbe;
-        Bild *bgKörperBild;
-        AlphaFeld *körperBuffer;
-        int bgSchließFarbe;
-        Bild *bgSchließBild;
-        AlphaFeld *schließBuffer;
-        AlphaFeld *schließKlickBuffer;
+        int bgBodyColor;
+        Bild *bgBodyPicture;
+        AlphaFeld *bodyBuffer;
+        int bgClosingFarbe;
+        Bild *bgClosingBild;
+        AlphaFeld *closeBuffer;
+        AlphaFeld *closeKlickBuffer;
         VScrollBar *vScroll;
         HScrollBar *hScroll;
         Punkt min, max;
         Punkt kMin, kMax;
-        bool schließKlick, klick;
+        bool closeKlick, klick;
         int mx, my;
         int ref;
 
@@ -301,7 +301,7 @@ namespace Framework
         // Konstruktor 
         __declspec( dllexport ) Fenster();
         // Destruktor 
-        __declspec( dllexport ) ~Fenster();
+        __declspec( dllexport ) virtual ~Fenster();
         // Setzt einen Zeiger auf den Rahmen des Fensters
         //  ram: Der Rahmen
         __declspec( dllexport ) void setRahmenZ( LRahmen *ram );
@@ -331,7 +331,7 @@ namespace Framework
         __declspec( dllexport ) void setTSFarbe( int f );
         // Setzt die Größe der Schrift, die für den Titel verwendet werden soll
         //  gr: Die Höhe einer zeile in Pixeln
-        __declspec( dllexport ) void setTSGröße( int gr );
+        __declspec( dllexport ) void setTSSize( int gr );
         // Setzt die Hintergrund Farbe des Titels
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setTBgFarbe( int f );
@@ -343,7 +343,7 @@ namespace Framework
         __declspec( dllexport ) void setTAfFarbe( int f );
         // Setzt die Stärke des Farbübergangs des Titels
         //  st: Die Stärke
-        __declspec( dllexport ) void setTAfStärke( int st );
+        __declspec( dllexport ) void setTAfStrength( int st );
         // Setzt das Hintergrund Bild des Titels durch kopieren
         //  b: Das Bild, was kopiert werden soll
         __declspec( dllexport ) void setTBgBild( Bild *b );
@@ -376,15 +376,15 @@ namespace Framework
         __declspec( dllexport ) void setKAfFarbe( int f );
         // Setzt die Stärke des Farbübergangs des Körpers
         //  st: Die Stärke
-        __declspec( dllexport ) void setKAfStärke( int st );
+        __declspec( dllexport ) void setKAfStrength( int st );
         // Setzt den Parameter der Rückruffunktion, die aufgerufen wird, wenn der Schließen Knopf ein MausEreignis erhält
         //  param: Der Parameter
-        __declspec( dllexport ) void setSchließenMeParam( void *param );
+        __declspec( dllexport ) void setClosingMeParam( void *param );
         // Setzt die Rückruffunktion, die Aufgerufen wird, wenn der Schließen Knopf ein MausEreignis erhält
         // Wenn die Rückruffunktion 0 zurückgiebt, oder nicht gesetzt wurde, wird ein Maus Ereignis von der Zeichnung nicht weiter beachtet
         // Das Fenster wird nicht von selbst geschlossen, sondern sollte in der Rückruffunktion durch den aufruf von löscheStyle( Fenster::Style::Sichtbar ); geschlossen werden
         //  ak: Ein Zeiger auf die Rückruffunktion
-        __declspec( dllexport ) void setSchließenMe( bool( *schließenMe )( void *, void *, MausEreignis ) );
+        __declspec( dllexport ) void setClosingMe( bool( *closingMe )( void *, void *, MausEreignis ) );
         // Setzt die Hintergrund Farbe des Schließen Knopfes
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setSBgFarbe( int f );
@@ -402,7 +402,7 @@ namespace Framework
         __declspec( dllexport ) void setSAfFarbe( int f );
         // Setzt die Stärke des Farbübergangs des Schließen Knopfes
         //  st: Die Stärke
-        __declspec( dllexport ) void setSAfStärke( int st );
+        __declspec( dllexport ) void setSAfStrength( int st );
         // Setzt einen Zeiger auf den Farbübergang, der beim Klicken des Schließen Knopfes verwendet wird
         //  af: Der Farbübergnag
         __declspec( dllexport ) void setSKAlphaFeldZ( AlphaFeld *af );
@@ -411,7 +411,7 @@ namespace Framework
         __declspec( dllexport ) void setSKAfFarbe( int f );
         // Setzt die Stärke des Farbübergangs, der beim Klicken des Schließen Knopfes verwendet wird
         //  st: Die Stärke
-        __declspec( dllexport ) void setSKAfStärke( int st );
+        __declspec( dllexport ) void setSKAfStrength( int st );
         // Setzt die Minimale Größe des Fensters
         //  mx: Die Minimale Breite in Pixeln
         //  my: Die Minimale Höhe in Pixeln
@@ -500,7 +500,7 @@ namespace Framework
         // Gibt die Schrift Farbe des Titels im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getTSFarbe() const;
         // Gibt die Höhe einer Zeile des Titels in Pixeln zurück
-        __declspec( dllexport ) int getTSGröße() const;
+        __declspec( dllexport ) int getTSSize() const;
         // Gibt die Hintergrundfarbe des Titels im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getTBgFarbe() const;
         // Gibt den Farbübergang des Titels zurück
@@ -510,7 +510,7 @@ namespace Framework
         // Gibt die Farbe des Farbübergangs des Titels im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getTAfFarbe() const;
         // Gibt die Stärke des Farbübergangs des Titels zurück
-        __declspec( dllexport ) int getTAfStärke() const;
+        __declspec( dllexport ) int getTAfStrength() const;
         // Gibt das Hintergrund Bild des titels zurück
         __declspec( dllexport ) Bild *getTBgBild() const;
         // Gibt das Hintergrund Bild des titels ohne erhöhten Reference Counter zurück
@@ -536,7 +536,7 @@ namespace Framework
         // Gibt die Farbe des Farbübergangs des Körpers im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getKAfFarbe() const;
         // Gibt die Stärke des Farbübergangs des Körpers zurück
-        __declspec( dllexport ) int getKAfStärke() const;
+        __declspec( dllexport ) int getKAfStrength() const;
         // Gibt die Hintergrund Farbe des Schließen Knopfes im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getSBgFarbe() const;
         // Gibt das Hintergrund Bild des Schließen Knopfes zurück
@@ -550,7 +550,7 @@ namespace Framework
         // Gibt die Farbe des Farbübergangs des Schließen Knopfes im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getSAfFarbe() const;
         // Gibt die Stärke des Farbübergangs des Schließen Knopfes zurück
-        __declspec( dllexport ) int getSAfStärke() const;
+        __declspec( dllexport ) int getSAfStrength() const;
         // Gibt den Farbübergang zurück, der verwendet wird, wenn auf den Schließen Knopf gedrückt wird
         __declspec( dllexport ) AlphaFeld *getSKAlphaFeld() const;
         // Gibt den Farbübergang ohne erhöhten Reference Counter zurück, der verwendet wird, wenn auf den Schließen Knopf gedrückt wird
@@ -558,7 +558,7 @@ namespace Framework
         // Gibt die Farbe des Farbübergangs im A8R8G8B8 Format zurück, der verwendet wird, wenn auf den Schließen Knopf gedrückt wird
         __declspec( dllexport ) int getSKAfFarbe() const;
         // Gibt die Stärke des Farbübergangs zurück, der verwendet wird, wenn auf den Schließen Knopf gedrückt wird
-        __declspec( dllexport ) int getSKAfStärke() const;
+        __declspec( dllexport ) int getSKAfStrength() const;
         // Gibt die minimale Fenstergröße in Pixeln zurück
         __declspec( dllexport ) const Punkt &getMin() const;
         // Gibt die maximale Fenstergröße in Pixeln zurück

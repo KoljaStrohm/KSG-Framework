@@ -13,7 +13,7 @@ using namespace Framework;
 // Konstruktor
 ToolTip::ToolTip( Bildschirm *zScreen )
     : TextFeld(),
-    größe( 0, 0 ),
+    size( 0, 0 ),
     animationSpeed( 250 ),
     warten( 1 ),
     wartenCount( 0 ),
@@ -21,8 +21,8 @@ ToolTip::ToolTip( Bildschirm *zScreen )
     mausIn( 0 ),
     alpha( 0 ),
     sichtbar( 0 ),
-    bildschirm( zScreen ),
-    zeichnen( 0 )
+    zeichnen( 0 ),
+	bildschirm( zScreen )
 {
     bildschirm->addToolTip( ( ToolTip* )this->getThis() );
 }
@@ -32,16 +32,16 @@ ToolTip::~ToolTip()
 {}
 
 // nicht constant
-void ToolTip::setGröße( int breite, int höhe )
+void ToolTip::setSize( int breite, int height )
 {
-    größe.x = breite;
-    größe.y = höhe;
+    size.x = breite;
+    size.y = height;
     rend = 1;
 }
 
-void ToolTip::setGröße( Punkt &gr )
+void ToolTip::setSize( Punkt &gr )
 {
-    größe = gr;
+    size = gr;
     rend = 1;
 }
 
@@ -92,7 +92,7 @@ bool ToolTip::tick( double tickVal )
             if( alpha - val < 0 )
                 alpha = 0;
             else
-                alpha -= val;
+                alpha = (unsigned char)( alpha - val );
             rend = 1;
         }
         if( mausIn )
@@ -103,7 +103,7 @@ bool ToolTip::tick( double tickVal )
                 sichtbar = 1;
                 wartenCount = 0;
                 alpha = 0xFF;
-                __super::setGröße( 0, 0 );
+				TextFeld::setSize( 0, 0 );
             }
         }
         else
@@ -111,18 +111,18 @@ bool ToolTip::tick( double tickVal )
     }
     else
     {
-        if( getBreite() != größe.x )
+        if( getBreite() != size.x )
         {
-            __super::setGröße( getBreite() + val, getSchriftGröße() + getLinienRahmenBreite() * 2 );
-            if( getBreite() > größe.x )
-                __super::setGröße( größe.x, getHöhe() );
+			TextFeld::setSize( getBreite() + val, getSchriftSize() + getLinienRahmenBreite() * 2 );
+            if( getBreite() > size.x )
+				TextFeld::setSize( size.x, getHeight() );
             rend = 1;
         }
-        else if( getHöhe() != größe.y )
+        else if( getHeight() != size.y )
         {
-            __super::setGröße( getBreite(), getHöhe() + val );
-            if( getHöhe() > größe.y )
-                __super::setGröße( getBreite(), größe.y );
+			TextFeld::setSize( getBreite(), getHeight() + val );
+            if( getHeight() > size.y )
+				TextFeld::setSize( getBreite(), size.y );
             rend = 1;
         }
     }
@@ -145,16 +145,16 @@ void ToolTip::render( Bild &zRObj )
     if( alpha && zeichnen )
     {
         zSchrift()->lock();
-        zSchrift()->setSchriftGröße( getSchriftGröße() );
-        größe = Punkt( zSchrift()->getTextBreite( zText() ) + getLinienRahmenBreite() * 2, zSchrift()->getTextHöhe( zText() ) + getLinienRahmenBreite() * 2 );
+        zSchrift()->setSchriftSize( getSchriftSize() );
+        size = Punkt( zSchrift()->getTextBreite( zText() ) + getLinienRahmenBreite() * 2, zSchrift()->getTextHeight( zText() ) + getLinienRahmenBreite() * 2 );
         zSchrift()->unlock();
         zRObj.setAlpha( alpha );
         setPosition( pos );
         if( getX() + getBreite() > zRObj.getBreite() )
             setPosition( getX() - ( getX() + getBreite() - zRObj.getBreite() ), getY() );
-        if( getY() + getHöhe() > zRObj.getHöhe() )
-            setPosition( getX(), getY() - ( getY() + getHöhe() - zRObj.getHöhe() ) );
-        __super::render( zRObj );
+        if( getY() + getHeight() > zRObj.getHeight() )
+            setPosition( getX(), getY() - ( getY() + getHeight() - zRObj.getHeight() ) );
+		TextFeld::render( zRObj );
         zRObj.releaseAlpha();
         zeichnen = 0;
     }

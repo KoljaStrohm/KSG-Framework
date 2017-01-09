@@ -42,14 +42,14 @@ namespace Framework
         Bild *fBgBild;
         Schrift *schrift;
         int schriftFarbe;
-        unsigned char schriftGröße;
+        unsigned char schriftSize;
         int ref;
 
     public:
         // Konstruktor 
         __declspec( dllexport ) FBalken();
         // Destructor 
-        __declspec( dllexport ) ~FBalken();
+        __declspec( dllexport ) virtual ~FBalken();
         // Setzt die Anzahl an benötigten Operationen um 100% Fortschritt zu erreichen
         //  ak: Die Anzahl an Operationen
         __declspec( dllexport ) void setAktionAnzahl( __int64 ak );
@@ -75,7 +75,7 @@ namespace Framework
         __declspec( dllexport ) void setFAFFarbe( int f );
         // Setzt die Stärke des Farbverlaufs, der in dem Teil des Balkens gezeichnet wird, der vom Fortschritt erfasst wurde
         //  st: Die Stärke
-        __declspec( dllexport ) void setFAFStärke( int st );
+        __declspec( dllexport ) void setFAFStrength( int st );
         // Setzt die Hintergrund Farbe, die in dem Teil des Balkens gezeichnet wird, der vom Fortschritt erfasst wurde
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setFBgFarbe( int f );
@@ -92,7 +92,7 @@ namespace Framework
         __declspec( dllexport ) void setSFarbe( int f );
         // Setzt die Schriftgröße der Prozentanzeige
         //  gr: Die Größe einer Zeile in Pixeln
-        __declspec( dllexport ) void setSGröße( unsigned char gr );
+        __declspec( dllexport ) void setSSize( unsigned char gr );
         // Zeichnet das Objekt nach zRObj, falls es sichtbar ist
         //  zRObj: Das Bild, in welches gezeichnet werden soll
         __declspec( dllexport ) void render( Bild &zRObj ) override;

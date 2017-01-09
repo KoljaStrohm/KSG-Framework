@@ -7,6 +7,8 @@ using namespace Framework;
 int Model3DList::id = 0;
 CRITICAL_SECTION Model3DList::cs;
 
+const char *Standart3DTypes::cube = "f_würfel";
+
 // Inhalt der Model3DList Klasse
 // Konstruktor
 Model3DList::Model3DList()
@@ -47,7 +49,7 @@ bool Model3DList::addModel( Model3DData *mdl, const char *name )
 
 // Entfernt ein Model aus der Liste
 //  name: Der Name des Models
-void Model3DList::löscheModel( const char *name )
+void Model3DList::removeModel( const char *name )
 {
     EnterCriticalSection( &cs );
     int index = 0;
@@ -55,8 +57,8 @@ void Model3DList::löscheModel( const char *name )
     {
         if( i.var->istGleich( name ) )
         {
-            names->lösche( index );
-            models->lösche( index );
+            names->remove( index );
+            models->remove( index );
             LeaveCriticalSection( &cs );
             return;
         }

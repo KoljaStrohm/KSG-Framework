@@ -18,7 +18,7 @@ Shader::Shader()
     for( int i = 0; i < 14; i++ )
     {
         constBuffers[ i ] = 0;
-        buffLän[ i ] = 0;
+        buffLen[ i ] = 0;
     }
     buffAnz = 0;
     ref = 1;
@@ -44,14 +44,14 @@ bool Shader::ladeAusDatei( const char *pfad )
 {
     Datei d;
     d.setDatei( pfad );
-    __int64 gr = d.getGröße();
+    __int64 gr = d.getSize();
     if( gr > 10 * 1024 )
         return 0; // Datei zu groß für Shader Quellcode
-    shader->füllText( ' ', (int)gr );
-    if( !d.öffnen( Datei::Style::lesen ) )
+    shader->fillText( ' ', (int)gr );
+    if( !d.open( Datei::Style::lesen ) )
         return 0;
     d.lese( shader->getText(), (int)gr );
-    d.schließen();
+    d.close();
     return 1;
 }
 
@@ -76,7 +76,7 @@ bool Shader::compile( ID3D11Device *zD3d11Device, const char *einstiegsFunktion,
 #endif
     if( shaderBuffer )
         shaderBuffer->Release();
-    HRESULT result = D3DCompile( shader->getText(), shader->getLänge(), 0, 0, 0, einstiegsFunktion, type, flag, 0, &shaderBuffer, &errorMessage );
+    HRESULT result = D3DCompile( shader->getText(), shader->getLength(), 0, 0, 0, einstiegsFunktion, type, flag, 0, &shaderBuffer, &errorMessage );
     if( errorMessage )
     {
         char *err = (char*)errorMessage->GetBufferPointer();
@@ -116,18 +116,18 @@ bool Shader::erstelleConstBuffer( ID3D11Device *zD3d11Device, int größe, int ind
     {
         constBuffers[ index ]->Release();
         constBuffers[ index ] = 0;
-        buffLän[ index ] = 0;
+        buffLen[ index ] = 0;
     }
     HRESULT res = zD3d11Device->CreateBuffer( &bufferDesc, 0, &constBuffers[ index ] );
     if( res == S_OK )
-        buffLän[ index ] = größe;
+        buffLen[ index ] = größe;
     for( buffAnz = 0; buffAnz < 14 && constBuffers[ buffAnz ]; buffAnz++ );
     return res == S_OK;
 }
 
 // Löscht einen constanten Buffer
 //  index: der Index des Buffers, der gelöscht werden soll. Buffer 0 kann nicht gelöscht werden, solange Buffer 1 noch existiert usw.
-bool Shader::löscheConstBuffer( int index )
+bool Shader::removeConstBuffer( int index )
 {
     if( index < 0 || index >= 14 )
         return 0;
@@ -140,7 +140,7 @@ bool Shader::löscheConstBuffer( int index )
     {
         constBuffers[ index ]->Release();
         constBuffers[ index ] = 0;
-        buffLän[ index ] = 0;
+        buffLen[ index ] = 0;
     }
     for( buffAnz = 0; buffAnz < 14 && constBuffers[ buffAnz ]; buffAnz++ );
     return 1;
@@ -158,7 +158,7 @@ bool Shader::füllConstBuffer( ID3D11DeviceContext *zD3d11Context, char *data, in
     if( !constBuffers[ index ] )
         return 0;
     if( län < 0 )
-        län = buffLän[ index ];
+        län = buffLen[ index ];
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     HRESULT res = zD3d11Context->Map( constBuffers[ index ], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource );
     if( res != S_OK )
@@ -174,7 +174,7 @@ int Shader::getConstBufferLänge( int index ) const
 {
     if( index < 0 || index >= 14 )
         return 0;
-    return buffLän[ index ];
+    return buffLen[ index ];
 }
 
 // Gibt den Shadertyp zurück

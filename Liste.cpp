@@ -18,7 +18,7 @@ using namespace Framework;
 AuswahlListe::AuswahlListe()
     : ZeichnungHintergrund(),
     tfListe( 0 ),
-    einträge( 0 ),
+    entries( 0 ),
     auswahl( -1 ),
     ahFarbe( 0xFF000000 ),
     ahBild( 0 ),
@@ -71,12 +71,12 @@ void AuswahlListe::update() // aktualisiert die Auswahl Liste
     {
         rbr = rahmen->getRBreite();
         rahmen->setPosition( 0, 0 );
-        rahmen->setGröße( gr.x, gr.y );
+        rahmen->setSize( gr.x, gr.y );
     }
     if( hintergrundFeld )
     {
         hintergrundFeld->setPosition( rbr, rbr );
-        hintergrundFeld->setGröße( gr.x - rbr * 2, gr.y - rbr * 2 );
+        hintergrundFeld->setSize( gr.x - rbr * 2, gr.y - rbr * 2 );
     }
     if( hatStyleNicht( Style::MultiStyled ) && tfListe )
     {
@@ -85,7 +85,7 @@ void AuswahlListe::update() // aktualisiert die Auswahl Liste
         bool FeldHBild = hatStyle( Style::FeldHBild );
         bool FeldHAlpha = hatStyle( Style::FeldHAlpha );
         bool FeldBuffer = hatStyle( Style::FeldBuffer );
-        for( int i = 0; i < einträge; ++i )
+        for( int i = 0; i < entries; ++i )
         {
             TextFeld *tf = tfListe->z( i );
             tf->setStyle( TextFeld::Style::Rahmen, FeldRahmen );
@@ -99,7 +99,7 @@ void AuswahlListe::update() // aktualisiert die Auswahl Liste
     }
     if( hatStyle( Style::MultiStyled ) && tfListe && styles )
     {
-        for( int i = 0; i < einträge; ++i )
+        for( int i = 0; i < entries; ++i )
         {
             TextFeld *tf = tfListe->z( i );
             tf->setStyle( TextFeld::Style::Rahmen, hatMsStyle( i, Style::FeldRahmen ) );
@@ -120,7 +120,7 @@ void AuswahlListe::addEintrag( Text *txt ) // fügt einen Eintrag hinzu
     tf->setLinienRahmenBreite( 1 );
     tf->setLinienRahmenFarbe( 0xFFFFFFFF );
     tf->setTextZ( txt );
-    tf->setGröße( 0, 20 );
+    tf->setSize( 0, 20 );
     addEintragZ( tf );
     rend = 1;
 }
@@ -138,8 +138,8 @@ void AuswahlListe::addEintragZ( TextFeld *tf )
         tfListe = new RCArray< TextFeld >();
     if( schrift && ( !tf->zSchrift() || hatStyleNicht( Style::MultiStyled ) ) )
         tf->setSchriftZ( schrift->getThis() );
-    tfListe->set( tf, einträge );
-    ++einträge;
+    tfListe->set( tf, entries );
+    ++entries;
     rend = 1;
 }
 
@@ -151,7 +151,7 @@ void AuswahlListe::addEintrag( int pos, Text *txt ) // fügt einen Eintrag bei po
     tf->setLinienRahmenBreite( 1 );
     tf->setLinienRahmenFarbe( 0xFFFFFFFF );
     tf->setTextZ( txt );
-    tf->setGröße( 0, 20 );
+    tf->setSize( 0, 20 );
     addEintragZ( pos, tf );
     rend = 1;
 }
@@ -170,7 +170,7 @@ void AuswahlListe::addEintragZ( int pos, TextFeld *tf )
     if( schrift && ( !tf->zSchrift() || hatStyleNicht( Style::MultiStyled ) ) )
         tf->setSchriftZ( schrift->getThis() );
     tfListe->add( tf, pos );
-    ++einträge;
+    ++entries;
     rend = 1;
 }
 
@@ -187,7 +187,7 @@ void AuswahlListe::setEintrag( int pos, Text *txt ) // ändert den pos - ten Eint
         tf->setLinienRahmenFarbe( 0xFFFFFFFF );
         tf->setLinienRahmenBreite( 1 );
         tf->setTextZ( txt );
-        tf->setGröße( 0, 20 );
+        tf->setSize( 0, 20 );
         setEintragZ( pos, tf );
         rend = 1;
         return;
@@ -232,10 +232,10 @@ void AuswahlListe::tauschEintragPos( int vpos, int npos ) // taucht den Eintrag 
     }
 }
 
-void AuswahlListe::löscheEintrag( int pos ) // löscht den Eintrag pos
+void AuswahlListe::removeEintrag( int pos ) // löscht den Eintrag pos
 {
-    tfListe->lösche( pos );
-    --einträge;
+    tfListe->remove( pos );
+    --entries;
     rend = 1;
 }
 
@@ -251,11 +251,11 @@ void AuswahlListe::setVScrollZuEintrag( int eintrag ) // scrollt zum Eintrag
 {
     if( vertikalScrollBar )
     {
-        if( eintrag < einträge )
-            eintrag = einträge - 1;
+        if( eintrag < entries )
+            eintrag = entries - 1;
         int y = 0;
         for( int i = 0; i < eintrag; i++ )
-            y += tfListe->z( i ) ? tfListe->z( i )->getHöhe() : 0;
+            y += tfListe->z( i ) ? tfListe->z( i )->getHeight() : 0;
         vertikalScrollBar->scroll( y );
     }
 }
@@ -265,8 +265,8 @@ void AuswahlListe::updateVScroll() // scrollt zur Curser Position oder nach Unte
     if( vertikalScrollBar )
     {
         int y = 0;
-        for( int i = 0; i < einträge; i++ )
-            y += tfListe->z( i ) ? tfListe->z( i )->getHöhe() : 0;
+        for( int i = 0; i < entries; i++ )
+            y += tfListe->z( i ) ? tfListe->z( i )->getHeight() : 0;
         vertikalScrollBar->update( y, gr.y - ( ( rahmen && hatStyle( TextFeld::Style::Rahmen ) ) ? rahmen->getRBreite() : 0 ) );
     }
 }
@@ -303,11 +303,11 @@ void AuswahlListe::setAAFZ( AlphaFeld *buffer ) // setzt einen Zeiger zum Auswah
     rend = 1;
 }
 
-void AuswahlListe::setAAFStärke( int st ) // setzt die Stärke des Auswahl Hintergrund Buffers (nur ohne MultiStyled)
+void AuswahlListe::setAAFStrength( int st ) // setzt die Stärke des Auswahl Hintergrund Buffers (nur ohne MultiStyled)
 {
     if( !aBuffer )
         aBuffer = new AlphaFeld();
-    aBuffer->setStärke( st );
+    aBuffer->setStrength( st );
     rend = 1;
 }
 
@@ -323,10 +323,10 @@ void AuswahlListe::setAHBild( Bild *bild ) // setzt das Auswahl Hintergrund Bild
 {
     if( !ahBild )
         ahBild = new Bild();
-    ahBild->neuBild( bild->getBreite(), bild->getHöhe(), 0 );
+    ahBild->neuBild( bild->getBreite(), bild->getHeight(), 0 );
     int *buff1 = ahBild->getBuffer();
     int *buff2 = bild->getBuffer();
-    for( int i = 0; i < bild->getBreite() * bild->getHöhe(); ++i )
+    for( int i = 0; i < bild->getBreite() * bild->getHeight(); ++i )
         buff1[ i ] = buff2[ i ];
     bild->release();
     rend = 1;
@@ -382,13 +382,13 @@ void AuswahlListe::setAAFZ( int pos, AlphaFeld *buffer ) // setzt einen Zeiger z
     rend = 1;
 }
 
-void AuswahlListe::setAAFStärke( int pos, int st ) // setzt die Stärke des Auswahl Hintergrund Buffers (nur mit MultiStyled)
+void AuswahlListe::setAAFStrength( int pos, int st ) // setzt die Stärke des Auswahl Hintergrund Buffers (nur mit MultiStyled)
 {
     if( !aBufferListe )
         aBufferListe = new RCArray< AlphaFeld >();
     if( !aBufferListe->z( pos ) )
         aBufferListe->set( new AlphaFeld(), pos );
-    aBufferListe->z( pos )->setStärke( st );
+    aBufferListe->z( pos )->setStrength( st );
     rend = 1;
 }
 
@@ -408,10 +408,10 @@ void AuswahlListe::setAHBild( int pos, Bild *bild ) // setzt das Auswahl Hinterg
         ahBildListe = new RCArray< Bild >();
     if( !ahBildListe->z( pos ) )
         ahBildListe->set( new Bild(), pos );
-    ahBildListe->z( pos )->neuBild( bild->getBreite(), bild->getHöhe(), 0 );
+    ahBildListe->z( pos )->neuBild( bild->getBreite(), bild->getHeight(), 0 );
     int *buff1 = ahBildListe->z( pos )->getBuffer();
     int *buff2 = bild->getBuffer();
-    for( int i = 0; i < bild->getBreite() * bild->getHöhe(); ++i )
+    for( int i = 0; i < bild->getBreite() * bild->getHeight(); ++i )
         buff1[ i ] = buff2[ i ];
     bild->release();
     rend = 1;
@@ -441,11 +441,11 @@ void AuswahlListe::setMsStyle( int pos, __int64 style ) // setzt den Style des E
     rend = 1;
 }
 
-void AuswahlListe::setMsStyle( int pos, __int64 style, bool add_löschen )
+void AuswahlListe::setMsStyle( int pos, __int64 style, bool add_remove )
 {
     if( !styles )
         styles = new Array< __int64 >();
-    if( add_löschen )
+    if( add_remove )
         styles->set( styles->get( pos ) | style, pos );
     else
         styles->set( styles->get( pos ) & ~style, pos );
@@ -460,7 +460,7 @@ void AuswahlListe::addMsStyle( int pos, __int64 style )
     rend = 1;
 }
 
-void AuswahlListe::löscheMsStyle( int pos, __int64 style )
+void AuswahlListe::removeMsStyle( int pos, __int64 style )
 {
     if( !styles )
         styles = new Array< __int64 >();
@@ -480,7 +480,7 @@ void AuswahlListe::doMausEreignis( MausEreignis &me )
         {
             mausIn = 0;
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -489,13 +489,13 @@ void AuswahlListe::doMausEreignis( MausEreignis &me )
         }
         removeFokus = 1;
     }
-    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Verlässt )
+    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves )
     {
         if( removeFokus && me.id == ME_RLinks )
-            löscheStyle( Style::Fokus );
+            removeStyle( Style::Fokus );
         return;
     }
-    if( !mausIn && me.id != ME_Verlässt )
+    if( !mausIn && me.id != ME_Leaves )
     {
         mausIn = 1;
         MausEreignis me2;
@@ -509,7 +509,7 @@ void AuswahlListe::doMausEreignis( MausEreignis &me )
     if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
     {
         if( removeFokus && me.id == ME_RLinks )
-            löscheStyle( Style::Fokus );
+            removeStyle( Style::Fokus );
         if( !me.verarbeitet && hatStyleNicht( Style::Fokus ) && me.id == ME_RLinks )
             addStyle( Style::Fokus );
         if( hatStyle( Style::VScroll ) && vertikalScrollBar )
@@ -517,7 +517,7 @@ void AuswahlListe::doMausEreignis( MausEreignis &me )
             int rbr = 0;
             if( rahmen && hatStyle( Style::Rahmen ) )
                 rbr = rahmen->getRBreite();
-            if( ( ( me.mx > gr.x - 15 - rbr ) || me.id == ME_UScroll || me.id == ME_DScroll ) && me.id != ME_Betritt && me.id != ME_Verlässt )
+            if( ( ( me.mx > gr.x - 15 - rbr ) || me.id == ME_UScroll || me.id == ME_DScroll ) && me.id != ME_Betritt && me.id != ME_Leaves )
             {
                 vertikalScrollBar->doMausMessage( gr.x - rbr - 15, rbr, 15, gr.y - rbr * 2, me );
                 me.verarbeitet = 1;
@@ -539,7 +539,7 @@ void AuswahlListe::doMausEreignis( MausEreignis &me )
                     bool strg = TastenStand[ T_Strg ];
                     if( strg )
                     {
-                        setMsStyle( eintr, Style::Ausgewählt, hatMsStyleNicht( eintr, Style::Ausgewählt ) );
+                        setMsStyle( eintr, Style::Selected, hatMsStyleNicht( eintr, Style::Selected ) );
                         auswahl = eintr;
                     }
                     else if( shift && auswahl != -1 )
@@ -554,13 +554,13 @@ void AuswahlListe::doMausEreignis( MausEreignis &me )
                         }
                         for( int i = beg; i <= end; ++i )
                         {
-                            addMsStyle( i, Style::Ausgewählt );
+                            addMsStyle( i, Style::Selected );
                         }
                     }
                     else
                     {
                         deSelect();
-                        addMsStyle( eintr, Style::Ausgewählt );
+                        addMsStyle( eintr, Style::Selected );
                         auswahl = eintr;
                     }
                 }
@@ -591,8 +591,8 @@ void AuswahlListe::doTastaturEreignis( TastaturEreignis &te )
                 {
                 case T_Unten:
                     ++auswahl;
-                    if( auswahl > einträge )
-                        auswahl = einträge;
+                    if( auswahl > entries )
+                        auswahl = entries;
                     rend = 1;
                     break;
                 case T_Oben:
@@ -610,10 +610,10 @@ void AuswahlListe::doTastaturEreignis( TastaturEreignis &te )
                 case T_Unten:
                     deSelect();
                     ++auswahl;
-                    if( auswahl > einträge )
-                        auswahl = einträge;
+                    if( auswahl > entries )
+                        auswahl = entries;
                     if( auswahl >= 0 )
-                        addMsStyle( auswahl, Style::Ausgewählt );
+                        addMsStyle( auswahl, Style::Selected );
                     rend = 1;
                     break;
                 case T_Oben:
@@ -622,7 +622,7 @@ void AuswahlListe::doTastaturEreignis( TastaturEreignis &te )
                     if( auswahl < -1 )
                         auswahl = -1;
                     if( auswahl >= 0 )
-                        addMsStyle( auswahl, Style::Ausgewählt );
+                        addMsStyle( auswahl, Style::Selected );
                     rend = 1;
                     break;
                 }
@@ -641,10 +641,10 @@ void AuswahlListe::render( Bild &zRObj ) // zeichnet nach zRObj
 {
     if( !hatStyle( Style::Sichtbar ) )
         return;
-    löscheStyle( Style::HScroll );
-    __super::render( zRObj );
+    removeStyle( Style::HScroll );
+	ZeichnungHintergrund::render( zRObj );
     lockZeichnung();
-    if( !zRObj.setDrawOptions( innenPosition, innenGröße ) )
+    if( !zRObj.setDrawOptions( innenPosition, innenSize ) )
     {
         unlockZeichnung();
         return;
@@ -654,23 +654,23 @@ void AuswahlListe::render( Bild &zRObj ) // zeichnet nach zRObj
         rbr = rahmen->getRBreite();
     if( tfListe )
     {
-        einträge = tfListe->getEintragAnzahl();
-        int maxHöhe = 0;
+        entries = tfListe->getEintragAnzahl();
+        int maxHeight = 0;
         int dx = 0, dy = 0;
         if( vertikalScrollBar && hatStyle( Style::VScroll ) )
             dy -= vertikalScrollBar->getScroll();
-        int mdy = innenGröße.y + rbr;
-        for( int i = 0; i < einträge; ++i )
+        int mdy = innenSize.y + rbr;
+        for( int i = 0; i < entries; ++i )
         {
             TextFeld *tf = tfListe->z( i );
-            if( dy + tf->getHöhe() > mdy && !( vertikalScrollBar && hatStyle( Style::VScroll ) ) )
+            if( dy + tf->getHeight() > mdy && !( vertikalScrollBar && hatStyle( Style::VScroll ) ) )
                 break;
             tf->setPosition( dx, dy );
-            tf->setGröße( innenGröße.x, tf->getHöhe() );
-            maxHöhe += tf->getHöhe();
+            tf->setSize( innenSize.x, tf->getHeight() );
+            maxHeight += tf->getHeight();
             bool selected = 0;
             if( hatStyle( Style::MultiSelect ) && styles )
-                selected = hatMsStyle( i, Style::Ausgewählt );
+                selected = hatMsStyle( i, Style::Selected );
             else
                 selected = auswahl == i;
             AlphaFeld *tmpBuffer = 0;
@@ -815,10 +815,10 @@ void AuswahlListe::render( Bild &zRObj ) // zeichnet nach zRObj
                     }
                 }
             }
-            dy += tf->getHöhe();
+            dy += tf->getHeight();
         }
         if( vertikalScrollBar )
-            vertikalScrollBar->getScrollData()->max = maxHöhe;
+            vertikalScrollBar->getScrollData()->max = maxHeight;
     }
     zRObj.releaseDrawOptions();
     unlockZeichnung();
@@ -828,13 +828,13 @@ int AuswahlListe::getKlickEintrag( int my )
 {
     if( !tfListe )
         return -1;
-    einträge = tfListe->getEintragAnzahl();
+    entries = tfListe->getEintragAnzahl();
     int y = 0;
     if( hatStyle( Style::VScroll ) && vertikalScrollBar )
         y -= vertikalScrollBar->getScroll();
-    for( int i = 0; i < einträge; ++i )
+    for( int i = 0; i < entries; ++i )
     {
-        y += tfListe->z( i )->getHöhe();
+        y += tfListe->z( i )->getHeight();
         if( y > my )
             return i;
     }
@@ -847,9 +847,9 @@ void AuswahlListe::setAuswahl( int ausw ) // setzt die Auswahl
         auswahl = ausw;
     else if( styles )
     {
-        for( int i = 0; i < einträge; ++i )
-            löscheMsStyle( i, Style::Ausgewählt );
-        addMsStyle( ausw, Style::Ausgewählt );
+        for( int i = 0; i < entries; ++i )
+            removeMsStyle( i, Style::Selected );
+        addMsStyle( ausw, Style::Selected );
     }
 }
 
@@ -859,9 +859,9 @@ void AuswahlListe::deSelect()
         auswahl = -1;
     else if( styles )
     {
-        for( int i = 0; i < einträge; ++i )
+        for( int i = 0; i < entries; ++i )
         {
-            löscheMsStyle( i, Style::Ausgewählt );
+            removeMsStyle( i, Style::Selected );
         }
     }
 }
@@ -869,7 +869,7 @@ void AuswahlListe::deSelect()
 // constant 
 int AuswahlListe::getEintragAnzahl() const // gibt die Anzahl der Einträge zurück
 {
-    return einträge;
+    return entries;
 }
 
 int AuswahlListe::getAuswahl() const // gibt den ersten ausgewählten Eintrag zurück
@@ -879,7 +879,7 @@ int AuswahlListe::getAuswahl() const // gibt den ersten ausgewählten Eintrag zur
 
 int AuswahlListe::getEintragPos( Text *eintragText ) // gibt die Position des eintrages mit dem entsprechenden Textes zurück
 {
-    for( int i = 0; i < einträge; ++i )
+    for( int i = 0; i < entries; ++i )
     {
         if( tfListe->z( i )->zText()->istGleich( eintragText->getText() ) )
         {

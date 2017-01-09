@@ -40,9 +40,9 @@ AuswahlBox::AuswahlBox()
     anzahl( 0 ),
     auswahl( 0 ),
     ausgeklappt( 0 ),
-    ausklappHöhe( 0 ),
-    ausklapMaxHöhe( 200 ),
-    eintragHöhe( 15 ),
+    ausklappHeight( 0 ),
+    ausklapMaxHeight( 200 ),
+    eintragHeight( 15 ),
     tickval( 0 ),
     mausEintrag( 0 ),
     scrollAnzeigen( 0 ),
@@ -57,18 +57,18 @@ AuswahlBox::AuswahlBox()
     rahmen->setRamenBreite( 1 );
     ausfahren->setStyle( Knopf::Style::Sichtbar | Knopf::Style::Erlaubt | Knopf::Style::KlickBuffer );
     ausfahren->setKBFarbe( 0xA0000000 );
-    ausfahren->setKBStärke( 10 );
-    ausfahren->setGröße( 18, 18 );
+    ausfahren->setKBStrength( 10 );
+    ausfahren->setSize( 18, 18 );
     ausfahren->setSchriftFarbe( 0xFFFFFFFF );
     ausfahren->setText( "\\/" );
     auswRahmen->setFarbe( 0xFF00FF00 );
     auswRahmen->setRamenBreite( 1 );
     auswAf->setFarbe( 0xA000FF00 );
-    auswAf->setStärke( 7 );
+    auswAf->setStrength( 7 );
     mausRahmen->setFarbe( 0xFF00FF00 );
     mausRahmen->setRamenBreite( 1 );
     mausAf->setFarbe( 0x5000FF00 );
-    mausAf->setStärke( 7 );
+    mausAf->setStrength( 7 );
     gr.x = 20;
     gr.y = 20;
 }
@@ -143,7 +143,7 @@ void AuswahlBox::addEintrag( const char *txt ) // Eintrag hinzufügen
     tf->setText( txt );
     tf->setSchriftFarbe( 0xFFFFFFFF );
     tf->setLinienRahmenFarbe( 0xFFFFFFFF );
-    tf->setGröße( 0, eintragHöhe );
+    tf->setSize( 0, eintragHeight );
     members->add( tf, anzahl );
     ++anzahl;
     rend = 1;
@@ -158,7 +158,7 @@ void AuswahlBox::addEintrag( Text *txt )
     tf->setText( txt );
     tf->setSchriftFarbe( 0xFFFFFFFF );
     tf->setLinienRahmenFarbe( 0xFFFFFFFF );
-    tf->setGröße( 0, eintragHöhe );
+    tf->setSize( 0, eintragHeight );
     members->add( tf, anzahl );
     ++anzahl;
     rend = 1;
@@ -196,29 +196,29 @@ void AuswahlBox::setEintragZ( int i, TextFeld *txt )
     rend = 1;
 }
 
-void AuswahlBox::löscheEintrag( int i ) // Eintrag entfernen
+void AuswahlBox::removeEintrag( int i ) // Eintrag entfernen
 {
     if( i < anzahl )
     {
-        members->lösche( i );
+        members->remove( i );
         if( msStyle )
-            msStyle->lösche( i );
+            msStyle->remove( i );
         if( msAuswRahmen )
-            msAuswRahmen->lösche( i );
+            msAuswRahmen->remove( i );
         if( msAuswBgF )
-            msAuswBgF->lösche( i );
+            msAuswBgF->remove( i );
         if( msAuswBgB )
-            msAuswBgB->lösche( i );
+            msAuswBgB->remove( i );
         if( msAuswAf )
-            msAuswAf->lösche( i );
+            msAuswAf->remove( i );
         if( msMausRahmen )
-            msMausRahmen->lösche( i );
+            msMausRahmen->remove( i );
         if( msMausBgF )
-            msMausBgF->lösche( i );
+            msMausBgF->remove( i );
         if( msMausBgB )
-            msMausBgB->lösche( i );
+            msMausBgB->remove( i );
         if( msMausAf )
-            msMausAf->lösche( i );
+            msMausAf->remove( i );
         if( auswahl > i )
             --auswahl;
         if( mausEintrag > i )
@@ -298,10 +298,10 @@ void AuswahlBox::setEintragAlphaFeldFarbe( int i, int afF ) // Eintrag AlphaFeld
     rend = 1;
 }
 
-void AuswahlBox::setEintragAlphaFeldStärke( int i, int afSt ) // Eintrag AlphaFeld Stärke setzen
+void AuswahlBox::setEintragAlphaFeldStrength( int i, int afSt ) // Eintrag AlphaFeld Stärke setzen
 {
     if( members->z( i ) )
-        members->z( i )->setAlphaFeldStärke( afSt );
+        members->z( i )->setAlphaFeldStrength( afSt );
     rend = 1;
 }
 
@@ -347,8 +347,8 @@ void AuswahlBox::setAuswHintergrundBild( Bild *bgB )
 {
     if( !auswBgB )
         auswBgB = new Bild();
-    auswBgB->neuBild( bgB->getBreite(), bgB->getHöhe(), 0 );
-    auswBgB->drawBild( 0, 0, bgB->getBreite(), bgB->getHöhe(), *bgB );
+    auswBgB->neuBild( bgB->getBreite(), bgB->getHeight(), 0 );
+    auswBgB->drawBild( 0, 0, bgB->getBreite(), bgB->getHeight(), *bgB );
     bgB->release();
     rend = 1;
 }
@@ -369,11 +369,11 @@ void AuswahlBox::setAuswAlphaFeldFarbe( int afF ) // Auswahl AlphaFeld Farbe set
     rend = 1;
 }
 
-void AuswahlBox::setAuswAlphaFeldStärke( int afSt ) // Auswahl Alpha Feld stärke setzen
+void AuswahlBox::setAuswAlphaFeldStrength( int afSt ) // Auswahl Alpha Feld stärke setzen
 {
     if( !auswAf )
         auswAf = new AlphaFeld();
-    auswAf->setStärke( afSt );
+    auswAf->setStrength( afSt );
     rend = 1;
 }
 
@@ -449,14 +449,14 @@ void AuswahlBox::setMsAuswHintergrundBild( int i, Bild *bgB )
     if( !msAuswBgB->z( i ) )
     {
         Bild *z = new Bild;
-        z->neuBild( bgB->getBreite(), bgB->getHöhe(), 0 );
-        z->drawBild( 0, 0, bgB->getBreite(), bgB->getHöhe(), *bgB );
+        z->neuBild( bgB->getBreite(), bgB->getHeight(), 0 );
+        z->drawBild( 0, 0, bgB->getBreite(), bgB->getHeight(), *bgB );
         msAuswBgB->set( z, i );
     }
     else
     {
-        msAuswBgB->z( i )->neuBild( bgB->getBreite(), bgB->getHöhe(), 0 );
-        msAuswBgB->z( i )->drawBild( 0, 0, bgB->getBreite(), bgB->getHöhe(), *bgB );
+        msAuswBgB->z( i )->neuBild( bgB->getBreite(), bgB->getHeight(), 0 );
+        msAuswBgB->z( i )->drawBild( 0, 0, bgB->getBreite(), bgB->getHeight(), *bgB );
     }
     bgB->release();
     rend = 1;
@@ -487,7 +487,7 @@ void AuswahlBox::setMsAuswAlphaFeldFarbe( int i, int afF ) // Multistyle Auswahl
     rend = 1;
 }
 
-void AuswahlBox::setMsAuswAlphaFeldStärke( int i, int afSt ) // Multistyle Auswahl AlphaFeld stärke setzen
+void AuswahlBox::setMsAuswAlphaFeldStrength( int i, int afSt ) // Multistyle Auswahl AlphaFeld stärke setzen
 {
     if( hatStyleNicht( Style::MultiStyled ) || i >= anzahl )
         return;
@@ -495,7 +495,7 @@ void AuswahlBox::setMsAuswAlphaFeldStärke( int i, int afSt ) // Multistyle Auswa
         msAuswAf = new RCArray< AlphaFeld >();
     if( !msAuswAf->z( i ) )
         msAuswAf->set( new AlphaFeld(), i );
-    msAuswAf->z( i )->setStärke( afSt );
+    msAuswAf->z( i )->setStrength( afSt );
     rend = 1;
 }
 
@@ -541,8 +541,8 @@ void AuswahlBox::setMausHintergrundBild( Bild *bgB )
 {
     if( !mausBgB )
         mausBgB = new Bild();
-    mausBgB->neuBild( bgB->getBreite(), bgB->getHöhe(), 0 );
-    mausBgB->drawBild( 0, 0, bgB->getBreite(), bgB->getHöhe(), *bgB );
+    mausBgB->neuBild( bgB->getBreite(), bgB->getHeight(), 0 );
+    mausBgB->drawBild( 0, 0, bgB->getBreite(), bgB->getHeight(), *bgB );
     bgB->release();
     rend = 1;
 }
@@ -563,11 +563,11 @@ void AuswahlBox::setMausAlphaFeldFarbe( int afF ) // Maus AlphaFeld Farbe setzen
     rend = 1;
 }
 
-void AuswahlBox::setMausAlphaFeldStärke( int afSt ) // Maus AlphaFeld stärke setzen
+void AuswahlBox::setMausAlphaFeldStrength( int afSt ) // Maus AlphaFeld stärke setzen
 {
     if( !mausAf )
         mausAf = new AlphaFeld();
-    mausAf->setStärke( afSt );
+    mausAf->setStrength( afSt );
     rend = 1;
 }
 
@@ -643,14 +643,14 @@ void AuswahlBox::setMsMausHintergrundBild( int i, Bild *bgB )
     if( !msMausBgB->z( i ) )
     {
         Bild *z = new Bild;
-        z->neuBild( bgB->getBreite(), bgB->getHöhe(), 0 );
-        z->drawBild( 0, 0, bgB->getBreite(), bgB->getHöhe(), *bgB );
+        z->neuBild( bgB->getBreite(), bgB->getHeight(), 0 );
+        z->drawBild( 0, 0, bgB->getBreite(), bgB->getHeight(), *bgB );
         msMausBgB->set( z, i );
     }
     else
     {
-        msMausBgB->z( i )->neuBild( bgB->getBreite(), bgB->getHöhe(), 0 );
-        msMausBgB->z( i )->drawBild( 0, 0, bgB->getBreite(), bgB->getHöhe(), *bgB );
+        msMausBgB->z( i )->neuBild( bgB->getBreite(), bgB->getHeight(), 0 );
+        msMausBgB->z( i )->drawBild( 0, 0, bgB->getBreite(), bgB->getHeight(), *bgB );
     }
     bgB->release();
     rend = 1;
@@ -681,7 +681,7 @@ void AuswahlBox::setMsMausAlphaFeldFarbe( int i, int afF ) // Multistyle Maus Al
     rend = 1;
 }
 
-void AuswahlBox::setMsMausAlphaFeldStärke( int i, int afSt ) // Multistyle Maus AlphaFeld stärke setzen
+void AuswahlBox::setMsMausAlphaFeldStrength( int i, int afSt ) // Multistyle Maus AlphaFeld stärke setzen
 {
     if( hatStyleNicht( Style::MultiStyled ) || i >= anzahl )
         return;
@@ -689,7 +689,7 @@ void AuswahlBox::setMsMausAlphaFeldStärke( int i, int afSt ) // Multistyle Maus 
         msMausAf = new RCArray< AlphaFeld >();
     if( !msMausAf->z( i ) )
         msMausAf->set( new AlphaFeld(), i );
-    msMausAf->z( i )->setStärke( afSt );
+    msMausAf->z( i )->setStrength( afSt );
     rend = 1;
 }
 
@@ -722,23 +722,23 @@ void AuswahlBox::scrollZuEintrag( int i ) // liste scrollen
         if( hatStyle( Style::MultiStyled ) )
         {
             for( int j = 0; j < i; ++j )
-                scrollPos += members->z( j ) ? members->z( j )->getHöhe() : 0;
+                scrollPos += members->z( j ) ? members->z( j )->getHeight() : 0;
         }
         else
-            scrollPos += i * eintragHöhe;
+            scrollPos += i * eintragHeight;
         vertikalScrollBar->scroll( scrollPos );
         rend = 1;
     }
 }
 
-void AuswahlBox::setMaxAuskappHöhe( int maxHöhe ) // höhe der Liste beim ausklappen
+void AuswahlBox::setMaxAuskappHeight( int maxHeight ) // höhe der Liste beim ausklappen
 {
-    ausklapMaxHöhe = maxHöhe;
+    ausklapMaxHeight = maxHeight;
 }
 
-void AuswahlBox::setEintragHöhe( int höhe ) // setzt die Höhe der Einträge
+void AuswahlBox::setEintragHeight( int height ) // setzt die Höhe der Einträge
 {
-    eintragHöhe = höhe;
+    eintragHeight = height;
 }
 
 void AuswahlBox::addMsStyle( int i, __int64 abStyle ) // Multistyle style hinzufügen
@@ -774,7 +774,7 @@ void AuswahlBox::setMsStyle( int i, __int64 abStyle )
     rend = 1;
 }
 
-void AuswahlBox::löscheMsStyle( int i, __int64 abStyle ) // Multistyle style entfernen
+void AuswahlBox::removeMsStyle( int i, __int64 abStyle ) // Multistyle style entfernen
 {
     if( hatStyleNicht( Style::MultiStyled ) || i >= anzahl )
         return;
@@ -802,42 +802,42 @@ bool AuswahlBox::tick( double tickVal ) // tick
     this->tickval += tickVal * 300;
     int val = ( int )this->tickval;
     if( val < 1 )
-        return __super::tick( tickVal );
+        return ZeichnungHintergrund::tick( tickVal );
     this->tickval -= val;
-    int maxHöhe = rahmen ? rahmen->getRBreite() : 0;
+    int maxHeight = rahmen ? rahmen->getRBreite() : 0;
     if( hatStyleNicht( Style::MultiStyled ) )
-        maxHöhe += anzahl * eintragHöhe;
+        maxHeight += anzahl * eintragHeight;
     else
         for( int i = 0; i < anzahl; ++i )
-            maxHöhe += members->z( i ) ? members->z( i )->getHöhe() : 0;
-    if( maxHöhe > ausklapMaxHöhe )
+            maxHeight += members->z( i ) ? members->z( i )->getHeight() : 0;
+    if( maxHeight > ausklapMaxHeight )
     {
         if( hatStyle( Style::VScroll ) && vertikalScrollBar )
         {
             scrollAnzeigen = 1;
-            vertikalScrollBar->update( maxHöhe, ausklapMaxHöhe );
+            vertikalScrollBar->update( maxHeight, ausklapMaxHeight );
         }
-        maxHöhe = ausklapMaxHöhe;
+        maxHeight = ausklapMaxHeight;
     }
     else
         scrollAnzeigen = 0;
     if( ausgeklappt )
     {
-        if( ausklappHöhe < maxHöhe )
+        if( ausklappHeight < maxHeight )
         {
-            ausklappHöhe += val;
-            if( ausklappHöhe > maxHöhe )
-                ausklappHöhe = maxHöhe;
+            ausklappHeight += val;
+            if( ausklappHeight > maxHeight )
+                ausklappHeight = maxHeight;
             rend = 1;
         }
     }
     else
     {
-        if( ausklappHöhe > 0 )
+        if( ausklappHeight > 0 )
         {
-            ausklappHöhe -= val;
-            if( ausklappHöhe < 0 )
-                ausklappHöhe = 0;
+            ausklappHeight -= val;
+            if( ausklappHeight < 0 )
+                ausklappHeight = 0;
             rend = 1;
         }
     }
@@ -848,13 +848,11 @@ bool AuswahlBox::tick( double tickVal ) // tick
         else
             members->z( i )->tick( tickVal );
     }
-    return __super::tick( tickVal );
+    return ZeichnungHintergrund::tick( tickVal );
 }
 
 void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
 {
-    if( me.id == ME_DScroll )
-        int i = 0;
     mausEintrag = -1;
     if( hatStyleNicht( Style::Sichtbar ) || hatStyleNicht( Style::Erlaubt ) )
     {
@@ -865,7 +863,7 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
     }
     bool removeFokus = 0;
     bool nmakc = me.verarbeitet == 0;
-    if( me.verarbeitet || !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y + ausklappHöhe ) )
+    if( me.verarbeitet || !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y + ausklappHeight ) )
     {
         if( mausIn )
         {
@@ -873,7 +871,7 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
                 toolTip->setMausIn( 0 );
             mausIn = 0;
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -882,12 +880,12 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
         }
         removeFokus = 1;
     }
-    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y + ausklappHöhe ) && me.id != ME_Verlässt )
+    if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y + ausklappHeight ) && me.id != ME_Leaves )
     {
         if( removeFokus && me.id == ME_RLinks )
         {
             if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
-                löscheStyle( Style::Fokus );
+                removeStyle( Style::Fokus );
             ausgeklappt = 0;
             me.mx -= pos.x, me.my -= pos.y;
             if( nmakc && me.verarbeitet && nMak )
@@ -898,7 +896,7 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
             toolTip->setMausIn( 0 );
         return;
     }
-    if( !mausIn && me.id != ME_Verlässt )
+    if( !mausIn && me.id != ME_Leaves )
     {
         mausIn = 1;
         if( toolTip )
@@ -934,7 +932,7 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
                 scrollZuEintrag( mausEintrag );
         }
         if( removeFokus && me.id == ME_RLinks )
-            löscheStyle( Style::Fokus );
+            removeStyle( Style::Fokus );
         if( !me.verarbeitet && hatStyleNicht( Style::Fokus ) && me.id == ME_RLinks )
             addStyle( Style::Fokus );
         if( hatStyle( Style::VScroll ) && vertikalScrollBar && ausgeklappt && scrollAnzeigen )
@@ -942,7 +940,7 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
             int rbr = 0;
             if( rahmen && hatStyle( Style::Rahmen ) )
                 rbr = rahmen->getRBreite();
-            if( ( ( me.mx > gr.x - 15 - rbr && me.my > gr.y ) || me.id == ME_UScroll || me.id == ME_DScroll ) && me.id != ME_Betritt && me.id != ME_Verlässt )
+            if( ( ( me.mx > gr.x - 15 - rbr && me.my > gr.y ) || me.id == ME_UScroll || me.id == ME_DScroll ) && me.id != ME_Betritt && me.id != ME_Leaves )
             {
                 vertikalScrollBar->doMausMessage( gr.x - rbr - 15, gr.y, 15, vertikalScrollBar->getScrollData()->anzeige, me );
                 me.verarbeitet = 1;
@@ -956,27 +954,27 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
             {
                 for( int i = 0; i < anzahl; ++i )
                 {
-                    if( tmp > 0 && tmp < ( members->z( i ) ? members->z( i )->getHöhe() : 0 ) )
+                    if( tmp > 0 && tmp < ( members->z( i ) ? members->z( i )->getHeight() : 0 ) )
                     {
                         eintr = i;
                         break;
                     }
-                    tmp -= members->z( i ) ? members->z( i )->getHöhe() : 0;
+                    tmp -= members->z( i ) ? members->z( i )->getHeight() : 0;
                 }
             }
             else
             {
                 for( int i = 0; i < anzahl; ++i )
                 {
-                    if( tmp > 0 && tmp < eintragHöhe )
+                    if( tmp > 0 && tmp < eintragHeight )
                     {
                         eintr = i;
                         break;
                     }
-                    tmp -= eintragHöhe;
+                    tmp -= eintragHeight;
                 }
             }
-            if( ausgeklappt && me.mx > 0 && me.mx < gr.x && me.my > gr.y && me.my < gr.y + ausklappHöhe )
+            if( ausgeklappt && me.mx > 0 && me.mx < gr.x && me.my > gr.y && me.my < gr.y + ausklappHeight )
             {
                 if( eintr >= 0 )
                 {
@@ -1041,8 +1039,8 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
     {
         lockZeichnung();
         int br = gr.x;
-        int hö = gr.y + ausklappHöhe;
-        if( ( ausklappHöhe && !zRObj.setDrawOptionsErzwingen( pos.x, pos.y, br, hö ) ) || ( !ausklappHöhe && !zRObj.setDrawOptions( pos.x, pos.y, br, hö ) ) )
+        int hi = gr.y + ausklappHeight;
+        if( ( ausklappHeight && !zRObj.setDrawOptionsErzwingen( pos.x, pos.y, br, hi ) ) || ( !ausklappHeight && !zRObj.setDrawOptions( pos.x, pos.y, br, hi ) ) )
         {
             unlockZeichnung();
             return;
@@ -1050,11 +1048,11 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
         int rbr = 0;
         if( hatStyle( Style::Rahmen ) && rahmen ) // Rahmen zeichnen
         {
-            rahmen->setGröße( br, hö );
+            rahmen->setSize( br, hi );
             rahmen->render( zRObj );
             rbr = rahmen->getRBreite();
         }
-        if( ( ausklappHöhe && !zRObj.setDrawOptionsErzwingen( rbr, rbr, br - rbr * 2, hö - rbr * 2 ) ) || ( !ausklappHöhe && !zRObj.setDrawOptions( rbr, rbr, br - rbr * 2, hö - rbr * 2 ) ) )
+        if( ( ausklappHeight && !zRObj.setDrawOptionsErzwingen( rbr, rbr, br - rbr * 2, hi - rbr * 2 ) ) || ( !ausklappHeight && !zRObj.setDrawOptions( rbr, rbr, br - rbr * 2, hi - rbr * 2 ) ) )
         {
             zRObj.releaseDrawOptions();
             unlockZeichnung();
@@ -1063,25 +1061,25 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
         if( hatStyle( Style::Hintergrund ) )
         {
             if( hatStyle( Style::HAlpha ) )
-                zRObj.alphaRegion( 0, 0, br, hö, hintergrundFarbe );
+                zRObj.alphaRegion( 0, 0, br, hi, hintergrundFarbe );
             else
-                zRObj.füllRegion( 0, 0, br, hö, hintergrundFarbe );
+                zRObj.fillRegion( 0, 0, br, hi, hintergrundFarbe );
             if( hatStyle( Style::HBild ) && hintergrundBild )
             {
                 if( hatStyle( Style::HAlpha ) )
-                    zRObj.alphaBild( 0, 0, br, hö, *hintergrundBild );
+                    zRObj.alphaBild( 0, 0, br, hi, *hintergrundBild );
                 else
-                    zRObj.drawBild( 0, 0, br, hö, *hintergrundBild );
+                    zRObj.drawBild( 0, 0, br, hi, *hintergrundBild );
             }
         }
         if( hatStyle( Style::Buffered ) && hintergrundFeld )
         {
-            hintergrundFeld->setGröße( br - rbr * 2, hö - rbr * 2 );
+            hintergrundFeld->setSize( br - rbr * 2, hi - rbr * 2 );
             hintergrundFeld->render( zRObj );
         }
         if( ausfahren ) // Ausklapp Knopf zeichnen
         {
-            ausfahren->setGröße( gr.y - rbr * 2, gr.y - rbr * 2 );
+            ausfahren->setSize( gr.y - rbr * 2, gr.y - rbr * 2 );
             ausfahren->setPosition( gr.x - rbr - ausfahren->getBreite(), rbr );
             ausfahren->render( zRObj );
         }
@@ -1186,11 +1184,11 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
                         tf->setStyle( TextFeld::Style::Rahmen, hatMsStyle( auswahl, Style::AuswahlRahmen ) );
                     }
                 }
-                int tmpHö = tf->getHöhe();
+                int tmpHi = tf->getHeight();
                 tf->setPosition( 0, 0 );
-                tf->setGröße( gr.x - rbr * 2 - ( ausfahren ? ausfahren->getBreite() : 0 ), gr.y - rbr * 2 );
+                tf->setSize( gr.x - rbr * 2 - ( ausfahren ? ausfahren->getBreite() : 0 ), gr.y - rbr * 2 );
                 tf->render( zRObj );
-                tf->setGröße( tf->getBreite(), tmpHö );
+                tf->setSize( tf->getBreite(), tmpHi );
                 if( hatStyleNicht( Style::MultiStyled ) || !msStyle )
                 {
                     if( hatStyle( Style::AuswahlBuffer ) )
@@ -1253,25 +1251,24 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
         }
         if( members )
         {
-            if( vsb && ausklappHöhe )
+            if( vsb && ausklappHeight )
             {
                 br -= 15;
-                vertikalScrollBar->getScrollData()->anzeige = ausklappHöhe - rbr;
-                vertikalScrollBar->render( br - rbr, gr.y, 15, ausklappHöhe - rbr, zRObj );
+                vertikalScrollBar->getScrollData()->anzeige = ausklappHeight - rbr;
+                vertikalScrollBar->render( br - rbr, gr.y, 15, ausklappHeight - rbr, zRObj );
             }
-            if( ( ausklappHöhe && !zRObj.setDrawOptionsErzwingen( 0, gr.y, br - rbr, hö - rbr - gr.y ) ) || ( !ausklappHöhe && !zRObj.setDrawOptions( 0, gr.y, br - rbr, hö - rbr - gr.y ) ) )
+            if( ( ausklappHeight && !zRObj.setDrawOptionsErzwingen( 0, gr.y, br - rbr, hi - rbr - gr.y ) ) || ( !ausklappHeight && !zRObj.setDrawOptions( 0, gr.y, br - rbr, hi - rbr - gr.y ) ) )
             {
                 zRObj.releaseDrawOptions();
                 zRObj.releaseDrawOptions();
                 unlockZeichnung();
                 return;
             }
-            int maxHöhe = 0;
+            int maxHeight = 0;
             int dy = 0;
             if( vsb )
                 dy -= vertikalScrollBar->getScroll();
-            int mdy = hö - rbr;
-            RCArray< TextFeld > *tmpA = members;
+            int mdy = hi - rbr;
             anzahl = members->getEintragAnzahl();
             for( int i = 0; i < anzahl; ++i )
             {
@@ -1279,8 +1276,8 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
                 if( dy >= mdy && !vsb )
                     break;
                 tf->setPosition( 0, dy );
-                tf->setGröße( br - rbr * 2, tf->getHöhe() );
-                maxHöhe += tf->getHöhe();
+                tf->setSize( br - rbr * 2, tf->getHeight() );
+                maxHeight += tf->getHeight();
                 bool selected = auswahl == i;
                 AlphaFeld *tmpBuffer = 0;
                 bool tmpB = 0;
@@ -1556,10 +1553,10 @@ void AuswahlBox::render( Bild &zRObj ) // zeichnet nach zRObj
                         }
                     }
                 }
-                dy += tf->getHöhe();
+                dy += tf->getHeight();
             }
             if( vertikalScrollBar )
-                vertikalScrollBar->getScrollData()->max = maxHöhe;
+                vertikalScrollBar->getScrollData()->max = maxHeight;
             zRObj.releaseDrawOptions();
         }
         zRObj.releaseDrawOptions();
@@ -1634,16 +1631,16 @@ bool AuswahlBox::istAusgeklappt() const // prüft, ob die Liste ausgeklappt ist
     return ausgeklappt;
 }
 
-int AuswahlBox::getMaxHöhe() const // gibt die maximale Höhe der Liste zurück
+int AuswahlBox::getMaxHeight() const // gibt die maximale Höhe der Liste zurück
 {
-    if( !hatStyle( Style::MaxHöhe ) )
+    if( !hatStyle( Style::MaxHeight ) )
         return 0;
-    return ausklapMaxHöhe;
+    return ausklapMaxHeight;
 }
 
-int AuswahlBox::getEintragHöhe() const // gibt die Höhe der Einträge zurück
+int AuswahlBox::getEintragHeight() const // gibt die Höhe der Einträge zurück
 {
-    return eintragHöhe;
+    return eintragHeight;
 }
 
 Knopf *AuswahlBox::getAusklappKnopf() const // gibt den aus-/einklapp Knopf zurück
@@ -1723,13 +1720,13 @@ int AuswahlBox::getEintragAlphaFeldFarbe( int i ) const // gibt die Eintrag Alph
     return members->z( i )->getAlphaFeldFarbe();
 }
 
-int AuswahlBox::getEintragAlphaFeldStärke( int i ) const // gibt die Eintrag AlphaFeld stärke zurück
+int AuswahlBox::getEintragAlphaFeldStrength( int i ) const // gibt die Eintrag AlphaFeld stärke zurück
 {
     if( !hatStyle( Style::MultiStyled ) )
         return 0;
     if( !members->z( i ) )
         return 0;
-    return members->z( i )->getAlphaFeldStärke();
+    return members->z( i )->getAlphaFeldStrength();
 }
 
 int AuswahlBox::getEintragHintergrundFarbe( int i ) const // gibt die Eintrag Hintergrund Farbe zurück
@@ -1808,11 +1805,11 @@ int AuswahlBox::getAuswAlphaFeldFarbe() const // gibt die Auswahl AlphaFeld Farb
     return auswAf ? auswAf->getFarbe() : 0;
 }
 
-int AuswahlBox::getAuswAlphaFeldStärke() const // gibt die Auswahl AlphaFeld stärke zurück
+int AuswahlBox::getAuswAlphaFeldStrength() const // gibt die Auswahl AlphaFeld stärke zurück
 {
     if( hatStyle( Style::MultiStyled ) )
         return 0;
-    return auswAf ? auswAf->getStärke() : 0;
+    return auswAf ? auswAf->getStrength() : 0;
 }
 
 int AuswahlBox::getAuswHintergrundFarbe() const // gibt die Auswahl Hintergrund Farbe zurück
@@ -1899,13 +1896,13 @@ int AuswahlBox::getMsAuswAlphaFeldFarbe( int i ) const // gibt die Multistyle Au
     return msAuswAf->z( i ) ? msAuswAf->z( i )->getFarbe() : 0;
 }
 
-int AuswahlBox::getMsAuswAlphaFeldStärke( int i ) const // gibt die Multistyle Auswahl AlphaFeld stärke zurück
+int AuswahlBox::getMsAuswAlphaFeldStrength( int i ) const // gibt die Multistyle Auswahl AlphaFeld stärke zurück
 {
     if( !hatStyle( Style::MultiStyled ) )
         return 0;
     if( !msAuswAf )
         return 0;
-    return msAuswAf->z( i ) ? msAuswAf->z( i )->getStärke() : 0;
+    return msAuswAf->z( i ) ? msAuswAf->z( i )->getStrength() : 0;
 }
 
 int AuswahlBox::getMsAuswHintergrundFarbe( int i ) const // gibt die Multistyle Auswahl Hintergrund Farbe zurück
@@ -1984,11 +1981,11 @@ int AuswahlBox::getMausAlphaFeldFarbe() const // gibt die Maus AlphaFeld Farbe z
     return mausAf ? mausAf->getFarbe() : 0;
 }
 
-int AuswahlBox::getMausAlphaFeldStärke() const // gibt die Maus AlphaFeld stärke zurück
+int AuswahlBox::getMausAlphaFeldStrength() const // gibt die Maus AlphaFeld stärke zurück
 {
     if( hatStyle( Style::MultiStyled ) )
         return 0;
-    return mausAf ? mausAf->getStärke() : 0;
+    return mausAf ? mausAf->getStrength() : 0;
 }
 
 int AuswahlBox::getMausHintergrundFarbe() const // gibt die Maus Hintergrund Farbe zurück
@@ -2075,13 +2072,13 @@ int AuswahlBox::getMsMausAlphaFeldFarbe( int i ) const // gibt die Multistyle Ma
     return msMausAf->z( i ) ? msMausAf->z( i )->getFarbe() : 0;
 }
 
-int AuswahlBox::getMsMausAlphaFeldStärke( int i ) const // gibt die Multistyle Maus AlphaFeld stärke zurück
+int AuswahlBox::getMsMausAlphaFeldStrength( int i ) const // gibt die Multistyle Maus AlphaFeld stärke zurück
 {
     if( !hatStyle( Style::MultiStyled ) )
         return 0;
     if( !msMausAf )
         return 0;
-    return msMausAf->z( i ) ? msMausAf->z( i )->getStärke() : 0;
+    return msMausAf->z( i ) ? msMausAf->z( i )->getStrength() : 0;
 }
 
 int AuswahlBox::getMsMausHintergrundFarbe( int i ) const // gibt die Multistyle Maus Hintergrund Farbe zurück
@@ -2129,7 +2126,7 @@ Zeichnung *AuswahlBox::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
 {
     AuswahlBox *obj = new AuswahlBox();
     obj->setPosition( pos );
-    obj->setGröße( gr );
+    obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
     obj->setMausEreignis( Mak );
@@ -2162,8 +2159,8 @@ Zeichnung *AuswahlBox::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
         obj->setMausHintergrundBild( mausBgB->getThis() );
     if( mausAf )
         obj->setMausAlphaFeldZ( (AlphaFeld*)mausAf->dublizieren() );
-    obj->setMaxAuskappHöhe( ausklapMaxHöhe );
-    obj->setEintragHöhe( eintragHöhe );
+    obj->setMaxAuskappHeight( ausklapMaxHeight );
+    obj->setEintragHeight( eintragHeight );
     for( int i = 0; i < anzahl; ++i )
     {
         if( members->z( i ) )

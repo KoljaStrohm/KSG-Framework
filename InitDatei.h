@@ -70,17 +70,17 @@ namespace Framework
         // Löscht einen bestimmten Wert
         //  name: Der Name des Wertes, der gelöscht werden soll
         //  return: 1, falls der Wert vorhanden war und erfolgreich gelöscht werden konnte
-        __declspec( dllexport ) bool löscheWert( Text *name );
+        __declspec( dllexport ) bool removeWert( Text *name );
         // Löscht einen bestimmten Wert
         //  name: Der Name des Wertes, der gelöscht werden soll
         //  return: 1, falls der Wert vorhanden war und erfolgreich gelöscht werden konnte
-        __declspec( dllexport ) bool löscheWert( const char *name );
+        __declspec( dllexport ) bool removeWert( const char *name );
         // Löscht einen bestimmten Wert
         //  num: Der Index des Wertes der gelöscht werden soll
         //  return: 1, falls der Wert vorhanden war und erfolgreich gelöscht werden konnte
-        __declspec( dllexport ) bool löscheWert( int num );
+        __declspec( dllexport ) bool removeWert( int num );
         // Löscht alle Werte aus der Datei
-        __declspec( dllexport ) void löscheAlle();
+        __declspec( dllexport ) void removeAlle();
         // Speichert alle Werte in der Datei
         //  return: 1, falls das Speichern erfolgreich war
         __declspec( dllexport ) bool speichern();

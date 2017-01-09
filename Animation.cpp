@@ -71,10 +71,10 @@ void Animation2DData::ladeAnimation( InitDatei *datei )
             continue;
         bilder[ j ] = 0;
         Text pfad = datei->zWert( i )->getText();
-        if( pfad.hat( ".ltdb/" ) && pfad.getLänge() > 7 )
+        if( pfad.hat( ".ltdb/" ) && pfad.getLength() > 7 )
         {
             Text *name = pfad.getTeilText( pfad.positionVon( ".ltdb/", pfad.anzahlVon( ".ltdb/" ) - 1 ) + 6 );
-            pfad.setText( pfad.getTeilText( 0, pfad.getLänge() - name->getLänge() - 1 ) );
+            pfad.setText( pfad.getTeilText( 0, pfad.getLength() - name->getLength() - 1 ) );
             LTDBDatei *dat = new LTDBDatei();
             dat->setDatei( pfad.getThis() );
             dat->leseDaten( 0 );
@@ -295,7 +295,7 @@ bool Animation2D::tick( double zeit )
         if( alpha + aps * zeit >= maxAlpha )
             alpha = maxAlpha;
         else
-            alpha += (unsigned char)( aps * zeit );
+            alpha = (unsigned char)( alpha + aps * zeit );
         rend = 1;
     }
     else if( !sichtbar && alpha > 0 )
@@ -303,7 +303,7 @@ bool Animation2D::tick( double zeit )
         if( alpha - aps * zeit <= 0 )
             alpha = 0;
         else
-            alpha -= (unsigned char)( aps * zeit );
+            alpha = (unsigned char)( alpha - aps * zeit );
         rend = 1;
     }
     ausgleich += zeit;
@@ -338,7 +338,7 @@ void Animation2D::render( Bild &zRObj )
         unlockZeichnung();
         return;
     }
-    __super::render( zRObj );
+	Zeichnung::render( zRObj );
     data->lock();
     if( data->zBild( jetzt ) )
     {
@@ -350,7 +350,7 @@ void Animation2D::render( Bild &zRObj )
         if( ram && rahmen )
         {
             ram->setPosition( pos );
-            ram->setGröße( gr );
+            ram->setSize( gr );
             ram->render( zRObj );
         }
         zRObj.releaseAlpha();
@@ -414,7 +414,7 @@ Zeichnung *Animation2D::dublizieren() const
 {
     Animation2D *ret = new Animation2D();
     ret->setPosition( pos );
-    ret->setGröße( gr );
+    ret->setSize( gr );
     ret->setMausEreignisParameter( makParam );
     ret->setTastaturEreignisParameter( takParam );
     ret->setMausEreignis( Mak );

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vec2.h"
+#include "Vec2.h"
 #include "Array.h"
 #include "Mat4.h"
 #include "Zeichnung3D.h"
@@ -226,7 +226,7 @@ namespace Framework
         // Konstruktor
         __declspec( dllexport ) Model3D();
         // Destruktor
-        __declspec( dllexport ) ~Model3D();
+        __declspec( dllexport ) virtual ~Model3D();
         // Setzt den Zeiger auf das zum Annimieren verwendete Skelett
         //  s: Das Skelett, das verwendet werden soll
         __declspec( dllexport ) void setSkelettZ( Skelett *s );

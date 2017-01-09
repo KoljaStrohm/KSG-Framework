@@ -51,7 +51,7 @@ namespace Framework
     // Eine Struktur, die Informationen über einen Monitor beinhaltet
     struct Monitor
     {
-        int x, y, breite, höhe; // Koordinaten des Monitors und die Auflösung
+        int x, y, breite, height; // Koordinaten des Monitors und die Auflösung
         bool existiert; // Speichert, ob der Monitor wirklich existiert
     };
 
@@ -63,7 +63,7 @@ namespace Framework
         Bild *renderB;
         int ref;
         ZeichnungArray *members;
-        int füllFarbe;
+        int fillColor;
         int deckFarbe;
         Zeichnung *onTop;
         bool renderOnTop;
@@ -71,12 +71,12 @@ namespace Framework
         bool vollbild;
         bool rendering;
         ZeitMesser *renderZeit;
-        Punkt backBufferGröße;
+        Punkt backBufferSize;
         CRITICAL_SECTION cs;
         RCArray< ToolTip > *tips;
         int tipAnzahl;
         bool testRend;
-        bool füll;
+        bool fill;
         bool rend;
 
     public:
@@ -84,7 +84,7 @@ namespace Framework
         //  fenster: Das Fenster, dessen Inhalt verwaltet werden soll
         __declspec( dllexport ) Bildschirm( WFenster *fenster );
         // Destruktor 
-        __declspec( dllexport ) ~Bildschirm();
+        __declspec( dllexport ) virtual ~Bildschirm();
         // Dies ist notwendig, falls mehrere Threads gleichzeitig den Bildschirm benutzen.
         // Wenn lock() von zwei threads aufgerufen wird, wartet der letzte so lange, bis der erste unlock() aufgerufen hat.
         __declspec( dllexport ) virtual void lock();
@@ -93,7 +93,7 @@ namespace Framework
         __declspec( dllexport ) virtual void unlock();
         // Legt fest, ob der Bildschirm nach jedem Bild neu mit einer Farbe ausgefüllt wird (Standartmäßig gesetzt)
         //  f: 1, falls das Bild vor dem Zeichnen zurückgesetzt werden soll
-        __declspec( dllexport ) virtual void setFüll( bool f );
+        __declspec( dllexport ) virtual void setFill( bool f );
         // Aktualisiert die Objekte, mit der die Grafikkarte verwaltet wird
         __declspec( dllexport ) virtual void update() = 0;
         // Legt fest, ob von dem Zeichnen überprüft wird, ob sich das Bild vom letzten unterscheidet (Standartmäßig gesetzt)
@@ -121,7 +121,7 @@ namespace Framework
         __declspec( dllexport ) virtual void render() = 0;
         // Setzt die Farbe, mit der das Bild for dem Zeichnen gefüllt wird, wenn setFüll( 1 ) gesetzt wurde
         //  f: Die Farbe im A8R8G8B8 Format
-        __declspec( dllexport ) virtual void setFüllFarbe( int f );
+        __declspec( dllexport ) virtual void setFillFarbe( int f );
         // Legt fest, ob das Bild im Vollbildmodus präsentiert werden soll. (Standartmäßig nicht gesetzt)
         //  fullscreen: 1, für Vollbildmodus
         __declspec( dllexport ) virtual void setVollbild( bool fullscreen );
@@ -131,11 +131,11 @@ namespace Framework
         __declspec( dllexport ) virtual void tick( double tickval );
         // Setzt die Auflösung des Bildes, das angezeigt wird. Es wird von der Grafikkarte automatisch skalliert, so das es das Fenster ausfüllt
         //  breite: Die Breite des Bildes in Pixeln
-        //  höhe: Die Höhe des Bildes in Pixeln
-        __declspec( dllexport ) virtual void setBackBufferGröße( int breite, int höhe );
+        //  height: Die Höhe des Bildes in Pixeln
+        __declspec( dllexport ) virtual void setBackBufferSize( int breite, int height );
         // Setzt die Auflösung des Bildes, das angezeigt wird. Es wird von der Grafikkarte automatisch skalliert, so das es das Fenster ausfüllt
-        //  größe: Die Breite und Höhe in Pixeln
-        __declspec( dllexport ) virtual void setBackBufferGröße( Punkt &größe );
+        //  size: Die Breite und Höhe in Pixeln
+        __declspec( dllexport ) virtual void setBackBufferSize( Punkt &size );
         // Verarbeitet ein Maus Ereignis. Wird vom Framework automatisch aufgerufen.
         // Gibt das Ereignis automatisch an alle sich im Bild befindenden Zeichnungen weiter
         //  me: Das Ereignis
@@ -157,11 +157,11 @@ namespace Framework
         // Gibt ein Array von 2D GUI Zeichnungen zurück, die sich im Bild befinden
         __declspec( dllexport ) virtual ZeichnungArray *getMembers() const;
         // Gibt die Farbe im A8R8G8B8 Format zurück, mit der das Bild vor dem Zeichnen befüllt wird
-        __declspec( dllexport ) virtual int getFüllFarbe() const;
+        __declspec( dllexport ) virtual int getFillFarbe() const;
         // Gibt zurück, ob man sich im Vollbildmodus befindet
         __declspec( dllexport ) virtual bool istVolbild() const;
         // Gibt die Auflösung in Pixeln zurück, in der gezeichnet wird
-        __declspec( dllexport ) virtual const Punkt &getBackBufferGröße() const;
+        __declspec( dllexport ) virtual const Punkt &getBackBufferSize() const;
         // Wartet, bis das Zeichnen des aktuellen Bildes abgeschlossen ist
         __declspec( dllexport ) virtual void warteAufRendern() const;
         // Gibt die Zeit in Sekunden zurück, die benötigt wurde, um das letzte Bild zu zeichnen
@@ -173,7 +173,7 @@ namespace Framework
         //  Return: 0
         __declspec( dllexport ) virtual Bildschirm *release();
     };
-
+#ifdef WIN32
     // Diese Klasse verwaltet das Bild auf dem Bildschirm ohne 3D Elemente
     class Bildschirm2D : public Bildschirm
     {
@@ -260,6 +260,7 @@ namespace Framework
     // Findet die Psition und Auflösung eines Monitors heraus
     //  id: Die ID des Monitors. Falls der Monitor nicht gefunden wurde ist der existiert flag der zurückgegebenen Monitor Struktur 0
     __declspec( dllexport ) Monitor getMonitor( int id );
+#endif
 }
 
 #endif

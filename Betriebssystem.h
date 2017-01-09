@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <string.h>
 #ifndef CRITICAL_SECTION_CLASS
 #define CRITICAL_SECTION_CLASS
 class CriticalSection
@@ -53,7 +54,8 @@ public:
         pthread_mutexattr_init( &attr );
         pthread_mutexattr_settype( &attr, PTHREAD_MUTEX_RECURSIVE );
         pthread_mutex_init( &mutex, &attr );
-    }
+    } // TODO dsfgdslgkjhlas
+	// HACK dsgdshgah
     ~CriticalSection()
     {
         pthread_mutex_destroy( &mutex );
@@ -79,6 +81,7 @@ class CriticalSection;
 #define LeaveCriticalSection( x )      ( *( x ) )->Leave()
 #include <unistd.h>
 #define Sleep( x )   usleep( (x) * 1000 )
+#define ZeroMemory( Destination, Length ) memset( ( Destination ), 0, ( Length ) )
 
 #endif
 

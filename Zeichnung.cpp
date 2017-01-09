@@ -8,7 +8,9 @@
 #include "Rahmen.h"
 #include "AlphaFeld.h"
 #include "Bild.h"
+#ifdef WIN32
 #include <Windows.h>
+#endif
 
 using namespace Framework;
 
@@ -110,7 +112,7 @@ void Zeichnung::setNTastaturEreignis( bool( *ak )( void *, void *, TastaturEreig
 
 void Zeichnung::doMausEreignis( MausEreignis &me ) // ruft Mak auf
 {
-    if( me.verarbeitet || ( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Verlässt ) )
+    if( me.verarbeitet || ( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves ) )
     {
         if( mausIn )
         {
@@ -118,7 +120,7 @@ void Zeichnung::doMausEreignis( MausEreignis &me ) // ruft Mak auf
             if( toolTip )
                 toolTip->setMausIn( 0 );
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -126,7 +128,7 @@ void Zeichnung::doMausEreignis( MausEreignis &me ) // ruft Mak auf
         }
         return;
     }
-    if( !mausIn && me.id != ME_Verlässt )
+    if( !mausIn && me.id != ME_Leaves )
     {
         mausIn = 1;
         if( toolTip )
@@ -187,7 +189,7 @@ void Zeichnung::setY( int yPos )
     unlockZeichnung();
 }
 
-void Zeichnung::setGröße( const Punkt &gr ) // setzt die Größe
+void Zeichnung::setSize( const Punkt &gr ) // setzt die Größe
 {
     lockZeichnung();
     if( this->gr != gr )
@@ -201,9 +203,9 @@ void Zeichnung::setPosition( int x, int y ) // setzt die position
     setPosition( Punkt( x, y ) );
 }
 
-void Zeichnung::setGröße( int x, int y ) // setzt die Größe
+void Zeichnung::setSize( int x, int y ) // setzt die Größe
 {
-    setGröße( Punkt( x, y ) );
+    setSize( Punkt( x, y ) );
 }
 
 bool Zeichnung::tick( double tickval )
@@ -222,14 +224,14 @@ void Zeichnung::setStyle( __int64 style ) // setzt den Style des Text Feldes
     }
 }
 
-void Zeichnung::setStyle( __int64 style, bool add_löschen )
+void Zeichnung::setStyle( __int64 style, bool add_remove )
 {
-    if( add_löschen && ( this->style | style ) != this->style )
+    if( add_remove && ( this->style | style ) != this->style )
     {
         this->style |= style;
         rend = 1;
     }
-    else if( !add_löschen && ( this->style & ~style ) != this->style )
+    else if( !add_remove && ( this->style & ~style ) != this->style )
     {
         if( toolTip && ( style | Style::Sichtbar ) == style )
             toolTip->setMausIn( 0 );
@@ -247,7 +249,7 @@ void Zeichnung::addStyle( __int64 style )
     }
 }
 
-void Zeichnung::löscheStyle( __int64 style )
+void Zeichnung::removeStyle( __int64 style )
 {
     if( ( this->style & ~style ) != this->style )
     {
@@ -280,7 +282,7 @@ const Punkt &Zeichnung::getPosition() const // gibt die Position zurück
     return pos;
 }
 
-const Punkt &Zeichnung::getGröße() const // gibt die Größe zurück
+const Punkt &Zeichnung::getSize() const // gibt die Größe zurück
 {
     return gr;
 }
@@ -290,7 +292,7 @@ int Zeichnung::getBreite() const // gibt die Breite zurück
     return gr.x;
 }
 
-int Zeichnung::getHöhe() const // gibt die Höhe zurück
+int Zeichnung::getHeight() const // gibt die Höhe zurück
 {
     return gr.y;
 }
@@ -329,7 +331,7 @@ Zeichnung *Zeichnung::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
 {
     Zeichnung *obj = new Zeichnung();
     obj->setPosition( pos );
-    obj->setGröße( gr );
+    obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
     obj->setMausEreignis( Mak );
@@ -506,8 +508,8 @@ ZeichnungHintergrund::ZeichnungHintergrund()
     vertikalScrollBar = 0;
     innenPosition.x = 0;
     innenPosition.y = 0;
-    innenGröße.x = 0;
-    innenGröße.y = 0;
+    innenSize.x = 0;
+    innenSize.y = 0;
 }
 
 // Destruktor 
@@ -529,10 +531,10 @@ void ZeichnungHintergrund::setHintergrundBild( Bild *bild ) // setzt das Hinterg
 {
     if( !hintergrundBild )
         hintergrundBild = new Bild();
-    hintergrundBild->neuBild( bild->getBreite(), bild->getHöhe(), 0 );
+    hintergrundBild->neuBild( bild->getBreite(), bild->getHeight(), 0 );
     int *buff1 = hintergrundBild->getBuffer();
     int *buff2 = bild->getBuffer();
-    for( int i = 0; i < bild->getBreite() * bild->getHöhe(); ++i )
+    for( int i = 0; i < bild->getBreite() * bild->getHeight(); ++i )
         buff1[ i ] = buff2[ i ];
     bild->release();
     rend = 1;
@@ -569,16 +571,16 @@ void ZeichnungHintergrund::setAlphaFeldZ( AlphaFeld *buff ) // setzt einen Zeige
     }
 }
 
-void ZeichnungHintergrund::setAlphaFeldStärke( int st ) // setzt die Stärke des Hintergrund Buffers
+void ZeichnungHintergrund::setAlphaFeldStrength( int st ) // setzt die Stärke des Hintergrund Buffers
 {
     if( !hintergrundFeld )
     {
         hintergrundFeld = new AlphaFeld();
         rend = 1;
     }
-    if( hintergrundFeld->getStärke() != st )
+    if( hintergrundFeld->getStrength() != st )
     {
-        hintergrundFeld->setStärke( st );
+        hintergrundFeld->setStrength( st );
         rend = 1;
     }
 }
@@ -728,15 +730,15 @@ bool ZeichnungHintergrund::tick( double tickVal )
         rend |= vertikalScrollBar->getRend();
     if( horizontalScrollBar && hatStyle( Style::HScroll ) )
         rend |= horizontalScrollBar->getRend();
-    return __super::tick( tickVal );
+    return Zeichnung::tick( tickVal );
 }
 
 void ZeichnungHintergrund::render( Bild &rObj )
 {
     innenPosition.x = pos.x;
     innenPosition.y = pos.y;
-    innenGröße.x = gr.x;
-    innenGröße.y = gr.y;
+    innenSize.x = gr.x;
+    innenSize.y = gr.y;
     if( hatStyleNicht( Style::Sichtbar ) )
         return;
     lockZeichnung();
@@ -745,18 +747,18 @@ void ZeichnungHintergrund::render( Bild &rObj )
         unlockZeichnung();
         return;
     }
-    __super::render( rObj );
+	Zeichnung::render( rObj );
     int rbr = 0;
     if( hatStyle( Style::Rahmen ) && rahmen )
     {
-        rahmen->setGröße( gr );
+        rahmen->setSize( gr );
         rahmen->render( rObj );
         rbr = rahmen->getRBreite();
     }
     innenPosition.x += rbr;
     innenPosition.y += rbr;
-    innenGröße.x -= rbr * 2;
-    innenGröße.y -= rbr * 2;
+    innenSize.x -= rbr * 2;
+    innenSize.y -= rbr * 2;
     if( !rObj.setDrawOptions( rbr, rbr, gr.x - rbr * 2, gr.y - rbr * 2 ) )
     {
         rObj.releaseDrawOptions();
@@ -768,11 +770,11 @@ void ZeichnungHintergrund::render( Bild &rObj )
     if( vs )
     {
         vertikalScrollBar->render( gr.x - rbr * 2 - 15, 0, 15, gr.y - rbr * 2, rObj );
-        innenGröße.x -= 15;
+        innenSize.x -= 15;
         if( hs )
         {
             horizontalScrollBar->render( 0, gr.y - rbr * 2 - 15, gr.x - rbr * 2 - 15, 15, rObj );
-            innenGröße.y -= 15;
+            innenSize.y -= 15;
             if( !rObj.setDrawOptions( 0, 0, gr.x - rbr * 2 - 15, gr.y - rbr * 2 - 15 ) )
             {
                 rObj.releaseDrawOptions();
@@ -780,7 +782,7 @@ void ZeichnungHintergrund::render( Bild &rObj )
                 unlockZeichnung();
                 return;
             }
-            horizontalScrollBar->update( horizontalScrollBar->getScrollData()->max, innenGröße.x );
+            horizontalScrollBar->update( horizontalScrollBar->getScrollData()->max, innenSize.x );
         }
         else
         {
@@ -792,12 +794,12 @@ void ZeichnungHintergrund::render( Bild &rObj )
                 return;
             }
         }
-        vertikalScrollBar->update( vertikalScrollBar->getScrollData()->max, innenGröße.y );
+        vertikalScrollBar->update( vertikalScrollBar->getScrollData()->max, innenSize.y );
     }
     else if( hs )
     {
         horizontalScrollBar->render( rbr, gr.y - rbr * 2 - 15, gr.x - rbr * 2, 15, rObj );
-        innenGröße.y -= 15;
+        innenSize.y -= 15;
         if( !rObj.setDrawOptions( 0, 0, gr.x - rbr * 2, gr.y - rbr * 2 - 15 ) )
         {
             rObj.releaseDrawOptions();
@@ -811,7 +813,7 @@ void ZeichnungHintergrund::render( Bild &rObj )
         if( hatStyle( Style::HAlpha ) )
             rObj.alphaRegion( 0, 0, gr.x - rbr * 2, gr.y - rbr * 2, hintergrundFarbe );
         else
-            rObj.füllRegion( 0, 0, gr.x - rbr * 2, gr.y - rbr * 2, hintergrundFarbe );
+            rObj.fillRegion( 0, 0, gr.x - rbr * 2, gr.y - rbr * 2, hintergrundFarbe );
         if( hatStyle( Style::HBild ) && hintergrundBild )
         {
             if( hatStyle( Style::HAlpha ) )
@@ -822,7 +824,7 @@ void ZeichnungHintergrund::render( Bild &rObj )
     }
     if( hatStyle( Style::Buffered ) && hintergrundFeld )
     {
-        hintergrundFeld->setGröße( gr.x - rbr * 2, gr.y - rbr * 2 );
+        hintergrundFeld->setSize( gr.x - rbr * 2, gr.y - rbr * 2 );
         hintergrundFeld->render( rObj );
     }
     if( vs || hs )
@@ -861,11 +863,11 @@ AlphaFeld *ZeichnungHintergrund::zAlphaFeld() const // gibt den Hintergrund Buff
     return hintergrundFeld;
 }
 
-int ZeichnungHintergrund::getAlphaFeldStärke() const // gibt die Stärke des Hintergrund Buffers zurück
+int ZeichnungHintergrund::getAlphaFeldStrength() const // gibt die Stärke des Hintergrund Buffers zurück
 {
     if( !hintergrundFeld )
         return 0;
-    return hintergrundFeld->getStärke();
+    return hintergrundFeld->getStrength();
 }
 
 int ZeichnungHintergrund::getAlphaFeldFarbe() const // gibt getThis von der Farbe des Hintergrund Buffers zurück
@@ -941,7 +943,7 @@ Zeichnung *ZeichnungHintergrund::dublizieren() const // Erzeugt eine Kopie des Z
 {
     ZeichnungHintergrund *obj = new ZeichnungHintergrund();
     obj->setPosition( pos );
-    obj->setGröße( gr );
+    obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
     obj->setMausEreignis( Mak );

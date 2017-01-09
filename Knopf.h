@@ -41,7 +41,7 @@ namespace Framework
         // Konstruktor 
         __declspec( dllexport ) Knopf();
         // Destruktor 
-        __declspec( dllexport ) ~Knopf();
+        __declspec( dllexport ) virtual ~Knopf();
         // Setzt die Farbe, die als Hintergrund verwendet wird, wenn der Knopf gedrückt wird
         //  fc: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setKlickFarbe( int fc );
@@ -56,7 +56,7 @@ namespace Framework
         __declspec( dllexport ) void setKBZ( AlphaFeld *af );
         // Setzt die Stärke des Farbübergangs, der verwendet wird, wenn der Knopf gedrückt wird
         //  st: Die Stärke
-        __declspec( dllexport ) void setKBStärke( int st );
+        __declspec( dllexport ) void setKBStrength( int st );
         // Setzt die Farbe des Farbübergangs, der verwendet wird, wenn der Knopf gedrückt wird
         //  fc: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setKBFarbe( int fc );
@@ -79,7 +79,7 @@ namespace Framework
         // Gibt die Farbe des Farbübergangs im A8R8G8B8 Format zurück, der verwendet wird, wenn der Knopf gedrückt wird
         __declspec( dllexport ) int getKBFarbe() const;
         // Gibt die Stärke des Farbübergangs zurück, der verwendet wird, wenn der Knopf gedrückt wird
-        __declspec( dllexport ) int getKBStärke() const;
+        __declspec( dllexport ) int getKBStrength() const;
         // Kopiert den Knopf, so das er ohne auswirkungen auf das Original verändert werden kann
         __declspec( dllexport ) Zeichnung *dublizieren() const override;
         // Erhöht den Reference Counting Zähler.
@@ -136,7 +136,7 @@ namespace Framework
         // Konstruktor 
         __declspec( dllexport ) KontrollKnopf();
         // Destruktor 
-        __declspec( dllexport ) ~KontrollKnopf();
+        __declspec( dllexport ) virtual ~KontrollKnopf();
         // Setzt den Zeiger auf den Beschriftungs Text
         //  txt: Der Text
         __declspec( dllexport ) void setTextZ( Text *txt );
@@ -163,7 +163,7 @@ namespace Framework
         __declspec( dllexport ) void setSFarbe( int f );
         // Setzt die Größe der Schrift, die für die Beschriftung verwendet werden soll
         //  f: Die Höhe einer Zeile in Pixeln
-        __declspec( dllexport ) void setSGröße( int gr );
+        __declspec( dllexport ) void setSSize( int gr );
         // Setzt die Hintergrund Farbe, die verwendet wird, während das Kästchen ausgewählt ist
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setSBgFarbe( int f );
@@ -190,7 +190,7 @@ namespace Framework
         __declspec( dllexport ) void setSAFFarbe( int f );
         // Setzt die Stärke des Farbübergangs, der verwendet wird, während das Kästchen ausgewählt ist
         //  st: Die Stärke
-        __declspec( dllexport ) void setSAFStärke( int st );
+        __declspec( dllexport ) void setSAFStrength( int st );
         // Setzt einen Zeiger auf den Farbübergang, der verwendet wird, während auf das Kästchen geklickt wird
         //  af: Der Farbübergang
         __declspec( dllexport ) void setKAlphaFeldZ( AlphaFeld *af );
@@ -199,7 +199,7 @@ namespace Framework
         __declspec( dllexport ) void setKAFFarbe( int f );
         // Setzt die Stärke des Farbübergangs, der verwendet wird, während auf das Kästchen geklickt wird
         //  st: Die Stärke
-        __declspec( dllexport ) void setKAFStärke( int st );
+        __declspec( dllexport ) void setKAFStrength( int st );
         // Lädt die Bilder "kasten.gif" und "skasten.gif" aus einer LTDB Datei
         // Das Bild kasten.gif wird gezeichnet, wenn das Kästchen nicht ausgewählt ist. Das Bild skasten.gif wird gezeichnet, wenn das Kästchen ausgewählt wird
         //  zDat: Die LTDB Datei
@@ -229,7 +229,7 @@ namespace Framework
         // Gibt die Schrift Farbe im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getSFarbe() const;
         // Gibt die Schrift Größe zurück
-        __declspec( dllexport ) int getSGröße() const;
+        __declspec( dllexport ) int getSSize() const;
         // Gibt die Hintergrund Farbe im A8R8G8B8 Format zurück, die verwendet wird, während das Kästchen ausgewählt ist
         __declspec( dllexport ) int getSBgFarbe() const;
         // Gibt die Hintergrund Farbe im A8R8G8B8 Format zurück, die verwendet wird, während auf das Kästchen geklickt wird

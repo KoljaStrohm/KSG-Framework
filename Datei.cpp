@@ -1,7 +1,7 @@
 #include "Datei.h"
 #include "Text.h"
 #include "Zeit.h"
-#include "Schluessel.h"
+#include "Key.h"
 #ifdef WIN32
 #include <direct.h>
 #include <Shlwapi.h>
@@ -13,7 +13,7 @@
 #endif
 
 using namespace Framework;
-using namespace Verschlüsselung;
+using namespace Encryption;
 
 // Inhalt der Datei Klasse aus Datei.h
 // Konstruktor 
@@ -44,7 +44,7 @@ Datei::~Datei()
 void Datei::setDatei( const char *pfad ) // setzt die Datei
 {
     if( istOffen() )
-        schließen();
+        close();
     if( !this->pfad )
         this->pfad = new Text();
     this->pfad->setText( pfad );
@@ -54,7 +54,7 @@ void Datei::setDatei( const char *pfad ) // setzt die Datei
 void Datei::setDatei( Text *pfad )
 {
     if( istOffen() )
-        schließen();
+        close();
     if( !this->pfad )
         this->pfad = new Text();
     this->pfad->setText( pfad );
@@ -89,11 +89,11 @@ bool Datei::umbenennen( Text *pfad )
     return 0;
 }
 
-bool Datei::löschen() // löscht die Datei
+bool Datei::remove() // löscht die Datei
 {
     if( !pfad )
         return 0;
-    return DateiLöschen( pfad->getThis() );
+    return DateiRemove( pfad->getThis() );
 }
 
 bool Datei::erstellen() // erstellt die Datei
@@ -103,7 +103,7 @@ bool Datei::erstellen() // erstellt die Datei
     return DateiPfadErstellen( pfad->getThis() );
 }
 
-bool Datei::öffnen( int style ) // öffnet die Datei
+bool Datei::open( int style ) // öffnet die Datei
 {
     if( !pfad )
         return 0;
@@ -162,7 +162,7 @@ void Datei::setSPosition( __int64 pos, bool ende ) // setzt die Schreibeposition
     tmpSBPos = -1;
 }
 
-void Datei::schreibe( char *bytes, int län ) // schreibt bytes in datei
+void Datei::schreibe( char *bytes, int len ) // schreibt bytes in datei
 {
     if( !pfad || !stream )
         return;
@@ -175,28 +175,28 @@ void Datei::schreibe( char *bytes, int län ) // schreibt bytes in datei
 	if( key )
 	{
 		key->setPos( getSPosition() );
-		Bytes *n = new Bytes( bytes, län );
+		Bytes *n = new Bytes( bytes, len );
 		key->codieren( n->getThis() );
-		stream->write( n->getBytes(), län );
+		stream->write( n->getBytes(), len );
 		n->release();
 	}
 	else
-		stream->write( bytes, län );
+		stream->write( bytes, len );
 }
 
-void Datei::lese( char *bytes, int län ) // ließt bytes aus datei
+void Datei::lese( char *bytes, int len ) // ließt bytes aus datei
 {
     if( !pfad )
         return;
 	if( stream )
 	{
-		int tmp = getLPosition();
-		stream->read( bytes, län );
+		__int64 tmp = getLPosition();
+		stream->read( bytes, len );
 		if( key )
 		{
 			key->setPos( tmp );
 			Bytes *n = new Bytes();
-			n->setBytesZ( bytes, län );
+			n->setBytesZ( bytes, len );
 			key->decodieren( n );
 		}
 	}
@@ -211,10 +211,10 @@ Text *Datei::leseZeile() // ließt eine zeile
     if( istEnde() )
         return 0;
     Text *ret = new Text( "" );
-    __int64 län = getGröße();
-    for( char c = 0; c != '\n' && stream->tellg() < län; )
+    __int64 len = getSize();
+    for( char c = 0; c != '\n' && stream->tellg() < len; )
     {
-		int tmp = getLPosition();
+		__int64 tmp = getLPosition();
         stream->read( &c, 1 );
 		if( key )
 		{
@@ -224,14 +224,14 @@ Text *Datei::leseZeile() // ließt eine zeile
 			key->decodieren( n );
 		}
         if( c )
-            ret->anhängen( (const char*)&c, 1 );
+            ret->append( (const char*)&c, 1 );
     }
     tmpSBPos = 7;
     tmpSBPos = -1;
     return ret;
 }
 
-void Datei::schließen() // schließt die Datei
+void Datei::close() // schließt die Datei
 {
     if( !pfad || !stream )
         return;
@@ -310,7 +310,7 @@ bool Datei::getNextBit( bool &bit ) // Datei Bitweise auslesen
     if( tmpLBPos == 7 )
     {
         tmpLBPos = -1;
-		int tmp = getLPosition();
+		__int64 tmp = getLPosition();
         stream->read( &tmpLByte, 1 );
 		if( key )
 		{
@@ -330,7 +330,7 @@ bool Datei::setNextBit( bool bit ) // Datei Bitweise speichern
     if( !pfad || !stream )
         return 0;
     tmpSBPos++;
-    tmpSByte |= ( (char)bit << ( 7 - tmpSBPos ) ) & ( 1 << ( 7 - tmpSBPos ) );
+    tmpSByte |= (char)( ( (char)bit << ( 7 - tmpSBPos ) ) & ( 1 << ( 7 - tmpSBPos ) ) );
     if( tmpSBPos == 7 )
     {
         tmpSBPos = -1;
@@ -350,7 +350,7 @@ bool Datei::setNextBit( bool bit ) // Datei Bitweise speichern
 }
 
 // Setzt den Schlüssel für die Datei
-void Datei::setSchlüssel( char *s, int l )
+void Datei::setKey( char *s, int l )
 {
 	if( l == 0 )
 	{
@@ -358,9 +358,9 @@ void Datei::setSchlüssel( char *s, int l )
 		return;
 	}
 	if( key )
-		key->setSchlüssel( s, l );
+		key->setKey( s, l );
 	else
-		key = new Schlüssel( s, l );
+		key = new Key( s, l );
 }
 
 // constant 
@@ -392,10 +392,10 @@ int Datei::getUnterdateiAnzahl() const // gibt die Anzahl der unterdateien an
     WIN32_FIND_DATA wfd;
     Text stxt = pfad->getText();
     stxt.ersetzen( '/', '\\' );
-    if( stxt.positionVon( '\\' ) == stxt.getLänge() - 1 )
-        stxt.anhängen( "*" );
+    if( stxt.positionVon( '\\' ) == stxt.getLength() - 1 )
+        stxt.append( "*" );
     else
-        stxt.anhängen( "\\*" );
+        stxt.append( "\\*" );
     fHandle = FindFirstFile( stxt.getText(), &wfd );
     FindNextFile( fHandle, &wfd );
     while( FindNextFile( fHandle, &wfd ) )
@@ -410,8 +410,8 @@ int Datei::getUnterdateiAnzahl() const // gibt die Anzahl der unterdateien an
     int ret = 0;
     Text stxt = pfad->getText();
     stxt.ersetzen( '\\', '/' );
-    if( stxt.positionVon( '/' ) == stxt.getLaenge() - 1 )
-        stxt.loeschen( stxt.getLaenge() - 1 );
+    if( stxt.positionVon( '/' ) == stxt.getLength() - 1 )
+        stxt.remove( stxt.getLength() - 1 );
     DIR *hdir;
     hdir = opendir( stxt.getText() );
     for( dirent *entry = readdir( hdir ); entry; entry = readdir( hdir ) )
@@ -435,10 +435,10 @@ RCArray< Text > *Datei::getDateiListe() const // gibt eine Liste mit unterdateie
     WIN32_FIND_DATA wfd;
     Text stxt = pfad->getText();
     stxt.ersetzen( '/', '\\' );
-    if( stxt.positionVon( '\\' ) == stxt.getLänge() - 1 )
-        stxt.anhängen( "*" );
+    if( stxt.positionVon( '\\' ) == stxt.getLength() - 1 )
+        stxt.append( "*" );
     else
-        stxt.anhängen( "\\*" );
+        stxt.append( "\\*" );
     fHandle = FindFirstFile( stxt.getText(), &wfd );
     FindNextFile( fHandle, &wfd );
     RCArray< Text > *ret = new RCArray< Text >();
@@ -458,8 +458,8 @@ RCArray< Text > *Datei::getDateiListe() const // gibt eine Liste mit unterdateie
         return 0;
     Text stxt = pfad->getText();
     stxt.ersetzen( '\\', '/' );
-    if( stxt.positionVon( '/' ) == stxt.getLaenge() - 1 )
-        stxt.loeschen( stxt.getLaenge() - 1 );
+    if( stxt.positionVon( '/' ) == stxt.getLength() - 1 )
+        stxt.remove( stxt.getLength() - 1 );
     DIR *hdir;
     hdir = opendir( stxt.getText() );
     if( hdir )
@@ -481,7 +481,7 @@ RCArray< Text > *Datei::getDateiListe() const // gibt eine Liste mit unterdateie
 #endif
 }
 
-__int64 Datei::getGröße() const // gibt die Größe der Datei zurück
+__int64 Datei::getSize() const // gibt die Größe der Datei zurück
 {
     if( !pfad )
         return 0;
@@ -497,20 +497,20 @@ __int64 Datei::getGröße() const // gibt die Größe der Datei zurück
         stream->seekg( tmp, std::ios::beg );
         stream->close();
         delete stream;
-        __int64 *größe = (__int64*)&gr;
-        *größe = ret;
+        __int64 *size = (__int64*)&gr;
+        *size = ret;
         return ret;
     }
     __int64 tmp = stream->tellg();
     stream->seekg( 0, std::ios::end );
     __int64 ret = stream->tellg();
     stream->seekg( tmp, std::ios::beg );
-    __int64 *größe = (__int64*)&gr;
-    *größe = ret;
+    __int64 *size = (__int64*)&gr;
+    *size = ret;
     return ret;
 }
 
-Zeit *Datei::getLetzteÄnderung() const // gibt das Datum der letzten Änderung
+Zeit *Datei::getLastChange() const // gibt das Datum der letzten Änderung
 {
     if( !pfad )
         return 0;
@@ -568,7 +568,7 @@ bool Datei::istEnde() const // prüft, ob die Datei zu ende ist
 {
     if( !stream || stream->tellg() < 0 )
         return 1;
-    __int64 i = getGröße();
+    __int64 i = getSize();
     return stream->tellg() >= i;
 }
 
@@ -604,7 +604,7 @@ void Framework::GetFreePfad( Text *zPfad ) // Sucht einen unbenutzten Dateinamen
     for( int i = 0; DateiExistiert( txt ); i++ )
     {
         txt = zPfad->getText();
-        txt.anhängen( i );
+        txt.append( i );
     }
     zPfad->setText( txt );
 }
@@ -616,9 +616,9 @@ bool Framework::DateiPfadErstellen( Text *pfad ) // Erstellt eine Datei in dem P
     return ret;
 }
 
-bool Framework::DateiLöschen( Text *pfad ) // Löscht die angegebene Datei
+bool Framework::DateiRemove( Text *pfad ) // Löscht die angegebene Datei
 {
-    bool ret = DateiLöschen( pfad->getText() );
+    bool ret = DateiRemove( pfad->getText() );
     pfad->release();
     return ret;
 }
@@ -655,7 +655,7 @@ bool Framework::DateiPfadErstellen( const char *pfad ) // Erstellt eine Datei in
     for( int i = 0; i < pf.anzahlVon( "\\" ); ++i ) // Jeden ordner erstellen wenn er nicht existiert
     {
         Text *t = pf.getTeilText( 0, pf.positionVon( "\\", i ) );
-        if( !t || !t->getLänge() )
+        if( !t || !t->getLength() )
         {
             if( t )
                 t->release();
@@ -665,7 +665,7 @@ bool Framework::DateiPfadErstellen( const char *pfad ) // Erstellt eine Datei in
 #pragma warning(suppress: 6031)
             _mkdir( t->getText() );
         t->release();
-        if( pf.positionVon( "\\", i ) == pf.getLänge() - 1 )
+        if( pf.positionVon( "\\", i ) == pf.getLength() - 1 )
             erst = 0;
     }
 #else
@@ -673,7 +673,7 @@ bool Framework::DateiPfadErstellen( const char *pfad ) // Erstellt eine Datei in
     for( int i = 0; i < pf.anzahlVon( "/" ); ++i ) // Jeden ordner erstellen wenn er nicht existiert
     {
         Text *t = pf.getTeilText( 0, pf.positionVon( "/", i ) );
-        if( !t || !t->getLänge() )
+        if( !t || !t->getLength() )
         {
             if( t )
                 t->release();
@@ -682,7 +682,7 @@ bool Framework::DateiPfadErstellen( const char *pfad ) // Erstellt eine Datei in
         if( !DateiExistiert( t->getThis() ) )
             mkdir( t->getText(), 0777 );
         t->release();
-        if( pf.positionVon( "\\", i ) == pf.getLänge() - 1 )
+        if( pf.positionVon( "\\", i ) == pf.getLength() - 1 )
             erst = 0;
     }
 #endif
@@ -694,7 +694,7 @@ bool Framework::DateiPfadErstellen( const char *pfad ) // Erstellt eine Datei in
     return DateiExistiert( pf );
 }
 
-bool Framework::DateiLöschen( const char *pfad ) // Löscht die angegebene Datei
+bool Framework::DateiRemove( const char *pfad ) // Löscht die angegebene Datei
 {
     Text pfa = pfad;
 #ifdef WIN32
@@ -713,13 +713,13 @@ bool Framework::DateiLöschen( const char *pfad ) // Löscht die angegebene Datei
         for( int i = 0; i < anz; ++i )
         {
             Text *pf = new Text( pfa.getText() );
-            if( pf->getText()[ pf->getLänge() - 1 ] != '/' )
-                pf->anhängen( "/" );
-            pf->anhängen( liste->get( i ) );
+            if( pf->getText()[ pf->getLength() - 1 ] != '/' )
+                pf->append( "/" );
+            pf->append( liste->get( i ) );
             if( ret )
-                ret = DateiLöschen( pf );
+                ret = DateiRemove( pf );
             else
-                DateiLöschen( pf );
+                DateiRemove( pf );
         }
         liste->release();
         dat->release();
@@ -745,13 +745,13 @@ bool Framework::DateiLöschen( const char *pfad ) // Löscht die angegebene Datei
         for( int i = 0; i < anz; ++i )
         {
             Text *pf = new Text( pfa.getText() );
-            if( pf->getText()[ pf->getLaenge() - 1 ] != '/' )
-                pf->anhaengen( "/" );
-            pf->anhaengen( liste->get( i ) );
+            if( pf->getText()[ pf->getLength() - 1 ] != '/' )
+                pf->append( "/" );
+            pf->append( liste->get( i ) );
             if( ret )
-                ret = DateiLoeschen( pf );
+                ret = DateiRemove( pf );
             else
-                DateiLoeschen( pf );
+				DateiRemove( pf );
         }
         liste->release();
         dat->release();
@@ -777,7 +777,7 @@ bool Framework::DateiUmbenennen( const char *pfad_alt, const char *pfad_neu ) //
                 Text tmp = pfad_neu;
                 tmp += "/a";
                 DateiPfadErstellen( tmp );
-                DateiLöschen( tmp );
+                DateiRemove( tmp );
             }
             Datei d;
             d.setDatei( pfad_alt );
@@ -793,7 +793,7 @@ bool Framework::DateiUmbenennen( const char *pfad_alt, const char *pfad_neu ) //
                 pf_a += list->z( i )->getText();
                 ret |= DateiUmbenennen( pf_a, pf );
             }
-            d.löschen();
+            d.remove();
         }
         else
         {
@@ -815,7 +815,7 @@ bool Framework::DateiUmbenennen( const char *pfad_alt, const char *pfad_neu ) //
                 Text tmp = pfad_neu;
                 tmp += "/a";
                 DateiPfadErstellen( tmp );
-                DateiLöschen( tmp );
+				DateiRemove( tmp );
             }
             Datei d;
             d.setDatei( pfad_alt );
@@ -831,7 +831,7 @@ bool Framework::DateiUmbenennen( const char *pfad_alt, const char *pfad_neu ) //
                 pf_a += list->z( i )->getText();
                 ret |= DateiUmbenennen( pf_a, pf );
             }
-            d.löschen();
+            d.remove();
         }
         else
         {

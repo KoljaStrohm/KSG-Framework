@@ -59,7 +59,7 @@ void M2DVorschau::doMausEreignis( MausEreignis &me )
             toolTip->setMausIn( 0 );
         return;
     }
-    if( me.verarbeitet || ( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Verlässt ) )
+    if( me.verarbeitet || ( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves ) )
     {
         if( mausIn )
         {
@@ -67,7 +67,7 @@ void M2DVorschau::doMausEreignis( MausEreignis &me )
             if( toolTip )
                 toolTip->setMausIn( 0 );
             MausEreignis me2;
-            me2.id = ME_Verlässt;
+            me2.id = ME_Leaves;
             me2.mx = me.mx;
             me2.my = me.my;
             me2.verarbeitet = 0;
@@ -75,7 +75,7 @@ void M2DVorschau::doMausEreignis( MausEreignis &me )
         }
         return;
     }
-    if( !mausIn && me.id != ME_Verlässt )
+    if( !mausIn && me.id != ME_Leaves )
     {
         mausIn = 1;
         if( toolTip )
@@ -93,11 +93,11 @@ void M2DVorschau::doMausEreignis( MausEreignis &me )
         if( hatStyle( Style::UsrScale ) )
         {
             if( mdl && me.id == ME_UScroll )
-                mdl->addGröße( 0.01f );
+                mdl->addSize( 0.01f );
             if( mdl && me.id == ME_DScroll )
-                mdl->addGröße( -0.01f );
+                mdl->addSize( -0.01f );
         }
-        if( me.id == ME_RLinks || me.id == ME_RRechts || me.id == ME_Verlässt )
+        if( me.id == ME_RLinks || me.id == ME_RRechts || me.id == ME_Leaves )
         {
             mx = -1;
             my = -1;
@@ -111,13 +111,13 @@ void M2DVorschau::doMausEreignis( MausEreignis &me )
                 if( getMausStand( M_Rechts ) && hatStyle( Style::UsrRot ) )
                 {
                     if( me.mx > gr.x / 2 )
-                        mdl->addDrehung( 0.01f * ( me.my - my ) );
+                        mdl->addDrehung( 0.01f * (float)( me.my - my ) );
                     else
-                        mdl->addDrehung( -0.01f * ( me.my - my ) );
+                        mdl->addDrehung( -0.01f * (float)( me.my - my ) );
                     if( me.my > gr.y / 2 )
-                        mdl->addDrehung( -0.01f * ( me.mx - mx ) );
+                        mdl->addDrehung( -0.01f * (float)( me.mx - mx ) );
                     else
-                        mdl->addDrehung( 0.01f * ( me.mx - mx ) );
+                        mdl->addDrehung( 0.01f * (float)( me.mx - mx ) );
                 }
                 mx = me.mx;
                 my = me.my;
@@ -139,16 +139,16 @@ bool M2DVorschau::tick( double tv )
     rend |= mdl ? mdl->tick( tv ) : 0;
     rend |= af ? af->tick( tv ) : 0;
     rend |= ram ? ram->tick( tv ) : 0;
-    return __super::tick( tv );
+    return ZeichnungHintergrund::tick( tv );
 }
 
 void M2DVorschau::render( Bild &rb )
 {
-    löscheStyle( Style::VScroll | Style::HScroll );
+    removeStyle( Style::VScroll | Style::HScroll );
     if( hatStyleNicht( Style::Sichtbar ) )
         return;
-    __super::render( rb );
-    if( !rb.setDrawOptions( innenPosition, innenGröße ) )
+	ZeichnungHintergrund::render( rb );
+    if( !rb.setDrawOptions( innenPosition, innenSize ) )
         return;
     if( mdl )
     {

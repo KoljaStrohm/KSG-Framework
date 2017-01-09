@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Quelldateien">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
@@ -135,9 +135,6 @@
     <ClInclude Include="Bild.h">
       <Filter>Headerdateien\Framework\Grafik\2D</Filter>
     </ClInclude>
-    <ClInclude Include="RenderThread.h">
-      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
-    </ClInclude>
     <ClInclude Include="MausEreignis.h">
       <Filter>Headerdateien\Framework</Filter>
     </ClInclude>
@@ -146,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="Array.h">
       <Filter>Headerdateien\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Maus.h">
-      <Filter>Headerdateien\Framework\OS</Filter>
     </ClInclude>
     <ClInclude Include="Schrift.h">
       <Filter>Headerdateien\Framework</Filter>
@@ -163,9 +157,6 @@
       <Filter>Headerdateien\Framework</Filter>
     </ClInclude>
     <ClInclude Include="FrameworkMath.h">
-      <Filter>Headerdateien\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="main.h">
       <Filter>Headerdateien\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Zeit.h">
@@ -186,9 +177,6 @@
     <ClInclude Include="M2Datei.h">
       <Filter>Headerdateien\Framework\OS\Datei</Filter>
     </ClInclude>
-    <ClInclude Include="DateiDialog.h">
-      <Filter>Headerdateien\Framework\OS\Datei</Filter>
-    </ClInclude>
     <ClInclude Include="M2DVorschau.h">
       <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
@@ -197,9 +185,6 @@
     </ClInclude>
     <ClInclude Include="Zeichnung.h">
       <Filter>Headerdateien\Framework\Objekte2D</Filter>
-    </ClInclude>
-    <ClInclude Include="DefaultShader.h">
-      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
     </ClInclude>
     <ClInclude Include="M3Datei.h">
       <Filter>Headerdateien\Framework\OS\Datei</Filter>
@@ -213,23 +198,14 @@
     <ClInclude Include="Mat4.h">
       <Filter>Headerdateien\Framework\Grafik\4D</Filter>
     </ClInclude>
-    <ClInclude Include="Kam3D.h">
-      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
-    </ClInclude>
     <ClInclude Include="DreieckListe.h">
       <Filter>Headerdateien\Framework\Grafik\2D</Filter>
     </ClInclude>
     <ClInclude Include="Welt3D.h">
       <Filter>Headerdateien\Framework\Grafik\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Render3D.h">
-      <Filter>Headerdateien\Framework\Grafik\3D</Filter>
-    </ClInclude>
     <ClInclude Include="Textur.h">
       <Filter>Headerdateien\Framework\Grafik\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="DXBuffer.h">
-      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
     </ClInclude>
     <ClInclude Include="Cube.h">
       <Filter>Headerdateien\Framework\Objekte3D</Filter>
@@ -246,9 +222,6 @@
     <ClInclude Include="TexturModel.h">
       <Filter>Headerdateien\Framework\Objekte3D</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
-    </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Headerdateien\Framework\Objekte2D</Filter>
     </ClInclude>
@@ -258,11 +231,11 @@
     <ClInclude Include="Key.h">
       <Filter>Headerdateien\Framework</Filter>
     </ClInclude>
+    <ClInclude Include="DXBuffer.h">
+      <Filter>Headerdateien\Framework\Grafik\DX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Maus.cpp">
-      <Filter>Quelldateien\Framework\OS</Filter>
-    </ClCompile>
     <ClCompile Include="Prozess.cpp">
       <Filter>Quelldateien\Framework\OS</Filter>
     </ClCompile>
@@ -311,9 +284,6 @@
     <ClCompile Include="Bildschirm.cpp">
       <Filter>Quelldateien\Framework\Grafik\DX</Filter>
     </ClCompile>
-    <ClCompile Include="RenderThread.cpp">
-      <Filter>Quelldateien\Framework\Grafik\DX</Filter>
-    </ClCompile>
     <ClCompile Include="Global.cpp">
       <Filter>Quelldateien\Framework</Filter>
     </ClCompile>
@@ -353,9 +323,6 @@
     <ClCompile Include="M2Datei.cpp">
       <Filter>Quelldateien\Framework\OS\Datei</Filter>
     </ClCompile>
-    <ClCompile Include="DateiDialog.cpp">
-      <Filter>Quelldateien\Framework\OS\Datei</Filter>
-    </ClCompile>
     <ClCompile Include="M2DVorschau.cpp">
       <Filter>Quelldateien\Framework\Objekte2D</Filter>
     </ClCompile>
@@ -368,16 +335,7 @@
     <ClCompile Include="Zeichnung3D.cpp">
       <Filter>Quelldateien\Framework\Objekte3D</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Quelldateien\Framework\Grafik\DX</Filter>
-    </ClCompile>
     <ClCompile Include="Welt3D.cpp">
-      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Render3D.cpp">
-      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Kam3D.cpp">
       <Filter>Quelldateien\Framework\Grafik\3D</Filter>
     </ClCompile>
     <ClCompile Include="Textur.cpp">
@@ -385,9 +343,6 @@
     </ClCompile>
     <ClCompile Include="Model3D.cpp">
       <Filter>Quelldateien\Framework\Grafik\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="DXBuffer.cpp">
-      <Filter>Quelldateien\Framework\Grafik\DX</Filter>
     </ClCompile>
     <ClCompile Include="Cube.cpp">
       <Filter>Quelldateien\Framework\Objekte3D</Filter>
@@ -406,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="Key.cpp">
       <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="DXBuffer.cpp">
+      <Filter>Quelldateien\Framework\Grafik\DX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -62,21 +62,21 @@ bool KSGTDatei::laden()
     {
         inf.seekg( pos, std::ios::beg );
         char c = 1;
-        int län = 0;
+        int len = 0;
         do
         {
             inf.read( &c, 1 );
-            ++län;
-        } while( c != 0 && c != '\n' && pos + län < gr );
-        if( pos + län == gr )
-            ++län;
+            ++len;
+        } while( c != 0 && c != '\n' && pos + len < gr );
+        if( pos + len == gr )
+            ++len;
         inf.seekg( pos, std::ios::beg );
-        char *v = new char[ län ];
-        v[ län - 1 ] = 0;
-        if( län > 1 )
-            inf.read( v, län - 1 );
-        pos += län;
-        if( län > 1 && !data->z( zeilenPos ) )
+        char *v = new char[ len ];
+        v[ len - 1 ] = 0;
+        if( len > 1 )
+            inf.read( v, len - 1 );
+        pos += len;
+        if( len > 1 && !data->z( zeilenPos ) )
             data->set( new RCArray< Text >, zeilenPos );
         if( !data->z( zeilenPos )->z( feldPos ) )
             data->z( zeilenPos )->set( new Text(), feldPos );
@@ -116,12 +116,12 @@ bool KSGTDatei::setZeile( int zeile, int feldAnzahl, RCArray< Text > *zWert )
     return 1;
 }
 
-bool KSGTDatei::löscheZeile( int zeile )
+bool KSGTDatei::removeZeile( int zeile )
 {
     int zA = getZeilenAnzahl();
     if( zeile >= zA )
         return 0;
-    data->lösche( zeile );
+    data->remove( zeile );
     return 1;
 }
 
@@ -211,7 +211,7 @@ bool KSGTDatei::setFeld( int zeile, int feld, const char *wert )
     return 1;
 }
 
-bool KSGTDatei::löscheFeld( int zeile, int feld )
+bool KSGTDatei::removeFeld( int zeile, int feld )
 {
     int zA = getZeilenAnzahl();
     if( zeile >= zA )
@@ -219,13 +219,13 @@ bool KSGTDatei::löscheFeld( int zeile, int feld )
     int fA = getFeldAnzahl( zeile );
     if( feld >= fA )
         return 0;
-    data->z( zeile )->lösche( feld );
+    data->z( zeile )->remove( feld );
     return 1;
 }
 
 bool KSGTDatei::speichern()
 {
-    if( !pfad->getLänge() )
+    if( !pfad->getLength() )
         return 0;
     if( !DateiExistiert( pfad->getText() ) )
         DateiPfadErstellen( pfad->getText() );
@@ -243,7 +243,7 @@ bool KSGTDatei::speichern()
             if( f )
                 of.write( "\0", 1 );
             if( data->z( z ) && data->z( z )->z( f ) )
-                of.write( data->z( z )->z( f )->getText(), data->z( z )->z( f )->getLänge() );
+                of.write( data->z( z )->z( f )->getText(), data->z( z )->z( f )->getLength() );
         }
     }
     of.close();

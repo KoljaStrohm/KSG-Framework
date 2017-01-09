@@ -20,7 +20,7 @@ namespace Framework
         class Style : public TextFeld::Style
         {};
     private:
-        Punkt größe;
+        Punkt size;
         double animationSpeed;
         double warten;
         double wartenCount;
@@ -38,13 +38,13 @@ namespace Framework
         __declspec( dllexport ) ~ToolTip();
         // Setzt die ausgeklappte Größe.
         //  breite: Die Breite in Pixeln
-        //  höhe: Die Höhe in Pixeln
+        //  height: Die Höhe in Pixeln
         // Die Größe wird beim rendern überschrieben
-        __declspec( dllexport ) void setGröße( int breite, int höhe );
+        __declspec( dllexport ) void setSize( int breite, int height );
         // Setzt die ausgeklappte Größe.
         //  gr: Die Größe in Pixeln
         // Die Größe wird beim rendern überschrieben
-        __declspec( dllexport ) void setGröße( Punkt &gr );
+        __declspec( dllexport ) void setSize( Punkt &gr );
         // Setzt die anzahl an Seunden, de gewartet wird bis der Tipp erscheint
         //  warten: Die Anzahl an Sekunden
         __declspec( dllexport ) void setWarten( double warten );

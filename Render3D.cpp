@@ -198,7 +198,7 @@ void Render3D::beginnModel( Model3D *zMdl )
         lastObjektId = zMdl->getDatenId();
         unsigned int offset = 0;
         ID3D11Buffer *b = zMdl->zVertexBuffer()->zBuffer();
-        unsigned int es = (unsigned)zMdl->zVertexBuffer()->getElementLänge();
+        unsigned int es = (unsigned)zMdl->zVertexBuffer()->getElementLength();
         context->IASetVertexBuffers( 0, 1, &b, &es, &offset );
     }
 }
@@ -210,9 +210,9 @@ void Render3D::beginnModel( Model3D *zMdl )
 void Render3D::draw( DXIndexBuffer *zIndexBuffer, Textur *textur, D3D_PRIMITIVE_TOPOLOGY struktur )
 {
     DXGI_FORMAT f = DXGI_FORMAT_R32_UINT;
-    if( zIndexBuffer->getElementLänge() == 2 )
+    if( zIndexBuffer->getElementLength() == 2 )
         f = DXGI_FORMAT_R16_UINT;
-    if( zIndexBuffer->getElementLänge() == 1 )
+    if( zIndexBuffer->getElementLength() == 1 )
         f = DXGI_FORMAT_R8_UINT;
     context->IASetIndexBuffer( zIndexBuffer->zBuffer(), f, 0 );
     context->IASetPrimitiveTopology( struktur );

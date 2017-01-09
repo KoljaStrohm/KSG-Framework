@@ -30,7 +30,7 @@ namespace Framework
         // Konstructor
         __declspec( dllexport ) Welt3D();
         // Destruktor
-        __declspec( dllexport ) ~Welt3D();
+        __declspec( dllexport ) virtual ~Welt3D();
         // Fügt der Welt ein Objekt hinzu
         //  obj: Das Objekt, was hinzugefügt werden soll
         __declspec( dllexport ) void addZeichnung( Zeichnung3D *obj );

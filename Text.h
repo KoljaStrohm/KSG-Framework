@@ -14,7 +14,7 @@ namespace Framework
         char *txt;
         char suchGBeg;
         char suchGEnd;
-        int präzision;
+        int precision;
         int ref;
 
     public:
@@ -47,44 +47,44 @@ namespace Framework
         __declspec( dllexport ) void setText( Text *t );
         // Hängt eine Zeichenfolge ans Ende des Textes an, die von der Schrift Klasse beim zeichnen interpretiert wird, so dass der nachfolgende Text in einer anderen Farbe gezeichnet wird.
         //  fc: Der Farbcode im A8R8G8B8 Format
-        __declspec( dllexport ) void farbeAnhängen( int fc );
+        __declspec( dllexport ) void appendColor( int fc );
         // Hängt die übergebene Zahl als Hex Text (0-F) ans Ende des Textes an.
         //  num: Die Zahl, die ins Hex System umgewandelt und angehängt werden soll
-        __declspec( dllexport ) void hexAnhängen( int num );
+        __declspec( dllexport ) void appendHex( int num );
         // Fügt den übergebenen Buchtaben der Zeichenkette hinzu
         //  c: Der Buchstabe, der angehängt werden soll
-        __declspec( dllexport ) void anhängen( char c );
+        __declspec( dllexport ) void append( char c );
         // Hängt die übergebene Zeichenkette ans Ende des Textes an
         //  t: Die Zeichenkette, deren Kopie ans Ende des Textes angehängt werden soll
-        __declspec( dllexport ) void anhängen( const char *t );
+        __declspec( dllexport ) void append( const char *t );
         // Hängt einen Teil der übergebenen Zeichenkette ans Ende des Textes an
         //  t: Die Zeichenkette, deren Kopie angehängt werden soll
         //  l: Die Länge des Textabschnittes der angehängt werden soll
-        __declspec( dllexport ) void anhängen( const char *t, int l );
+        __declspec( dllexport ) void append( const char *t, int l );
         // Hängt den Inhalt des eines Textes ans Ende des Textes an
         //  t: Der Text, dessen Kopie ans Ende des Textes angehängt werden soll
-        __declspec( dllexport ) void anhängen( Text *t );
+        __declspec( dllexport ) void append( Text *t );
         // Hängt eine Zahl ans Ende Des Textes an
         //  num: Die Zahl, die in einen Text umgewandelt und am Ende angehängt werden soll
-        __declspec( dllexport ) void anhängen( int num );
+        __declspec( dllexport ) void append( int num );
         // Hängt eine Zahl ohne Vorzeichenbit am Ende des Textes an
         //  num: Die Zahl, die in einen Text umgewandelt und am Ende angehängt werden soll
-        __declspec( dllexport ) void anhängen( unsigned int num );
+        __declspec( dllexport ) void append( unsigned int num );
         // Hängt eine Kommazahl am Ende des Textes an
         //  num: Die Kommazahl, die am Ende des Textes angehängt werden soll
-        __declspec( dllexport ) void anhängen( double num );
+        __declspec( dllexport ) void append( double num );
         // Fügt an einer Bestimmten Stelle ein Zeichen in den Text ein
         //  p: Die position im Text bei der das Zeichen eingefügt werden soll
         //  c: Das Zeichen, das eingefügt werden soll
-        __declspec( dllexport ) void einfügen( int p, char c );
+        __declspec( dllexport ) void insert( int p, char c );
         // Fügt an einer Bestimmten Stelle im Text eine Zeichenkette ein
         //  p: Die position im Text bei der die Zeichenkette eingefügt werden soll
         //  t: Die Zeichenkette, deren Kopie an eingefügt werden soll
-        __declspec( dllexport ) void einfügen( int p, const char *t );
+        __declspec( dllexport ) void insert( int p, const char *t );
         // Fügt den Inhalt eines Textes an einer Bestimmten Stelle im Text ein
         //  p: Die Position im Text, bei der der inhalt des Textest eingefügt werden soll
         //  t: Der Text, dessen Kopie an der Stelle eingefügt werden soll
-        __declspec( dllexport ) void einfügen( int p, Text *t );
+        __declspec( dllexport ) void insert( int p, Text *t );
         // Ersetzt einen bestimmten Textabschnitt mit einer anderen Zeichenkette
         //  p1: Die Startposition des zu ersetzenden Textabschnittes
         //  p2: Die Endposition des zu ersetzenden Textabschnittes
@@ -144,41 +144,41 @@ namespace Framework
         __declspec( dllexport ) void ersetzen( int i, Text *t1, Text *t2 );
         // Löscht den bisherigen Text und erzeugt einen Text, der aus einem Bestimten Buchstaben besteht, mit einer bestimmten Länge
         //  c: Der Buchstabe, aus dem der Text bestehen soll
-        //  län: Die Länge des Textes
-        __declspec( dllexport ) void füllText( char c, int län );
+        //  length: Die Länge des Textes
+        __declspec( dllexport ) void fillText( char c, int length );
         // Löscht ein Bestimmtes Zeichen aus dem Text
         //  p: Die Position des zu löschenden Zeichens
-        __declspec( dllexport ) void löschen( int p );
+        __declspec( dllexport ) void remove( int p );
         // Löscht einen Bestimmten Textabschnitt
         //  p1: Die Startposition des zu löschenden Abschnittes
         //  p2: Die Endposition des zu löschenden Abschnittes (Das Zeichen bei p2 bleibt erhalten)
-        __declspec( dllexport ) void löschen( int p1, int p2 );
+        __declspec( dllexport ) void remove( int p1, int p2 );
         // Löscht jedes Vorkommen eines bestimmten Buchsaben
         //  c: Der Buchstabe, dessen Vorkommen gelöscht werden soll
-        __declspec( dllexport ) void löschen( char c );
+        __declspec( dllexport ) void remove( char c );
         // Löscht jedes Vorkommen einer bestimmten Zeichenkette
         //  t: Die Zeichenkette, deren Vorkommen entfernt werden sollen
-        __declspec( dllexport ) void löschen( const char *t );
+        __declspec( dllexport ) void remove( const char *t );
         // Löscht jedes Vorkommen des Inhalts eines Textes
         //  t: Der text, dessen Inhalt gelöscht werden soll
-        __declspec( dllexport ) void löschen( Text *t );
+        __declspec( dllexport ) void remove( Text *t );
         // Löscht das i-te Vorkommen eines bestimmten Buchstaben
         //  i: Das wie vielte Vorkommen des Buchstabens gelöscht werden soll
         //  c: Der Buchstabe, dessen i-tes Vorkommen gelöscht werden soll
-        __declspec( dllexport ) void löschen( int i, char c );
+        __declspec( dllexport ) void remove( int i, char c );
         // Löscht das i-te Vorkommen einer bestimmten Zechenkette
         //  i: Das wie vielte Vorkommen der Zeichenkette gelöscht werden soll
         //  t: Die Zeichenkette, dessen i-tes Vorkommen gelöscht werden soll
-        __declspec( dllexport ) void löschen( int i, const char *t );
+        __declspec( dllexport ) void remove( int i, const char *t );
         // Löscht das i-te Vorkommen eines bestimmten Textinhaltes
         //  i: Das wie vielte Vorkommen des Textinhaltes gelöscht werden soll
         //  t: Der Text, dessen i-tes Vorkommen gelöscht werden soll
-        __declspec( dllexport ) void löschen( int i, Text *t );
+        __declspec( dllexport ) void remove( int i, Text *t );
         // Setzt die Anzahl der Nachkommastellen beim Anhängen von Kommazahlen
         //  p: Die Anzahl der Stellen nach dem Komma
-        __declspec( dllexport ) void setPräzision( int p );
+        __declspec( dllexport ) void setPrecision( int p );
         // Gibt die Länge des Textes zurück
-        __declspec( dllexport ) int getLänge() const;
+        __declspec( dllexport ) int getLength() const;
         // Ermittelt die neue Curserposition nachdem Drücken der 'Links' Pfeiltaste
         //  pos: Die alte Curserposition
         __declspec( dllexport ) int getLKick( int pos ) const;
@@ -311,12 +311,12 @@ namespace Framework
     __declspec( dllexport ) void TextKopieren( const char *txt );
     // Ermittelt, ob in der Zwischenablage des Betriebssystems eine Zeichenkette steht.
     //  return: Die Zeichenkette aus der Zwischenablage. Wenn keine Zeichenkette kopiert wurde, wird eine lehre Zeichenkette zurückgegeben.
-    __declspec( dllexport ) char *TextEinfügen();
+    __declspec( dllexport ) char *TextInsert();
     // Wandelt einen bestimmten schreibbaren Buchstaben in einen Groß- oder Kleinbuchstaben um
     //  c: Der Buchstabe, der umgewandelt werden soll
     //  groß: Wenn (true), so wird der Buchstabe in einen Großbuchstaben umgewandelt. Wenn (false), wird er in einen Kleinbuchstaben umgewandelt.
     //  return: Den umgewandelten Buchstaben
-    __declspec( dllexport ) char KleinOrGroß( char c, bool groß );
+    __declspec( dllexport ) char smallOrBig( char c, bool big );
     // Ermittelt, ob ein Buchstabe ein schreibbares Zeichen ist
     //  zeichen: Der Buchstabe, der geprüft werden soll
     //  return: (true), wenn der Buchstabe gezeichnet werden kann. (false) sonnst
@@ -344,6 +344,6 @@ namespace Framework
     // Ermittelt die Länge einer bestimmten Zeichenkette
     //  txt: Die Zeichenkette, deren Länge ermittelt werden soll
     //  return: Die Länge der Zeichenkette
-    __declspec( dllexport ) int textLänge( const char *txt );
+    __declspec( dllexport ) int textLength( const char *txt );
 }
 #endif

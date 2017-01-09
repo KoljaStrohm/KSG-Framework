@@ -25,7 +25,7 @@ namespace Framework
         // Destruktor
         __declspec( dllexport ) ~DateiDialog();
         // Löscht die Liste mit zugelassenen Dateitypen
-        __declspec( dllexport ) void löscheDateiTypen();
+        __declspec( dllexport ) void removeDateiTypen();
         // Fügt einen zugelassenen Dateityp hinzu
         //  name: Der Name des Dateitypes. Ist für den Nutzer in der Select Box sichtbar
         //  typ: Der Dateityp, der ausgewählt werden darf
@@ -55,7 +55,7 @@ namespace Framework
     private:
         DateiDialog *dialog;
         Text *ret;
-        bool öffnen;
+        bool open;
         int ref;
 
     public:
@@ -65,9 +65,9 @@ namespace Framework
         __declspec( dllexport ) ~DateiDialogTh();
         // Legt fest, ob der Dialog zum öffnen oder speichern ist
         //  b: 1, wenn er zum öfnen ist. 0, wenn er zum speichern ist
-        __declspec( dllexport ) void setÖffnen( bool b );
+        __declspec( dllexport ) void setOpen( bool b );
         // Löscht die liste mit erlaubten Dateitypen
-        __declspec( dllexport ) void löscheDateiTypen();
+        __declspec( dllexport ) void removeDateiTypen();
         // Fügt einen zugelassenen Dateityp hinzu
         //  name: Der Name des Dateitypes. Ist für den Nutzer in der Select Box sichtbar
         //  typ: Der Dateityp, der ausgewählt werden darf

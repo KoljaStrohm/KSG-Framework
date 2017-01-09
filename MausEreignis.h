@@ -18,7 +18,7 @@ namespace Framework
     const int ME_DKRechts = 7;
     const int ME_DKMitte = 8;
     const int ME_Betritt = 9;
-    const int ME_Verlässt = 10;
+    const int ME_Leaves = 10;
     const int ME_Bewegung = 11;
     const int ME_UScroll = 12;
     const int ME_DScroll = 13;

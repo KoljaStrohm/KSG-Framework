@@ -32,7 +32,7 @@ namespace Framework
             const static __int64 AuswahlBuffer = 0x000100000; // Wenn dieser Flag gesetzt ist, bekommt der Wert, der gerade ausgewählt ist einen Farbübergang
             const static __int64 AuswahlRahmen = 0x000200000; // Wenn dieser Flag gesetzt ist, bekommt der Wert, der gerade ausgewählt ist einen Rahmen
             const static __int64 MultiStyled = 0x000400000; // Wenn dieser Flag gesetzt ist, hat jeder Wert seine eigenen Hintergründe unt Rahmen und nicht alle die selben
-            const static __int64 MaxHöhe = 0x004000000; // Legt eine maximale Höhe der ausgeklappten Liste fest. Es erscheint automatisch eine Scrollbar wenn mehr Elemente da sind als sichtbar sein können
+            const static __int64 MaxHeight = 0x004000000; // Legt eine maximale Höhe der ausgeklappten Liste fest. Es erscheint automatisch eine Scrollbar wenn mehr Elemente da sind als sichtbar sein können
             const static __int64 MausHintergrund = 0x008000000; // Wenn dieser Flag gesetzt ist, hat ein Element, wo die Maus drau zeigt, einen Hintergrund
             const static __int64 MausHBild = 0x010000000; // Wenn dieser Flag gesetzt ist, hat ein Element, wo die Maus drauf zeigt, ein Hintergrundbild
             const static __int64 MausHAlpha = 0x020000000; // Wenn dieser Flag gesetzt ist, hat ein Element, wo die Maus drauf zeigt, einen transparenten Hintergrund
@@ -41,7 +41,7 @@ namespace Framework
             //const int NachObenAusklappen	= 0x100000000;
             //const int AutoAusklappRichtung	= 0x200000000;
 
-            const static __int64 Normal = Sichtbar | Erlaubt | Rahmen | FeldRahmen | AuswahlBuffer | AuswahlRahmen | MaxHöhe | VScroll | MausRahmen | MausBuffer; // Normaler Style: Sichtbar, Erlaubt, Rahmen, FeldRahmen, AuswahlBuffer, AuswahlRahmen, MaxHöhe, VScroll, MausRahmen, MausBuffer
+            const static __int64 Normal = Sichtbar | Erlaubt | Rahmen | FeldRahmen | AuswahlBuffer | AuswahlRahmen | MaxHeight | VScroll | MausRahmen | MausBuffer; // Normaler Style: Sichtbar, Erlaubt, Rahmen, FeldRahmen, AuswahlBuffer, AuswahlRahmen, MaxHöhe, VScroll, MausRahmen, MausBuffer
         };
     private:
         Schrift *schrift;
@@ -67,9 +67,9 @@ namespace Framework
         int anzahl;
         int auswahl;
         bool ausgeklappt;
-        int ausklappHöhe;
-        int ausklapMaxHöhe;
-        int eintragHöhe;
+        int ausklappHeight;
+        int ausklapMaxHeight;
+        int eintragHeight;
         double tickval;
         int mausEintrag;
         bool scrollAnzeigen;
@@ -81,7 +81,7 @@ namespace Framework
         // Konstruktor 
         __declspec( dllexport ) AuswahlBox();
         // Destruktor 
-        __declspec( dllexport ) ~AuswahlBox();
+        __declspec( dllexport ) virtual ~AuswahlBox();
         // Setzt den Parameter der Rückruffunktion, die aufgerufen wird, wenn der Benutzer ein neues element auswählt
         //  p: Der Parameter
         __declspec( dllexport ) void setEventParam( void *p );
@@ -114,7 +114,7 @@ namespace Framework
         __declspec( dllexport ) void setEintragZ( int i, TextFeld *txt );
         // Löscht einen Eintrag
         //  i: Der Index des Eintrags
-        __declspec( dllexport ) void löscheEintrag( int i );
+        __declspec( dllexport ) void removeEintrag( int i );
         // Setzt einen Zeiger auf den Knopf, der zum aus und einklappen der Liste verwendet wird
         //  ausK: Der Knopf
         __declspec( dllexport ) void setAusklappKnopfZ( Knopf *ausK );
@@ -153,7 +153,7 @@ namespace Framework
         // Setzt dei Stärke eines Farbübergangns, der für einen bestimmten Eintrag benutzt wird
         //  i: Der Index des Eintrags
         //  afSt: Die Stärke
-        __declspec( dllexport ) void setEintragAlphaFeldStärke( int i, int afSt );
+        __declspec( dllexport ) void setEintragAlphaFeldStrength( int i, int afSt );
         // Setzt eienen Zeiger auf einen Rahmen, der bei dem ausgewählten Eintrag verwendet wird
         //  rahmen: Der Rahmen
         __declspec( dllexport ) void setAuswRahmenZ( LRahmen *rahmen );
@@ -180,7 +180,7 @@ namespace Framework
         __declspec( dllexport ) void setAuswAlphaFeldFarbe( int afF );
         // Setzt die Stärke eines Farbübergangs, der bei dem ausgewählten Eintrag verwendet wird
         //  afSt: Die Stärke
-        __declspec( dllexport ) void setAuswAlphaFeldStärke( int afSt );
+        __declspec( dllexport ) void setAuswAlphaFeldStrength( int afSt );
         // Setzt eienen Zeiger auf einen Rahmen, der bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
         //  i: Der Index des Eintrags
         //  rahmen: Der Rahmen
@@ -216,7 +216,7 @@ namespace Framework
         // Setzt die Stärke eines Farbverlaufs, der bei dem Flag MultiStyled bei der Auswahl eines bestimmten Eintrags verwendet wird
         //  i: Der Index des Eintrags
         //  afSt: Die Stärke
-        __declspec( dllexport ) void setMsAuswAlphaFeldStärke( int i, int afSt );
+        __declspec( dllexport ) void setMsAuswAlphaFeldStrength( int i, int afSt );
         // Setzt einen Zeiger auf einen Rahmen, der bei dem Eintrag verwendet wird, auf den die Maus zeigt
         //  rahmen: Der Rahmen
         __declspec( dllexport ) void setMausRahmenZ( LRahmen *rahmen );
@@ -243,7 +243,7 @@ namespace Framework
         __declspec( dllexport ) void setMausAlphaFeldFarbe( int afF );
         // Setzt die Stärke eines Farbverlaufs, der bei dem Eintrag verwendet wird, auf den die Maus zeigt
         //  afSt: Die Stärke
-        __declspec( dllexport ) void setMausAlphaFeldStärke( int afSt );
+        __declspec( dllexport ) void setMausAlphaFeldStrength( int afSt );
         // Setzt einen Zeiger auf einen Rahmen, der bei dem Flag MultiStyled bei einem bestimmten Eintrag verwendet wird, auf den die Maus zeigt
         //  i: Der Index des Eintrags
         //  rahmen: Der Rahmen
@@ -279,7 +279,7 @@ namespace Framework
         // Setzt die Stärke einens Farbübergangs, der bei dem Flag MultiStyled bei einem bestimmten Eintrag verwendet wird, auf den die Maus zeigt
         //  i: Der Index des Eintrags
         //  afSt: Die Stärke
-        __declspec( dllexport ) void setMsMausAlphaFeldStärke( int i, int afSt );
+        __declspec( dllexport ) void setMsMausAlphaFeldStrength( int i, int afSt );
         // Wählt ein Element aus
         //  i: Der Index des Elements
         __declspec( dllexport ) void setAuswahl( int i );
@@ -291,11 +291,11 @@ namespace Framework
         //  i: Der Index des Eintrags
         __declspec( dllexport ) void scrollZuEintrag( int i );
         // Setzt die maximale Ausklapp Höhe der Liste
-        //  maxHöhe: Die maximale Höhe in Pixeln
-        __declspec( dllexport ) void setMaxAuskappHöhe( int maxHöhe );
+        //  maxHeight: Die maximale Höhe in Pixeln
+        __declspec( dllexport ) void setMaxAuskappHeight( int maxHeight );
         // Setzt die Höhe der Einträge
-        //  höhe: Die Höhe in Pixeln
-        __declspec( dllexport ) void setEintragHöhe( int höhe );
+        //  height: Die Höhe in Pixeln
+        __declspec( dllexport ) void setEintragHeight( int height );
         // Fügt Styles zu einem bestimmten Eintrag hinzu, falls der Flag MultiStyled gesetzt wurde
         //  i: Der Index des Eintrags
         //  abStyle: Der Style, der hinzugefügt werden soll
@@ -312,7 +312,7 @@ namespace Framework
         // Entfernt Styles von einem bestimmten Eintrag, falls der Flag MultiStyled gesetzt wurde
         //  i: Der Index des Eintrags
         //  abStyle: Der Style, der entfernt werden soll
-        __declspec( dllexport ) void löscheMsStyle( int i, __int64 abStyle );
+        __declspec( dllexport ) void removeMsStyle( int i, __int64 abStyle );
         // Aktualisiert das Objekt. Wird vom Framework aufgerufen
         //  tickVal: Die Zeit in sekunden, die seit dem lezten Aufruf dieser Funktion vergangen ist
         //  return: 1, wenn sich etwas verändert hat und das Bild neu gezeichnet werden muss. 0 sonst
@@ -351,9 +351,9 @@ namespace Framework
         // Gibt zurück, ob die Liste gerade Ausgeklappt ist
         __declspec( dllexport ) bool istAusgeklappt() const;
         // Gibt die maximale Höhe der ausgeklappten Liste zurück
-        __declspec( dllexport ) int getMaxHöhe() const;
+        __declspec( dllexport ) int getMaxHeight() const;
         // Gibt die Höhe eines Eintrags zurück
-        __declspec( dllexport ) int getEintragHöhe() const;
+        __declspec( dllexport ) int getEintragHeight() const;
         // Gibt den Knopf zurück, der zum aus- und einklappen dr Liste verwendet wird
         __declspec( dllexport ) Knopf *getAusklappKnopf() const;
         // Gibt den Knopf ohne erhöhten Reference Counter zurück, der zum aus- und einklappen dr Liste verwendet wird
@@ -381,7 +381,7 @@ namespace Framework
         __declspec( dllexport ) int getEintragAlphaFeldFarbe( int i ) const;
         // Gibt die Stärke eines Farbübergangs eines Eintrags zurück
         //  i: Der Index des Eintrags
-        __declspec( dllexport ) int getEintragAlphaFeldStärke( int i ) const;
+        __declspec( dllexport ) int getEintragAlphaFeldStrength( int i ) const;
         // Gibt die Hintergrund Farbe eines Eintrags im A8R8G8B8 Format zurück
         //  i: Der Index des Eintrags
         __declspec( dllexport ) int getEintragHintergrundFarbe( int i ) const;
@@ -406,7 +406,7 @@ namespace Framework
         // Gibt die Farbe des Farbübergangs zurück, der bei der Auswahl eines Eintrags verwendet wird
         __declspec( dllexport ) int getAuswAlphaFeldFarbe() const;
         // Gibt die Stärke des Farbübergangs zurück, der bei der Auswahl eines Eintrags verwendet wird
-        __declspec( dllexport ) int getAuswAlphaFeldStärke() const;
+        __declspec( dllexport ) int getAuswAlphaFeldStrength() const;
         // Gibt die Hintergrundfarbe im A8R8G8B8 Format zurück, die bei der Auswahl eines Eintrags verwendet wird
         __declspec( dllexport ) int getAuswHintergrundFarbe() const;
         // Gibt das Hintergrundbild zurück, das bei der Auswahl eines Eintrags verwendet wird
@@ -436,7 +436,7 @@ namespace Framework
         __declspec( dllexport ) int getMsAuswAlphaFeldFarbe( int i ) const;
         // Gibt die Stärke des Farbübergangs zurück, der bei dem Flag MultiStyled bei der auswahl eines bestimmten Eintrags verwendet wird
         //  i: Der Index des Eintrags
-        __declspec( dllexport ) int getMsAuswAlphaFeldStärke( int i ) const;
+        __declspec( dllexport ) int getMsAuswAlphaFeldStrength( int i ) const;
         // Gibt die Hintergrund Farbe im A8R8G8B8 Format zurück, die bei dem Flag MultiStyled bei der auswahl eines bestimmten Eintrags verwendet wird
         //  i: Der Index des Eintrags
         __declspec( dllexport ) int getMsAuswHintergrundFarbe( int i ) const;
@@ -461,7 +461,7 @@ namespace Framework
         // Gibt die Farbe des Farbübergangs im A8R8G8B8 Format zurück, der verwendet wird, wenn die Maus auf einen Eintrag zeigt
         __declspec( dllexport ) int getMausAlphaFeldFarbe() const;
         // Gibt die Breite des Farbübergangs zurück, der verwendet wird, wenn die Maus auf einen Eintrag zeigt
-        __declspec( dllexport ) int getMausAlphaFeldStärke() const;
+        __declspec( dllexport ) int getMausAlphaFeldStrength() const;
         // Gibt die Hintergrund Farbe im A8R8G8B8 Format zurück, die verwendet wird, wenn die Maus auf einen Eintrag zeigt
         __declspec( dllexport ) int getMausHintergrundFarbe() const;
         // Gibt das Hintergrund Bild zurück, das verwendet wird, wenn die Maus auf einen Eintrag zeigt
@@ -491,7 +491,7 @@ namespace Framework
         __declspec( dllexport ) int getMsMausAlphaFeldFarbe( int i ) const;
         // Gibt die Stärke des Farbübergangs zurück, der bei dem Flag Multistyle verwendet wird, wenn die Maus auf einen bestimmten Eintrag zeigt
         //  i: Der Index des Eintrags
-        __declspec( dllexport ) int getMsMausAlphaFeldStärke( int i ) const;
+        __declspec( dllexport ) int getMsMausAlphaFeldStrength( int i ) const;
         // Gibt die Hintergrund Farbe im A8R8G8B8 Format zurück, die bei dem Flag Multistyle verwendet wird, wenn die Maus auf einen bestimmten Eintrag zeigt
         //  i: Der Index des Eintrags
         __declspec( dllexport ) int getMsMausHintergrundFarbe( int i ) const;

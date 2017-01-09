@@ -32,7 +32,7 @@ namespace Framework
             const static __int64 Scroll = VScroll | HScroll; // Vereint die Flags VScroll und HScroll
         };
     private:
-        unsigned char schriftGröße;
+        unsigned char schriftSize;
         Schrift *schrift;
         Text *text;
         int sF;
@@ -47,7 +47,7 @@ namespace Framework
         // Konstruktor 
         __declspec( dllexport ) TextFeld();
         // Destruktor 
-        __declspec( dllexport ) ~TextFeld();
+        __declspec( dllexport ) virtual ~TextFeld();
         // setzt einen Zeiger auf den Text im Textfeld
         //  txt: Der Zeiger auf den Text
         __declspec( dllexport ) void setTextZ( Text *txt );
@@ -72,7 +72,7 @@ namespace Framework
         __declspec( dllexport ) void setSchriftZ( Schrift *schrift );
         // Setzt die Schriftgröße (Standart: 12)
         //  gr: Die Schriftgröße, die zum Textzeichnen verwendet werden soll
-        __declspec( dllexport ) void setSchriftGröße( unsigned char gr );
+        __declspec( dllexport ) void setSchriftSize( unsigned char gr );
         // Setzt die Schrift Farbe
         //  fc: Die Farbe, die zum Textzeichnen verwendet werden soll
         __declspec( dllexport ) void setSchriftFarbe( int fc );
@@ -113,7 +113,7 @@ namespace Framework
         //  return: 0, falls die Schrift nicht gesetzt wurde
         __declspec( dllexport ) Schrift *zSchrift() const;
         // Gibt die Schriftgröße zurück
-        __declspec( dllexport ) unsigned char getSchriftGröße() const;
+        __declspec( dllexport ) unsigned char getSchriftSize() const;
         // Gibt die Schriftfarbe im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getSchriftFarbe() const;
         // Gibt den Anzeigebuchstabe zurück
@@ -121,7 +121,7 @@ namespace Framework
         // Gibt die Cursorposition zurück
         __declspec( dllexport ) int getCursorPos() const;
         // Gibt den Index des Buchstaben zurück, con dem an der Text bis zur Cursorposition eingefärbt ist
-        __declspec( dllexport ) int getFärbungPos() const;
+        __declspec( dllexport ) int getSelectionPos() const;
         // Erzeugt eine Komplette Kopie des Textfeldes, welches ohne auswirkungen verändert werden kann
         __declspec( dllexport ) Zeichnung *dublizieren() const override;
         // Erhöht den Reference Counting Zähler.

@@ -8,9 +8,9 @@ namespace Framework
 {
     class Text; // Text.h
     class Zeit; // Zeit.h
-	namespace Verschlüsselung
+	namespace Encryption
 	{
-		class Schlüssel; // Schlüssel.h
+		class Key; // Schlüssel.h
 	}
     class Datei; // aus dieser Datei
 
@@ -34,7 +34,7 @@ namespace Framework
         char tmpLBPos;
         char tmpSByte;
         char tmpSBPos;
-		Verschlüsselung::Schlüssel *key;
+		Encryption::Key *key;
 
     public:
         // Konstruktor 
@@ -57,14 +57,14 @@ namespace Framework
         __declspec( dllexport ) bool umbenennen( Text *pfad );
         // Löscht die Datei
         //  return: 1, wenn das löschen erfolgreich war. 0 sonst
-        __declspec( dllexport ) bool löschen();
+        __declspec( dllexport ) bool remove();
         // Erstellt die Datei neu. Wenn im Pfad Ordner vorkommen, die nicht existieren, so werden sie erstellt
         //  return 1: wenn das erstellen erfolgreich war. 0, sonst
         __declspec( dllexport ) bool erstellen();
         // Öffnet die Datei
         //  style: Legt fest, ob die Datei zum lesen und/oder schreiben geöffnet wird. Alle Elemente aus Datei::Style:: sin möglich
         //  return 1: wenn die datei erfolgreich geöffnet werden konnte. 0 sonnst
-        __declspec( dllexport ) bool öffnen( int style );
+        __declspec( dllexport ) bool open( int style );
         // Setzt die Position des Bytes, das als nächstes gelesen werden soll
         //  pos: Der Index des Bytes
         //  ende: 1, wenn der Index vom ende der Datei zählt. 0, wenn der Index vom Beginn der Datei zählt
@@ -75,19 +75,19 @@ namespace Framework
         __declspec( dllexport ) void setSPosition( __int64 pos, bool ende );
         // Schreibt in die Datei
         //  bytes: Ein Array von bytes, die geschrieben werden sollen.
-        //  län: Wie viele Bytes in die Datei geschrieben werden sollen
-        __declspec( dllexport ) void schreibe( char *bytes, int län );
+        //  len: Wie viele Bytes in die Datei geschrieben werden sollen
+        __declspec( dllexport ) void schreibe( char *bytes, int len );
         // Ließt aus der Datei
         //  bytes: Ein Array, der mit Bytes aus der Datei gefüllt werden soll
-        //  län: Wie viele Bytes aus der Datei gelesen werden sollen
-        __declspec( dllexport ) void lese( char *bytes, int län );
+        //  len: Wie viele Bytes aus der Datei gelesen werden sollen
+        __declspec( dllexport ) void lese( char *bytes, int len );
         // Ließt die nächste zeile der Datei ein
         //  return: Die gelesene Zeile als Text mit zeilenumbruch
         __declspec( dllexport ) Text *leseZeile();
         // Schließt die datei
-        __declspec( dllexport ) void schließen();
+        __declspec( dllexport ) void close();
 		// Setzt den Schlüssel für die Datei
-		__declspec( dllexport ) void setSchlüssel( char *s, int l );
+		__declspec( dllexport ) void setKey( char *s, int l );
 #ifdef WIN32
         // Setzt den Zeitpunkt der letzten Änderung der Datei (nur für Windows)
         //  zeit: den Zeitpunkt der letzten Änderung
@@ -116,10 +116,10 @@ namespace Framework
         __declspec( dllexport ) RCArray< Text > *getDateiListe() const;
         // Gibt die Größe der Datei zurück
         // return -1, falls die Datei ein Verzeichnis ist oder ein Fehler auftrat. Sonst die größe der Datei
-        __declspec( dllexport ) __int64 getGröße() const;
+        __declspec( dllexport ) __int64 getSize() const;
         // Gibt den Zeitpunkt der letzten änderung zurück
         //  return: 0, falls ein Fehler aufgetreten ist. Der Zeitpunkt der letzten Änderung sonst
-        __declspec( dllexport ) Zeit *getLetzteÄnderung() const;
+        __declspec( dllexport ) Zeit *getLastChange() const;
         // Prüft, ob die Datei existiert
         //  return: 1, falls die Datei existiert. 0 sonnst
         __declspec( dllexport ) bool existiert() const;
@@ -157,7 +157,7 @@ namespace Framework
     // Löscht die angegebene Datei
     //  pfad: Der Pfad zur Datei
     //  return: 1, falls die Datei gelöscht wurde
-    __declspec( dllexport ) bool DateiLöschen( Text *pfad );
+    __declspec( dllexport ) bool DateiRemove( Text *pfad );
     // Benennt eine Datei um oder verschiebt sie
     //  pfad_alt: Der Pfad zur Datei, die umbenannt werden soll.
     //  pfad_neu: Der neue Pfad zur Datei. Wenn sich nur der Name ändert, wird sie nur umbenannt
@@ -178,7 +178,7 @@ namespace Framework
     // Löscht die angegebene Datei
     //  pfad: Der Pfad zur Datei
     //  return: 1, falls die Datei gelöscht wurde
-    __declspec( dllexport ) bool DateiLöschen( const char *pfad );
+    __declspec( dllexport ) bool DateiRemove( const char *pfad );
     // Benennt eine Datei um oder verschiebt sie
     //  pfad_alt: Der Pfad zur Datei, die umbenannt werden soll.
     //  pfad_neu: Der neue Pfad zur Datei. Wenn sich nur der Name ändert, wird sie nur umbenannt

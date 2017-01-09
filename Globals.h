@@ -11,28 +11,29 @@ namespace Framework
 {
     class ThreadRegister; // Thread.h
     class Thread; // Thread.h
+	class Model3DList; // Model3DList.h
+	class TexturList; // TexturList.h
 #ifdef WIN32
     class Maus; // Maus.h
     class WFensterArray; // Fenster.h
-    class Model3DList; // Model3DList.h
-    class TexturList; // TexturList.h
 
     Global WFensterArray WFensterA;
     Global bool MausTrack;
-    Global bool MausStand[ 3 ];
-    Global bool TastenStand[ 255 ];
     Global Maus MausZeiger;
     Global bool msgExit;
     Global Punkt mausPos;
-    Global Model3DList *m3dRegister;
-    Global TexturList *texturRegister;
 #endif
+	Global bool TastenStand[ 255 ];
+	Global bool MausStand[ 3 ];
+	Global Model3DList *m3dRegister;
+	Global TexturList *texturRegister;
     Global bool istInitialisiert;
     Global ThreadRegister *thRegister;
 
 #ifdef WIN32
     // Gibt die Koordinaten der Maus auf dem Bildschirm zurück
     __declspec( dllexport ) const Punkt &getMausPos();
+#endif
     // Gibt zurück, ob eine Taste der Maus momentan gedrückt wird
     //  taste: Die Taste, die geprüft werden soll
     // Beispiel: getMausStand( M_Links ); (Benötigt include <MausEreignis.h>
@@ -46,11 +47,10 @@ namespace Framework
     //  taste: Die Taste, deren Status gesetzt werden soll
     //  st: Ob die Taste momentan gedrückt wird. (true), wenn ja. (false) sonnst.
     __declspec( dllexport ) void setTastenStand( unsigned char taste, bool st );
-    // Gibt das Model3DData Register des Frameworks ohne erhöhten reference Counter zurück
-    __declspec( dllexport ) Model3DList *zM3DRegister();
-    // Gibt das Textur Register des Frameworks ohne erhöhten reference Counter zurück
-    __declspec( dllexport ) TexturList *zTexturRegister();
-#endif
+	// Gibt das Model3DData Register des Frameworks ohne erhöhten reference Counter zurück
+	__declspec( dllexport ) Model3DList *zM3DRegister();
+	// Gibt das Textur Register des Frameworks ohne erhöhten reference Counter zurück
+	__declspec( dllexport ) TexturList *zTexturRegister();
     // Initialisiert das Framework
     // Wird in der (WinMain) des Frameworks automatisch aufgerufen
     __declspec( dllexport ) void initFramework();

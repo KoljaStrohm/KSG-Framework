@@ -1,7 +1,9 @@
 #include "Welt3D.h"
 #include "Zeichnung3D.h"
-#include "Render3D.h"
 #include "MausEreignis.h"
+#ifdef WIN32
+#include "Render3D.h"
+#endif
 
 using namespace Framework;
 
@@ -228,9 +230,10 @@ bool Welt3D::tick( double tickval )
 //  zRObj: Enthällt alle Werkzeuge, die zum Zeichnen verwendet werden
 void Welt3D::render( Render3D *zRObj )
 {
+#ifdef WIN32
     upd = 1;
+	EnterCriticalSection( &cs );
     int index = 0;
-    EnterCriticalSection( &cs );
     for( Zeichnung3D **i = members; index < arraySize; i++, index++ )
     {
         if( *i && zRObj->isInFrustrum( ( *i )->getPos(), ( *i )->getRadius() ) )
@@ -311,6 +314,7 @@ void Welt3D::render( Render3D *zRObj )
     for( int i = index2 - 1; i >= 0; i-- )
         alphaVS[ i ]->render( zRObj );
     LeaveCriticalSection( &cs );
+#endif
 }
 
 // Erhöht den Reference Counting Zähler.

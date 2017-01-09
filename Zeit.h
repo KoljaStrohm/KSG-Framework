@@ -214,26 +214,26 @@ namespace Framework
         //  zeit: Die zu prüfende Uhrzeit.
         //  return: (true), wenn die gespeicherte Zeit größer als die übergebene Zeit ist. (false) sonst.
         // Beispiel: (5:30:00).istGrößer( (10:40:29) ); return false
-        __declspec( dllexport ) bool istGrößer( Uhrzeit *zeit ) const;
+        __declspec( dllexport ) bool istLater( Uhrzeit *zeit ) const;
         // prüft, ob die Uhrzeit größer als die übergebene Zeit ist.
         //  stunde: Die Stunden der zu prüfenden Zeit.
         //  minute: Die Minute der zu prüfenden Zeit.
         //  sekunde: Die Sekunde der zu prüfenden Zeit.
         //  return: (true), wenn die gespeicherte Zeit größer als die übergebene Zeit ist. (false) sonst.
         // Beispiel: (5:30:00).istGrößer( 10, 40, 29 ); return false
-        __declspec( dllexport ) bool istGrößer( int stunde, int minute, int sekunde ) const;
+        __declspec( dllexport ) bool istLater( int stunde, int minute, int sekunde ) const;
         // prüft, ob die Uhrzeit größer als die übergebene Zeit ist.
         //  format: Eine Zeichenfolge, die bestimmt in welcher Form die Uhrzeit in (zeit) vorliegt. h=Stunde, i=Minute,s=Sekunde.
         //  zeit: Eine Zeichenfolge die die andere Uhrzeit enthält.
         //  return: (true), wenn die gespeicherte Zeit größer als die übergebene Zeit ist. (false) sonst.
         // Beispiel: (5:30:00).istGrößer( "h:i:s", "10:40:29" ); return false
-        __declspec( dllexport ) bool istGrößer( const char *format, const char *zeit ) const;
+        __declspec( dllexport ) bool istLater( const char *format, const char *zeit ) const;
         // prüft, ob die Uhrzeit größer als die übergebene Zeit ist.
         //  format: Eine Zeichenfolge, die bestimmt in welcher Form die Uhrzeit in (zeit) vorliegt. h=Stunde, i=Minute,s=Sekunde.
         //  zeit: Ein Text Zeichnung, welches die andere Uhrzeit enthält.
         //  return: (true), wenn die gespeicherte Zeit größer als die übergebene Zeit ist. (false) sonst.
         // Beispiel: (5:30:00).istGrößer( "h:i:s", "10:40:29" ); return false
-        __declspec( dllexport ) bool istGrößer( const char *format, Text *zeit ) const;
+        __declspec( dllexport ) bool istLater( const char *format, Text *zeit ) const;
         // Erhöht den Reference Counting Zähler
         //  return: this
         __declspec( dllexport ) Uhrzeit *getThis();
@@ -422,26 +422,26 @@ namespace Framework
         //  datum: Das zu prüfende Datum.
         //  return: (true), wenn das gespeicherte Datum hinter dem übergebenen liegt. (false) sonnst.
         // Beispiel: ( 1.11.1995 ).istGrößer( ( 23.1.2016 ) ); return false
-        __declspec( dllexport ) bool istGrößer( Datum *datum ) const;
+        __declspec( dllexport ) bool istLater( Datum *datum ) const;
         // Prüft, ob das gespeicherte Datum größer als das übergebene ist.
         //  jahr: Das Jahr des zu prüfenden Datums.
         //  monat: Der Monat des zu prüfenden Datums.
         //  tag: Der Tag des zu prüfenden Datums.
         //  return: (true), wenn das gespeicherte Datum hinter dem übergebenen liegt. (false) sonnst.
         // Beispiel: ( 1.11.1995 ).istGrößer( 2016, 1, 23 ); return false
-        __declspec( dllexport ) bool istGrößer( int jahr, int monat, int tag ) const;
+        __declspec( dllexport ) bool istLater( int jahr, int monat, int tag ) const;
         // Prüft, ob das gespeicherte Datum größer als das übergebene ist.
         //  format: Eine Zeichenkette, die angibt in welcher Form das Datum in (datum) vorhanden ist. y=Jahr, m=Monat, d=Tag.
         //  datum: Eine Zeichenkette, die das zu überprüfende Datum enthält.
         //  return: (true), wenn das gespeicherte Datum hinter dem übergebenen liegt. (false) sonnst.
         // Beispiel: ( 1.11.1995 ).istGrößer( "y, m, d", "2016, 1, 23" ); return false
-        __declspec( dllexport ) bool istGrößer( const char *format, const char *datum ) const;
+        __declspec( dllexport ) bool istLater( const char *format, const char *datum ) const;
         // Prüft, ob das gespeicherte Datum größer als das übergebene ist.
         //  format: Eine Zeichenkette, die angibt in welcher Form das Datum in (datum) vorhanden ist. y=Jahr, m=Monat, d=Tag.
         //  datum: Ein Text Zeichnung, welches das zu überprüfende Datum enthält.
         //  return: (true), wenn das gespeicherte Datum hinter dem übergebenen liegt. (false) sonnst.
         // Beispiel: ( 1.11.1995 ).istGrößer( "y, m, d", new Text( "2016, 1, 23" ) ) ); return true
-        __declspec( dllexport ) bool istGrößer( const char *format, Text *datum ) const;
+        __declspec( dllexport ) bool istLater( const char *format, Text *datum ) const;
         // Erhöht den Reference Counting Zähler
         //  return: this
         __declspec( dllexport ) Datum *getThis();
@@ -636,7 +636,7 @@ namespace Framework
         // Überprüft, ob die gespeicherte Zeit größer als die übergebene Zeit ist.
         //  zeit: Die zu überprüfende Zeit.
         //  return: (true) wenn die gespeicherte Zeit nach der übergebenen Zeit liegt. (false) sonnst.
-        __declspec( dllexport ) bool istGrößer( Zeit *zeit ) const;
+        __declspec( dllexport ) bool istLater( Zeit *zeit ) const;
         // Überprüft, ob die gespeicherte Zeit größer als die übergebene Zeit ist.
         //  jahr: Das zu überprüfende Jahr.
         //  monat: Der zu überprüfende Monat.
@@ -645,17 +645,17 @@ namespace Framework
         //  minute: Die zu überprüfende Minute.
         //  sekunde: Die zu überprüfende Sekunde.
         //  return: (true) wenn die gespeicherte Zeit nach der übergebenen Zeit liegt. (false) sonnst.
-        __declspec( dllexport ) bool istGrößer( int jahr, int monat, int tag, int stunde, int minute, int sekunde ) const;
+        __declspec( dllexport ) bool istLater( int jahr, int monat, int tag, int stunde, int minute, int sekunde ) const;
         // Überprüft, ob die gespeicherte Zeit größer als die übergebene Zeit ist.
         //  format: Eine Zeichenkette, die angibt in welcher Form die neue Zeit in (zeit) vorhanden ist. y=Jahr, m=Monat, d=Tag, h=Stunde, i=Minute, s=Sekunde.
         //  zeit: Eine Zeichenkette, die die zu überprüfende Zeit enthält.
         //  return: (true) wenn die gespeicherte Zeit nach der übergebenen Zeit liegt. (false) sonnst.
-        __declspec( dllexport ) bool istGrößer( const char *format, const char *zeit ) const;
+        __declspec( dllexport ) bool istLater( const char *format, const char *zeit ) const;
         // Überprüft, ob die gespeicherte Zeit größer als die übergebene Zeit ist.
         //  format: Eine Zeichenkette, die angibt in welcher Form die neue Zeit in (zeit) vorhanden ist. y=Jahr, m=Monat, d=Tag, h=Stunde, i=Minute, s=Sekunde.
         //  zeit: Eine Text Zeichnung, welches die zu überprüfende Zeit enthält.
         //  return: (true) wenn die gespeicherte Zeit nach der übergebenen Zeit liegt. (false) sonnst.
-        __declspec( dllexport ) bool istGrößer( const char *format, Text *zeit ) const;
+        __declspec( dllexport ) bool istLater( const char *format, Text *zeit ) const;
         // Erhöht den Reference Counting Zähler
         //  return: this
         __declspec( dllexport ) Zeit *getThis();

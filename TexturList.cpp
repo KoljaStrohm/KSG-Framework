@@ -47,7 +47,7 @@ bool TexturList::addTextur( Textur *t, const char *name )
 
 // Entfernt eine Textur aus der Liste
 //  name: Der Name der Textur
-void TexturList::löscheTextur( const char *name )
+void TexturList::removeTextur( const char *name )
 {
     EnterCriticalSection( &cs );
     int index = 0;
@@ -55,8 +55,8 @@ void TexturList::löscheTextur( const char *name )
     {
         if( i.var->istGleich( name ) )
         {
-            names->lösche( index );
-            textures->lösche( index );
+            names->remove( index );
+            textures->remove( index );
             LeaveCriticalSection( &cs );
             return;
         }

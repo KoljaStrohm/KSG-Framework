@@ -47,8 +47,8 @@ void Maus::ladeMaus( Bild *maus )
     HDC hAndMaskDC = CreateCompatibleDC( hDC );
     HDC hXorMaskDC = CreateCompatibleDC( hDC );
 
-    hAndMaskBitmap = CreateCompatibleBitmap( hDC, maus->getBreite(), maus->getHöhe() );
-    hXorMaskBitmap = CreateCompatibleBitmap( hDC, maus->getBreite(), maus->getHöhe() );
+    hAndMaskBitmap = CreateCompatibleBitmap( hDC, maus->getBreite(), maus->getHeight() );
+    hXorMaskBitmap = CreateCompatibleBitmap( hDC, maus->getBreite(), maus->getHeight() );
 
     //Select the bitmaps to DC
     HBITMAP hOldAndMaskBitmap = (HBITMAP)SelectObject( hAndMaskDC, hAndMaskBitmap );
@@ -58,7 +58,7 @@ void Maus::ladeMaus( Bild *maus )
     int y;
     for( int x = 0; x < maus->getBreite(); ++x )
     {
-        for( y = 0; y < maus->getHöhe(); ++y )
+        for( y = 0; y < maus->getHeight(); ++y )
         {
             int pixel = maus->getPixel( x, y );
             if( ( ( pixel >> 24 ) & 0xFF ) == 0 )

@@ -118,28 +118,28 @@ namespace Framework
         __declspec( dllexport ) void setY( int yPos );
         // Setzt die Größe der Zeichnung
         //  gr: Ein Punkt mit x als Breite und y als Höhe in Pixeln
-        __declspec( dllexport ) void setGröße( const Punkt &gr );
+        __declspec( dllexport ) void setSize( const Punkt &gr );
         // Setzt die Position der Zeichnung
         //  x: Die X Position in Pixeln
         //  y: Die Y Position in Pixeln
         __declspec( dllexport ) void setPosition( int x, int y );
         // Setzt die Größe der Zeichnung
         //  br: Die Breite in Pixeln
-        //  hö: Die Höhe in Pixeln
-        __declspec( dllexport ) void setGröße( int br, int hö );
+        //  height: Die Höhe in Pixeln
+        __declspec( dllexport ) void setSize( int br, int height );
         // Setzt den Style der Zeichnung
         //  style: Der neue Style bestehend aus den Flags aus der zugehörigen Style Klasse
         __declspec( dllexport ) void setStyle( __int64 style );
         // Setzt den Style der Zeichnung
         //  style: Alle Style Flags, die verändert werden sollen
-        //  add_löschen: 1, falls der Style hinzugefügt werden soll. 0, falls der Style entfernt weden soll
-        __declspec( dllexport ) void setStyle( __int64 style, bool add_löschen );
+        //  add_remove: 1, falls der Style hinzugefügt werden soll. 0, falls der Style entfernt weden soll
+        __declspec( dllexport ) void setStyle( __int64 style, bool add_remove );
         // Fügt Style Flags hinzu
         //  style: Der Style, der hinzugefügt werden soll
         __declspec( dllexport ) void addStyle( __int64 style );
         // Entfernt Style Flags
         //  style: Der Style, der entfernt werden soll
-        __declspec( dllexport ) void löscheStyle( __int64 style );
+        __declspec( dllexport ) void removeStyle( __int64 style );
         // Zeichnet die Zeihnung in ein bestimmtes Bild
         //  zRObj: Das Bild, in das gezeichnet werden soll
         __declspec( dllexport ) virtual void render( Bild &zRObj );
@@ -150,11 +150,11 @@ namespace Framework
         // Gibt die Position der Zeichnung in Pixeln zurück
         __declspec( dllexport ) const Punkt &getPosition() const;
         // Gibt die Größe der Zeichnung in Pixeln zurück. x für Breite und y für Höhe
-        __declspec( dllexport ) const Punkt &getGröße() const;
+        __declspec( dllexport ) const Punkt &getSize() const;
         // Gibt die Breite der Zeichnung in Pixeln zurück
         __declspec( dllexport ) int getBreite() const;
         // Gibt die Höhe der Zeichnung in Pixeln zurück
-        __declspec( dllexport ) int getHöhe() const;
+        __declspec( dllexport ) int getHeight() const;
         // Gibt die X Position der Zeichnung in Pixeln zurück
         __declspec( dllexport ) int getX() const;
         // Gibt die Y Position der Zeichnung in Pixeln zurück
@@ -166,11 +166,11 @@ namespace Framework
         // Gibt zurück, ob bestimmte Styles gesetzt wurden
         //  style: Die Styles, die überprüft werden sollen
         //  return: 1, falls alle Styles in style gesetzt wurden
-        __declspec( dllexport ) inline bool hatStyle( __int64 style ) const;
+        __declspec( dllexport ) bool hatStyle( __int64 style ) const;
         // Gibt zurück, ob bestimmte Styles nicht gesetzt wurden
         //  style: Die Styles, die geprüft werden sollen
         //  return: 1, falls alle Styles in style nicht gesetzt wurden
-        __declspec( dllexport ) inline bool hatStyleNicht( __int64 style ) const;
+        __declspec( dllexport ) bool hatStyleNicht( __int64 style ) const;
         // Kopiert die Komplette Zeichnung, so dass sie ohne Effekt auf das Original verändert werden kann
         __declspec( dllexport ) virtual Zeichnung *dublizieren() const;
     };
@@ -252,7 +252,7 @@ namespace Framework
         VScrollBar *vertikalScrollBar;
         HScrollBar *horizontalScrollBar;
         Punkt innenPosition;
-        Punkt innenGröße;
+        Punkt innenSize;
 
     public:
         // Konstruktor 
@@ -273,7 +273,7 @@ namespace Framework
         __declspec( dllexport ) void setAlphaFeldZ( AlphaFeld *buff );
         // Setzt die Stärke des AlphaFeldes (benötigt Flag zum Zeichnen: Buffered)
         //  st: Die Stärke des AlphaFeldes, welches über dem Hintergrund gezeichnet werden soll
-        __declspec( dllexport ) void setAlphaFeldStärke( int st );
+        __declspec( dllexport ) void setAlphaFeldStrength( int st );
         // Setzt die Farbe des AlphaFeldes (benötigt Flag zum Zeichnen: Buffered)
         //  fc: Die Farbe des AlphaFeldes, welches über dem Hintergrund gezeichnet werden soll
         __declspec( dllexport ) void setAlphaFeldFarbe( int fc );
@@ -328,7 +328,7 @@ namespace Framework
         //  return: 0, falls das AlphaFeld nicht definiert wurde
         __declspec( dllexport ) AlphaFeld *zAlphaFeld() const;
         // Git die Stärke des Alphafeldes zurück
-        __declspec( dllexport ) int getAlphaFeldStärke() const;
+        __declspec( dllexport ) int getAlphaFeldStrength() const;
         // Gibt die Farbe des Alphafedes im A8R8G8B8 Format zurück
         __declspec( dllexport ) int getAlphaFeldFarbe() const;
         // Gibt den Rahmen zurück
