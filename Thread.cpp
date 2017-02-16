@@ -106,7 +106,7 @@ int Thread::warteAufThread( int zeit ) // wartet zeit lang auf den Thread
     if( pthread_self() == threadHandle )
         return 0;
     if( threadHandleSys )
-        *threadHandleSys = threadHandle;
+        *threadHandleSys = 0;
     int ret = pthread_join( threadHandle, 0 );
     threadHandle = 0;
     return ret;

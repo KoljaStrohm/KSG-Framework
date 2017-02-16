@@ -56,10 +56,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <RemoteRootDir>/home/kolja/projects</RemoteRootDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <RemoteRootDir>/home/kolja/projects</RemoteRootDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -77,13 +79,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetExt>.so</TargetExt>
-    <RemoteProjectDir>$(RemoteRootDir)/Framework/Debug</RemoteProjectDir>
+    <RemoteProjectDir>$(RemoteRootDir)/Framework/debug</RemoteProjectDir>
     <TargetName>libdbgFramework</TargetName>
     <IncludePath>D:\Visual Studio 2017\Common7\IDE\VC\Linux\include\usr\include\c++\5;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetExt>.so</TargetExt>
-    <RemoteProjectDir>$(RemoteRootDir)/Framework/Release</RemoteProjectDir>
+    <RemoteProjectDir>$(RemoteRootDir)/Framework/release</RemoteProjectDir>
     <TargetName>libFramework</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
@@ -200,10 +202,15 @@
     <ClCompile>
       <CppAdditionalWarning>switch;no-deprecated-declarations;empty-body;conversion;return-type;parentheses;no-format;uninitialized;unreachable-code;unused-function;unused-value;unused-variable;%(CppAdditionalWarning)</CppAdditionalWarning>
       <AdditionalOptions>-fPIC</AdditionalOptions>
+      <PositionIndependentCode>false</PositionIndependentCode>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(StlAdditionalDependencies)</AdditionalDependencies>
       <LibraryDependencies>pthread;%(LibraryDependencies)</LibraryDependencies>
+      <GenerateMapFile>
+      </GenerateMapFile>
+      <Trace>true</Trace>
+      <TraceSymbols>test;%(TraceSymbols)</TraceSymbols>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
