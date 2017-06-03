@@ -11,7 +11,6 @@ using namespace Framework;
 // Konstructor
 Welt3D::Welt3D()
 {
-    InitializeCriticalSection( &cs );
     arraySize = 100;
     arraySizeAlpha = 100;
     members = new Zeichnung3D*[ arraySize ];
@@ -38,14 +37,13 @@ Welt3D::~Welt3D()
     delete[] distSqSort;
     delete[] alphaVS;
     delete[] elementsSort;
-    DeleteCriticalSection( &cs );
 }
 
 // Fügt der Welt ein Objekt hinzu
 //  obj: Das Objekt, was hinzugefügt werden soll
 void Welt3D::addZeichnung( Zeichnung3D *obj )
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     Zeichnung3D **tmp = members;
     int max = arraySize;
     if( obj->hatAlpha() )
@@ -58,7 +56,7 @@ void Welt3D::addZeichnung( Zeichnung3D *obj )
         if( !*tmp )
         {
             *tmp = obj;
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return;
         }
         tmp++;
@@ -81,7 +79,7 @@ void Welt3D::addZeichnung( Zeichnung3D *obj )
         distSqSort= new float[ arraySizeAlpha + arraySize ];
         alphaVS = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
         elementsSort = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
-        LeaveCriticalSection( &cs );
+        cs.unlock();
         return;
     }
     arraySize += 100;
@@ -99,14 +97,14 @@ void Welt3D::addZeichnung( Zeichnung3D *obj )
     distSqSort = new float[ arraySizeAlpha + arraySize ];
     alphaVS = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
     elementsSort = new Zeichnung3D*[ arraySizeAlpha + arraySize ];
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 }
 
 // Entfernt ein Objekt aus der Welt
 //  obj: Das Objekt, das entwernt werden soll
 void Welt3D::removeZeichnung( Zeichnung3D *obj )
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     int index = 0;
     if( !obj->hatAlpha() )
     {
@@ -116,11 +114,11 @@ void Welt3D::removeZeichnung( Zeichnung3D *obj )
             {
                 *i = 0;
                 rend = 1;
-                LeaveCriticalSection( &cs );
+                cs.unlock();
                 return;
             }
         }
-        LeaveCriticalSection( &cs );
+        cs.unlock();
         return;
     }
     for( Zeichnung3D **i = membersAlpha; index < arraySizeAlpha; i++, index++ )
@@ -129,18 +127,18 @@ void Welt3D::removeZeichnung( Zeichnung3D *obj )
         {
             *i = 0;
             rend = 1;
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return;
         }
     }
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 }
 
 // Verarbeitet ein Mausereignis
 //  me: Das Mausereignis, das verarbeitet werden soll
 void Welt3D::doMausEreignis( MausEreignis3D &me )
 {
-    //EnterCriticalSection( &cs );
+    //cs.lock()
     //int anz = 0;
     //int index = 0;
     //for( Zeichnung3D **i = members; index < arraySize; i++, index++ )
@@ -181,13 +179,13 @@ void Welt3D::doMausEreignis( MausEreignis3D &me )
     //        alphaVS[ ind ]->doMausEreignis( me );
     //        if( me.verarbeitet )
     //        {
-    //            LeaveCriticalSection( &cs );
+    //            cs.unlock();
     //            return;
     //        }
     //        used[ ind ] = 1;
     //    }
     //} while( ind >= 0 );
-    //LeaveCriticalSection( &cs );
+    //cs.unlock();
 }
 
 // Verarbeitet die vergangene Zeit
@@ -200,7 +198,7 @@ bool Welt3D::tick( double tickval )
     rend = 0;
     upd = 0;
     int index = 0;
-    EnterCriticalSection( &cs );
+    cs.lock();
     for( Zeichnung3D **i = members; index < arraySize; i++, index++ )
     {
         if( *i && ( *i )->hatAlpha() )
@@ -222,7 +220,7 @@ bool Welt3D::tick( double tickval )
             continue;
         }
     }
-    LeaveCriticalSection( &cs );
+    cs.unlock();
     return rend;
 }
 
@@ -232,7 +230,7 @@ void Welt3D::render( Render3D *zRObj )
 {
 #ifdef WIN32
     upd = 1;
-	EnterCriticalSection( &cs );
+    cs.lock();
     int index = 0;
     for( Zeichnung3D **i = members; index < arraySize; i++, index++ )
     {
@@ -313,7 +311,7 @@ void Welt3D::render( Render3D *zRObj )
     }
     for( int i = index2 - 1; i >= 0; i-- )
         alphaVS[ i ]->render( zRObj );
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 #endif
 }
 

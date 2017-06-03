@@ -2,6 +2,7 @@
 #define Animation_H
 
 #include "Zeichnung.h"
+#include "Critical.h"
 
 namespace Framework
 {
@@ -19,7 +20,7 @@ namespace Framework
         int fps;
         bool wiederhohlen;
         bool transparent;
-        CRITICAL_SECTION cs;
+        Critical cs;
         int ref;
 
     public:

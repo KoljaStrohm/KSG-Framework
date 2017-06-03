@@ -82,11 +82,15 @@
     <RemoteProjectDir>$(RemoteRootDir)/Framework/debug</RemoteProjectDir>
     <TargetName>libdbgFramework</TargetName>
     <IncludePath>D:\Visual Studio 2017\Common7\IDE\VC\Linux\include\usr\include\c++\5;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)bin\$(Platform)\debug\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Platform)\debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetExt>.so</TargetExt>
     <RemoteProjectDir>$(RemoteRootDir)/Framework/release</RemoteProjectDir>
     <TargetName>libFramework</TargetName>
+    <OutDir>$(ProjectDir)bin\$(Platform)\release\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Platform)\release\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <TargetExt>.so</TargetExt>
@@ -103,6 +107,7 @@
     <ClCompile Include="AuswahlBox.cpp" />
     <ClCompile Include="Bild.cpp" />
     <ClCompile Include="Bildschirm.cpp" />
+    <ClCompile Include="Critical.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Datei.cpp" />
     <ClCompile Include="DateiSystem.cpp" />
@@ -151,6 +156,7 @@
     <ClInclude Include="Betriebssystem.h" />
     <ClInclude Include="Bild.h" />
     <ClInclude Include="Bildschirm.h" />
+    <ClInclude Include="Critical.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Datei.h" />
     <ClInclude Include="DateiSystem.h" />

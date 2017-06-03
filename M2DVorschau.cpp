@@ -19,6 +19,8 @@ M2DVorschau::M2DVorschau()
     mdl = 0;
     mx = -1;
     my = -1;
+    af = 0;
+    ram = 0;
     ref = 1;
 }
 

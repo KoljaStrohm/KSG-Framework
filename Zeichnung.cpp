@@ -31,13 +31,11 @@ Zeichnung::Zeichnung()
     toolTip( 0 ),
     rend( 0 )
 {
-    InitializeCriticalSection( &cs );
 }
 
 // Destruktor 
 Zeichnung::~Zeichnung()
 {
-    DeleteCriticalSection( &cs );
     if( toolTip )
         toolTip->release();
 }
@@ -62,12 +60,12 @@ void Zeichnung::setToolTipText( const char *txt, Bildschirm *zScreen )
 
 void Zeichnung::lockZeichnung()
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
 }
 
 void Zeichnung::unlockZeichnung()
 {
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 }
 
 void Zeichnung::setMausEreignisParameter( void *p ) // setzt den Parameter vom Maus Ereignis

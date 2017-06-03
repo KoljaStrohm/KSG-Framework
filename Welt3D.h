@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Betriebssystem.h"
+#include "Critical.h"
 
 namespace Framework
 {
@@ -23,7 +23,7 @@ namespace Framework
         int arraySizeAlpha;
         bool rend;
         bool upd;
-        CRITICAL_SECTION cs;
+        Critical cs;
         int ref;
 
     public:

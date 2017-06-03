@@ -2,6 +2,7 @@
 #define RenderThread_H
 
 #include "Thread.h"
+#include "Critical.h"
 
 namespace Framework
 {
@@ -22,7 +23,7 @@ namespace Framework
         void( *renderFunktion )( void *, void *, Bild * );
         void( *tickFunktion )( void *, void *, double );
         bool pause;
-        CRITICAL_SECTION cs;
+        Critical cs;
         int maxFps;
         int ref;
 

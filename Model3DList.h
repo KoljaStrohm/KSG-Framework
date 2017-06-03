@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Array.h"
+#include "Critical.h"
 
 namespace Framework
 {
     class Model3DData; // Model3D.h
     class Text; // Text.h
     class Model3D; // Model3D.h
+
     namespace Standart3DTypes
     {
         extern const char *cube; // = "f_würfel"; Die Modeldaten eines Würfels der 100 * 100 * 100 groß ist
@@ -17,7 +19,7 @@ namespace Framework
     {
     private:
         static int id;
-        static CRITICAL_SECTION cs;
+        static Critical cs;
         RCArray< Model3DData > *models;
         RCArray< Text > *names;
         int ref;

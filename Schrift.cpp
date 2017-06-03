@@ -742,25 +742,23 @@ Schrift::Schrift()
     drawPos( 0, 0 ),
     ref( 1 )
 {
-    InitializeCriticalSection( &cs );
 }
 
 // Destruktor 
 Schrift::~Schrift()
 {
     delete alphabet;
-    DeleteCriticalSection( &cs );
 }
 
 // nicht constant 
 void Schrift::lock() // lockt die Schrift
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
 }
 
 void Schrift::unlock() // unlockt die Schrift
 {
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 }
 
 bool Schrift::addAlphabet( Alphabet *alphabet ) // Fügt der Schrift ein Alphabet hinzu

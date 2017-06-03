@@ -19,7 +19,6 @@ RenderTh::RenderTh()
     maxFps( 30 ),
     ref( 1 )
 {
-    InitializeCriticalSection( &cs );
 }
 
 // Destruktor 
@@ -30,18 +29,17 @@ RenderTh::~RenderTh()
     if( bildschirm )
         bildschirm->release();
     zeit->release();
-    DeleteCriticalSection( &cs );
 }
 
 // nicht constant 
 void RenderTh::lock()
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
 }
 
 void RenderTh::unlock()
 {
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 }
 
 void RenderTh::setBildschirm( Bildschirm *bildschirm ) // setzt den Bildschirm

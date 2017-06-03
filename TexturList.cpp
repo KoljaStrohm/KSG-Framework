@@ -5,7 +5,7 @@
 using namespace Framework;
 
 int TexturList::id = 0;
-CRITICAL_SECTION TexturList::cs;
+Critical TexturList::cs;
 
 // Inhalt der TexturList Klasse
 // Konstruktor
@@ -28,20 +28,20 @@ TexturList::~TexturList()
 //  name: Der name, unter dem die Textur in der Liste gespeichert wird
 bool TexturList::addTextur( Textur *t, const char *name )
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     for( auto i = names->getArray(); i.set; i++ )
     {
         if( i.var->istGleich( name ) )
         {
             t->release();
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return 0;
         }
     }
     t->id = id++;
     textures->add( t );
     names->add( new Text( name ) );
-    LeaveCriticalSection( &cs );
+    cs.unlock();
     return 1;
 }
 
@@ -49,7 +49,7 @@ bool TexturList::addTextur( Textur *t, const char *name )
 //  name: Der Name der Textur
 void TexturList::removeTextur( const char *name )
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     int index = 0;
     for( auto i = names->getArray(); i.set; i++ )
     {
@@ -57,12 +57,12 @@ void TexturList::removeTextur( const char *name )
         {
             names->remove( index );
             textures->remove( index );
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return;
         }
         index++;
     }
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 }
 
 // Überprüft, ob unter einem bestimmten Namen eine Textur abgespeichert wurde
@@ -70,16 +70,16 @@ void TexturList::removeTextur( const char *name )
 //  return: true, wenn eine Textur mit dem Namen existiert
 bool TexturList::hatTextur( const char *name ) const
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     for( auto i = names->getArray(); i.set; i++ )
     {
         if( i.var->istGleich( name ) )
         {
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return 1;
         }
     }
-    LeaveCriticalSection( &cs );
+    cs.unlock();
     return 0;
 }
 
@@ -87,18 +87,18 @@ bool TexturList::hatTextur( const char *name ) const
 //  name: Der Name der Textur
 Textur *TexturList::getTextur( const char *name ) const
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     int index = 0;
     for( auto i = names->getArray(); i.set; i++ )
     {
         if( i.var->istGleich( name ) )
         {
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return textures->get( index );
         }
         index++;
     }
-    LeaveCriticalSection( &cs );
+    cs.unlock();
     return 0;
 }
 
@@ -106,16 +106,16 @@ Textur *TexturList::getTextur( const char *name ) const
 //  id: Die Id der Textur
 Textur *TexturList::getTextur( int id ) const
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     for( auto i = textures->getArray(); i.set; i++ )
     {
         if( i.var->getId() == id )
         {
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return i.var->getThis();
         }
     }
-    LeaveCriticalSection( &cs );
+    cs.unlock();
     return 0;
 }
 
@@ -123,18 +123,18 @@ Textur *TexturList::getTextur( int id ) const
 //  name: Der Name der Textur
 Textur *TexturList::zTextur( const char *name ) const
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     int index = 0;
     for( auto i = names->getArray(); i.set; i++ )
     {
         if( i.var->istGleich( name ) )
         {
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return textures->z( index );
         }
         index++;
     }
-    LeaveCriticalSection( &cs );
+    cs.unlock();
     return 0;
 }
 
@@ -142,16 +142,16 @@ Textur *TexturList::zTextur( const char *name ) const
 //  id: Die Id der Textur
 Textur *TexturList::zTextur( int id ) const
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
     for( auto i = textures->getArray(); i.set; i++ )
     {
         if( i.var->getId() == id )
         {
-            LeaveCriticalSection( &cs );
+            cs.unlock();
             return i.var;
         }
     }
-    LeaveCriticalSection( &cs );
+    cs.unlock();
     return 0;
 }
 
@@ -179,11 +179,9 @@ TexturList *TexturList::release()
 void TexturList::init()
 {
     id = 0;
-    InitializeCriticalSection( &cs );
 }
 
 // Löscht statische private member. Wird vom Framework automatisch aufgerufen.
 void TexturList::destroy()
 {
-    DeleteCriticalSection( &cs );
 }

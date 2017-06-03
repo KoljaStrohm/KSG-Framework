@@ -258,6 +258,9 @@
     <ClInclude Include="Key.h">
       <Filter>Headerdateien\Framework</Filter>
     </ClInclude>
+    <ClInclude Include="Critical.h">
+      <Filter>Headerdateien\Framework\OS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Maus.cpp">
@@ -406,6 +409,9 @@
     </ClCompile>
     <ClCompile Include="Key.cpp">
       <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Critical.cpp">
+      <Filter>Quelldateien\Framework\OS</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

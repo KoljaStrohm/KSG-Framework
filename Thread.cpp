@@ -19,7 +19,7 @@ Thread::~Thread()
 {
     thRegister->remove( this );
 #ifdef WIN32
-    if( GetCurrentThreadId() == GetThreadId( threadHandle ) )
+    if( threadHandle != 0 && GetCurrentThreadId() == GetThreadId( threadHandle ) )
         return;
 #else
     if( pthread_self() == threadHandle )
@@ -63,6 +63,8 @@ void Thread::ende() // beendet den Thread
 {
     if( run )
     {
+        while( lockCount > 0 )
+            Sleep( 100 );
 #ifdef WIN32
 #pragma warning(suppress: 6258)
         TerminateThread( threadHandle, 0 );
@@ -124,6 +126,16 @@ void Thread::setSystemHandlePointer( pthread_t *ths )
 pthread_t Thread::getThreadHandle() const
 {
     return threadHandle;
+}
+
+void Thread::addCriticalLock()
+{
+    lockCount++;
+}
+
+void Thread::removeCriticalLock()
+{
+    lockCount--;
 }
 
 // funktionen 
@@ -195,6 +207,23 @@ void ThreadRegister::addClosedThread( pthread_t handle )
     if( handle )
         closedThreads.add( handle );
     LeaveCriticalSection( &cs );
+}
+
+// Sucht nach einem bestimmten Thread und gibt das zugehörige Objekt zurück
+// handle: Ein handle zu dem gesuchten Thread
+Thread *ThreadRegister::zThread( pthread_t handle )
+{
+    EnterCriticalSection( &cs );
+    for( auto i = threads.getArray(); i.set; i++ )
+    {
+        if( i.var->getThreadHandle() == handle )
+        {
+            LeaveCriticalSection( &cs );
+            return i.var;
+        }
+    }
+    LeaveCriticalSection( &cs );
+    return 0;
 }
 
 // Löscht die bereits beendetetn Threads und gibt ihre Reccourcen wieder frei

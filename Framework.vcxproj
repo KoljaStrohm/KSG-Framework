@@ -133,7 +133,8 @@ copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\patcher\patcher\fra
 copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\Icon\Icon\framework.dll"
 copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\SMP\SMP\framework.dll"
 copy "x64\Debug\Framework.dll" "..\LTDB Konverter\LTDB Konverter\framework.dll"
-copy "x64\Debug\Framework.dll" "..\GSL Konverter\GSL Konverter\framework.dll"</Command>
+copy "x64\Debug\Framework.dll" "..\GSL Konverter\GSL Konverter\framework.dll"
+copy "x64\Debug\Framework.dll" "..\..\Spiele Platform\Klient\Fertig\Debug\x64\framework.dll"</Command>
       <Outputs>kopiere Dateien...;%(Outputs)</Outputs>
     </CustomBuildStep>
     <Bscmake>
@@ -202,6 +203,7 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClInclude Include="AuswahlBox.h" />
     <ClInclude Include="Bild.h" />
     <ClInclude Include="Bildschirm.h" />
+    <ClInclude Include="Critical.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DXBuffer.h" />
     <ClInclude Include="Datei.h" />
@@ -264,6 +266,7 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
     <ClCompile Include="AuswahlBox.cpp" />
     <ClCompile Include="Bild.cpp" />
     <ClCompile Include="Bildschirm.cpp" />
+    <ClCompile Include="Critical.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Datei.cpp" />
     <ClCompile Include="DateiDialog.cpp" />

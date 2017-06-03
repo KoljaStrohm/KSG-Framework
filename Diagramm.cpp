@@ -413,7 +413,7 @@ DiagDaten *DiagDaten::release()
 
 // Inhalt der BaseDiag Klasse aus Diagramm.h
 // Konstruktor
-BaseDiag::BaseDiag( CRITICAL_SECTION *lock )
+BaseDiag::BaseDiag( Critical *lock )
     : daten( new DiagDaten() ),
     changed( 0 ),
     lock( lock ),
@@ -430,17 +430,17 @@ BaseDiag::~BaseDiag()
 // nicht constant
 void BaseDiag::setDiagDatenZ( DiagDaten *dd ) // Setzt einen Zeiger auf die Daten des Diagramms
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( daten )
         daten->release();
     daten = dd;
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
 void BaseDiag::setDiagDaten( DiagDaten *dd ) // Kopiert die Daten eines Diagramms
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     daten->style = dd->style;
@@ -491,97 +491,97 @@ void BaseDiag::setDiagDaten( DiagDaten *dd ) // Kopiert die Daten eines Diagramm
         }
     }
     dd->release();
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
 void BaseDiag::setRasterDicke( int d ) // Rasterdicke setzen
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( daten->rasterDicke != d )
         changed = 1;
     daten->rasterDicke = d;
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setRasterBreite( int br ) // Rasterbreite setzen
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( daten->rasterBreite != br )
         changed = 1;
     daten->rasterBreite = br;
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setRasterHeight( int hi ) // Rasterhöhe setzen
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( daten->rasterHeight != hi )
         changed = 1;
     daten->rasterHeight = hi;
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setRasterFarbe( int f ) // Rasterfarbe setzen
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( daten->rasterFarbe != f )
         changed = 1;
     daten->rasterFarbe = f;
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setHIntervallBreite( double br ) // Intervall Breite
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     daten->hIntervallBreite = br;
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setVIntervallHeight( double hi ) // Intervall Höhe
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     daten->vIntervallHeight = hi;
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setHIntervallFarbe( int f ) // Farbe des Horizontalen Intervalls
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( daten->hIntervallFarbe != f )
         changed = 1;
     daten->hIntervallFarbe = f;
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setVIntervallFarbe( int f ) // Farbe des Vertikalen Intervalls
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( daten->vIntervallFarbe != f )
         changed = 1;
     daten->vIntervallFarbe = f;
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setHIntervallName( char *name ) // Setzt den Namen des Horizontalen Intervalls
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->hIntervallName )
@@ -589,12 +589,12 @@ void BaseDiag::setHIntervallName( char *name ) // Setzt den Namen des Horizontal
     if( !daten->hIntervallName->istGleich( name ) )
         changed = 1;
     daten->hIntervallName->setText( name );
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setHIntervallName( Text *name )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->hIntervallName )
@@ -602,12 +602,12 @@ void BaseDiag::setHIntervallName( Text *name )
     if( !daten->hIntervallName->istGleich( *name ) )
         changed = 1;
     daten->hIntervallName->setText( name );
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setVIntervallName( char *name ) // Setzt den Namen des Vertikalen Intervalls
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->vIntervallName )
@@ -615,12 +615,12 @@ void BaseDiag::setVIntervallName( char *name ) // Setzt den Namen des Vertikalen
     if( !daten->vIntervallName->istGleich( name ) )
         changed = 1;
     daten->vIntervallName->setText( name );
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::setVIntervallName( Text *name )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->vIntervallName )
@@ -628,7 +628,7 @@ void BaseDiag::setVIntervallName( Text *name )
     if( !daten->vIntervallName->istGleich( *name ) )
         changed = 1;
     daten->vIntervallName->setText( name );
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::addHIntervallText( double hIntervall, char *text ) // Text eines Horizontalen Intervalls hinzufügen
@@ -644,7 +644,7 @@ void BaseDiag::addHIntervallText( double hIntervall, Text *text )
 
 void BaseDiag::setHIntervallTextZ( double hIntervall, Text *text ) // Setzt den Text eines Horizontalen Intervalls
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->hIntervallWerte )
@@ -657,14 +657,14 @@ void BaseDiag::setHIntervallTextZ( double hIntervall, Text *text ) // Setzt den 
         if( daten->hIntervallWerte->hat( i ) && daten->hIntervallWerte->get( i ) == hIntervall )
         {
             daten->hIntervallTexte->set( text, i );
-            LeaveCriticalSection( lock );
+            lock->unlock();
             changed = 1;
             return;
         }
     }
     daten->hIntervallWerte->set( hIntervall, anz );
     daten->hIntervallTexte->set( text, anz );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
@@ -676,7 +676,7 @@ void BaseDiag::setHIntervallText( double hIntervall, Text *text )
 
 void BaseDiag::setHIntervallText( double hIntervall, char *text )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->hIntervallWerte )
@@ -692,20 +692,20 @@ void BaseDiag::setHIntervallText( double hIntervall, char *text )
                 daten->hIntervallTexte->set( new Text( text ), i );
             else
                 daten->hIntervallTexte->z( i )->setText( text );
-            LeaveCriticalSection( lock );
+            lock->unlock();
             changed = 1;
             return;
         }
     }
     daten->hIntervallWerte->set( hIntervall, anz );
     daten->hIntervallTexte->set( new Text( text ), anz );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
 void BaseDiag::removeHIntervallText( double hIntervall ) // Text eines Horizontalen Intervalls entfernen
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->hIntervallWerte )
@@ -719,12 +719,12 @@ void BaseDiag::removeHIntervallText( double hIntervall ) // Text eines Horizonta
         {
             daten->hIntervallTexte->remove( i );
             daten->hIntervallWerte->remove( i );
-            LeaveCriticalSection( lock );
+            lock->unlock();
             changed = 1;
             return;
         }
     }
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::addVIntervallText( double vIntervall, char *text ) // Text eines Vertikalen Intervalls hinzufügen
@@ -740,7 +740,7 @@ void BaseDiag::addVIntervallText( double vIntervall, Text *text )
 
 void BaseDiag::setVIntervallTextZ( double vIntervall, Text *text ) // Setzt den Text eines Vertikalen Intervalls
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->vIntervallWerte )
@@ -753,14 +753,14 @@ void BaseDiag::setVIntervallTextZ( double vIntervall, Text *text ) // Setzt den 
         if( daten->vIntervallWerte->hat( i ) && daten->vIntervallWerte->get( i ) == vIntervall )
         {
             daten->vIntervallTexte->set( text, i );
-            LeaveCriticalSection( lock );
+            lock->unlock();
             changed = 1;
             return;
         }
     }
     daten->vIntervallWerte->set( vIntervall, anz );
     daten->vIntervallTexte->set( text, anz );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
@@ -772,7 +772,7 @@ void BaseDiag::setVIntervallText( double vIntervall, Text *text )
 
 void BaseDiag::setVIntervallText( double vIntervall, char *text )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->vIntervallWerte )
@@ -788,20 +788,20 @@ void BaseDiag::setVIntervallText( double vIntervall, char *text )
                 daten->vIntervallTexte->set( new Text( text ), i );
             else
                 daten->vIntervallTexte->z( i )->setText( text );
-            LeaveCriticalSection( lock );
+            lock->unlock();
             changed = 1;
             return;
         }
     }
     daten->vIntervallWerte->set( vIntervall, anz );
     daten->vIntervallTexte->set( new Text( text ), anz );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
 void BaseDiag::removeVIntervallText( double vIntervall ) // Text eines Vertikalen Intervalls entfernen
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->vIntervallWerte )
@@ -815,29 +815,29 @@ void BaseDiag::removeVIntervallText( double vIntervall ) // Text eines Vertikale
         {
             daten->vIntervallTexte->remove( i );
             daten->vIntervallWerte->remove( i );
-            LeaveCriticalSection( lock );
+            lock->unlock();
             changed = 1;
             return;
         }
     }
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::addWertZ( DiagWert *w ) // Fügt einen Wert hinzu
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
         daten->werte = new RCArray< DiagWert >();
     daten->werte->add( w );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
 void BaseDiag::addWert( DiagWert *w )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     DiagWert *tmp = new DiagWert();
     tmp->style = w->style;
     tmp->farbe = w->farbe;
@@ -856,13 +856,13 @@ void BaseDiag::addWert( DiagWert *w )
     }
     w->release();
     addWertZ( tmp );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
 void BaseDiag::addWert( const char *name )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -870,7 +870,7 @@ void BaseDiag::addWert( const char *name )
     DiagWert *w = new DiagWert();
     w->name->setText( name );
     daten->werte->add( w );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
@@ -884,7 +884,7 @@ void BaseDiag::setWertFarbe( int wNum, int f ) // setzt die Farbe eines Wertes
 {
     if( wNum < 0 )
         return;
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -892,7 +892,7 @@ void BaseDiag::setWertFarbe( int wNum, int f ) // setzt die Farbe eines Wertes
     if( !daten->werte->z( wNum ) )
         daten->werte->set( new DiagWert(), wNum );
     daten->werte->z( wNum )->farbe = f;
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
@@ -900,7 +900,7 @@ void BaseDiag::addPunktZ( int wNum, DiagPunkt *p ) // fügt einem Wert einen Punk
 {
     if( wNum < 0 )
         return;
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -910,7 +910,7 @@ void BaseDiag::addPunktZ( int wNum, DiagPunkt *p ) // fügt einem Wert einen Punk
     if( !daten->werte->z( wNum )->punkte )
         daten->werte->z( wNum )->punkte = new Array< DiagPunkt* >();
     daten->werte->z( wNum )->punkte->add( p );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
@@ -918,7 +918,7 @@ void BaseDiag::addPunkt( int wNum, DiagPunkt *p )
 {
     if( wNum < 0 )
         return;
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -931,7 +931,7 @@ void BaseDiag::addPunkt( int wNum, DiagPunkt *p )
     tmp->hIntervall = p->hIntervall;
     tmp->vIntervall = p->vIntervall;
     daten->werte->z( wNum )->punkte->add( tmp );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
@@ -939,7 +939,7 @@ void BaseDiag::addPunkt( int wNum, double hI, double vI )
 {
     if( wNum < 0 )
         return;
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -952,7 +952,7 @@ void BaseDiag::addPunkt( int wNum, double hI, double vI )
     tmp->hIntervall = hI;
     tmp->vIntervall = vI;
     daten->werte->z( wNum )->punkte->add( tmp );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
@@ -976,7 +976,7 @@ void BaseDiag::setPunktZ( int wNum, int pNum, DiagPunkt *p )
 {
     if( pNum < 0 || wNum < 0 )
         return;
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -988,7 +988,7 @@ void BaseDiag::setPunktZ( int wNum, int pNum, DiagPunkt *p )
     if( daten->werte->z( wNum )->punkte->hat( pNum ) )
         delete daten->werte->z( wNum )->punkte->get( pNum );
     daten->werte->z( wNum )->punkte->set( p, pNum );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
@@ -1003,7 +1003,7 @@ void BaseDiag::setPunkt( int wNum, int pNum, double h, double v )
 {
     if( pNum < 0 || wNum < 0 )
         return;
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -1016,14 +1016,14 @@ void BaseDiag::setPunkt( int wNum, int pNum, double h, double v )
         daten->werte->z( wNum )->punkte->set( new DiagPunkt(), pNum );
     daten->werte->z( wNum )->punkte->get( pNum )->hIntervall = h;
     daten->werte->z( wNum )->punkte->get( pNum )->vIntervall = v;
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
 // Löscht einen vorhandenen Punkt
 void BaseDiag::removePunkt( int wNum, double hI )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -1039,17 +1039,17 @@ void BaseDiag::removePunkt( int wNum, double hI )
         {
             delete daten->werte->z( wNum )->punkte->get( i );
             daten->werte->z( wNum )->punkte->remove( i );
-            LeaveCriticalSection( lock );
+            lock->unlock();
             changed = 1;
             return;
         }
     }
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::removePunkt( int wNum, int pNum )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -1064,24 +1064,24 @@ void BaseDiag::removePunkt( int wNum, int pNum )
         daten->werte->z( wNum )->punkte->remove( pNum );
         changed = 1;
     }
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::removeWert( int wNum ) // entfernt einen Wert
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
         daten->werte = new RCArray< DiagWert >();
     daten->werte->remove( wNum );
-    LeaveCriticalSection( lock );
+    lock->unlock();
     changed = 1;
 }
 
 void BaseDiag::removeWert( char *name )
 {
-    EnterCriticalSection( lock );
+    lock->lock();
     if( !daten )
         daten = new DiagDaten();
     if( !daten->werte )
@@ -1093,12 +1093,12 @@ void BaseDiag::removeWert( char *name )
         if( tmp && tmp->name && tmp->name->istGleich( name ) )
         {
             daten->werte->remove( i );
-            LeaveCriticalSection( lock );
+            lock->unlock();
             changed = 1;
             return;
         }
     }
-    LeaveCriticalSection( lock );
+    lock->unlock();
 }
 
 void BaseDiag::removeWert( Text *name )

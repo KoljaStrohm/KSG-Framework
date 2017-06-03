@@ -2,6 +2,7 @@
 #define Zeichnung_H
 
 #include "Punkt.h"
+#include "Critical.h"
 
 namespace Framework
 {
@@ -42,7 +43,7 @@ namespace Framework
         bool( *nMak )( void *, void *, MausEreignis );
         bool( *nTak )( void *, void *, TastaturEreignis );
         bool mausIn;
-        CRITICAL_SECTION cs;
+        Critical cs;
         ToolTip *toolTip;
         __int64 style;
         bool rend;

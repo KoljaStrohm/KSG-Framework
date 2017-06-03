@@ -6,12 +6,14 @@
 namespace Framework
 {
     class Thread;
+    class Critical;
 
     // Ein neuer Thread wie die Thread Klasse aus Java
     class Thread
     {
     private:
         pthread_t *threadHandleSys;
+        int lockCount;
     protected:
         unsigned long threadId;
         pthread_t threadHandle;
@@ -48,6 +50,12 @@ namespace Framework
         void setSystemHandlePointer( pthread_t *ths );
         // Gibt ein Handle auf den Thread zurück
         __declspec( dllexport ) pthread_t getThreadHandle() const;
+
+    private:
+        void addCriticalLock();
+        void removeCriticalLock();
+
+    friend Critical;
     };
 
 #ifdef WIN32
@@ -80,6 +88,9 @@ namespace Framework
         // Überprüft, ob ein Zeiger auf ein gültiges Thread Objekt zeigt, oder ob es schon gelöscht wurde
         //  t: Der Zeiger, der geprüft werden soll
         bool isThread( Thread *t );
+        // Sucht nach einem bestimmten Thread und gibt das zugehörige Objekt zurück
+        // handle: Ein handle zu dem gesuchten Thread
+        Thread *zThread( pthread_t handle );
         // Setzt Wird automatisch aufgerufen, wenn ein Thread beendet wird. Die Reccourcen werden daraufhin in cleanUpClosedThreads freigegeben.
         //  handle: Das Handle des Threads
         void addClosedThread( pthread_t handle );

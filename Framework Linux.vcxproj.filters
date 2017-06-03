@@ -234,6 +234,9 @@
     <ClInclude Include="DXBuffer.h">
       <Filter>Headerdateien\Framework\Grafik\DX</Filter>
     </ClInclude>
+    <ClInclude Include="Critical.h">
+      <Filter>Headerdateien\Framework\OS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Prozess.cpp">
@@ -364,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="DXBuffer.cpp">
       <Filter>Quelldateien\Framework\Grafik\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Critical.cpp">
+      <Filter>Quelldateien\Framework\OS</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

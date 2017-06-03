@@ -1,7 +1,7 @@
 #ifndef Schrift_H
 #define Schrift_H
 
-#include "Betriebssystem.h"
+#include "Critical.h"
 #include "Punkt.h"
 
 namespace Framework
@@ -255,7 +255,7 @@ namespace Framework
         int schriftSize;
         int zeilenAbstand;
         Punkt drawPos;
-        CRITICAL_SECTION cs;
+        Critical cs;
         int ref;
 
     public:

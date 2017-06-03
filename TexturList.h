@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Array.h"
+#include "Critical.h"
 
 namespace Framework
 {
@@ -11,7 +12,7 @@ namespace Framework
     {
     private:
         static int id;
-        static CRITICAL_SECTION cs;
+        static Critical cs;
         RCArray< Textur > *textures;
         RCArray< Text > *names;
         int ref;

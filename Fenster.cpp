@@ -522,7 +522,7 @@ void WFenster::setPosition( Punkt &p )// Fenster Position
     RECT res;
     res.left = p.x, res.top = p.y, res.right = r.right - r.left, res.bottom = r.bottom - r.top;
     AdjustWindowRect( &res, style, 0 );
-    if( res.top < 0 )
+/*    if( res.top < 0 )
     {
         res.bottom -= res.top;
         res.top = 0;
@@ -531,7 +531,7 @@ void WFenster::setPosition( Punkt &p )// Fenster Position
     {
         res.right -= res.left;
         res.left = 0;
-    }
+    }*/
     SetWindowPos( hWnd, 0, res.left, res.top, res.right, res.bottom, 0 ); // Position ändern
 }
 
@@ -542,7 +542,7 @@ void WFenster::setSize( Punkt &g )// Fenster Größe
     RECT res;
     res.left = r.left, res.top = r.top, res.right = g.x, res.bottom = g.y;
     AdjustWindowRect( &res, style, 0 );
-    if( res.top < 0 )
+/*    if( res.top < 0 )
     {
         res.bottom -= res.top;
         res.top = 0;
@@ -551,7 +551,7 @@ void WFenster::setSize( Punkt &g )// Fenster Größe
     {
         res.right -= res.left;
         res.left = 0;
-    }
+    }*/
     SetWindowPos( hWnd, 0, res.left, res.top, res.right, res.bottom, 0 ); // Größe ändern
 }
 
@@ -562,7 +562,7 @@ void WFenster::setSize( int breite, int höhe )
     RECT res;
     res.left = r.left, res.top = r.top, res.right = breite, res.bottom = höhe;
     AdjustWindowRect( &res, style, 0 );
-    if( res.top < 0 )
+/*    if( res.top < 0 )
     {
         res.bottom -= res.top;
         res.top = 0;
@@ -571,7 +571,7 @@ void WFenster::setSize( int breite, int höhe )
     {
         res.right -= res.left;
         res.left = 0;
-    }
+    }*/
     SetWindowPos( hWnd, 0, res.left, res.top, res.right, res.bottom, 0 ); // Größe ändern
 }
 

@@ -52,7 +52,6 @@ Bildschirm::Bildschirm( WFenster *f )
     fill( 1 ),
     rend( 0 )
 {
-    InitializeCriticalSection( &cs );
 }
 
 // Destruktor 
@@ -61,7 +60,7 @@ Bildschirm::~Bildschirm()
     lock();
     if( renderB )
         renderB->release();
-#ifdef Win32
+#ifdef WIN32
     if( fenster )
         fenster->release();
 #endif
@@ -70,18 +69,17 @@ Bildschirm::~Bildschirm()
     tips->release();
     renderZeit->release();
     unlock();
-    DeleteCriticalSection( &cs );
 }
 
 // nicht konstant 
 void Bildschirm::lock()
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
 }
 
 void Bildschirm::unlock()
 {
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 }
 
 void Bildschirm::setFill( bool f )
@@ -995,14 +993,15 @@ void Bildschirm3D::render() // Zeichnet das Bild
         float screenAspect = (float)backBufferSize.x / (float)backBufferSize.y;
         Mat4< float > view = view.translation( Vec3< float >( 0.f, 0.f, backBufferSize.y * 1.2075f ) );
         renderObj->setKameraMatrix( view, view.projektion( DirectX::XM_PI / 4.0f, screenAspect, 0.1f, 10000.f ), Vec3< float >( 0.f, 0.f, backBufferSize.y * 1.2075f ) );
-        texturModel->render( renderObj );
+        if( fenster && !IsIconic( fenster->getFensterHandle() ) )
+            texturModel->render( renderObj );
 
         result = d3d11SpawChain->Present( 0, 0 );
         renderZeit->messungEnde();
 #ifdef _DEBUG
         std::cout << renderZeit->getSekunden() << "\n";
 #endif
-        if( result != S_OK )
+        if( !SUCCEEDED( result ) )
         {
             ++count;
             update();

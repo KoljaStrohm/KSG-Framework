@@ -210,9 +210,9 @@ void FBalken::render( Bild &zRObj ) // zeichnet nach zRObj
     if( hatStyle( Style::FBild ) && fBgBild )
     {
         if( hatStyle( Style::FAlpha ) )
-            zRObj.alphaBildSkall( rbr, rbr, b - rbr * 2, h - rbr * 2, *fBgBild );
+            zRObj.alphaBildSkall( rbr, rbr, gr.x - rbr * 2, gr.y - rbr * 2, *fBgBild );
         else
-            zRObj.drawBildSkall( rbr, rbr, b - rbr * 2, h - rbr * 2, *fBgBild );
+            zRObj.alphaBildSkall( rbr, rbr, gr.x - rbr * 2, gr.y - rbr * 2, *fBgBild );
     }
     if( hatStyle( Style::FBuffered ) && fBuffer )
     {

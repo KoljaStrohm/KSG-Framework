@@ -3,6 +3,7 @@
 
 #include "Array.h"
 #include "Punkt.h"
+#include "Critical.h"
 
 // DirectX 11 Types
 
@@ -72,7 +73,7 @@ namespace Framework
         bool rendering;
         ZeitMesser *renderZeit;
         Punkt backBufferSize;
-        CRITICAL_SECTION cs;
+        Critical cs;
         RCArray< ToolTip > *tips;
         int tipAnzahl;
         bool testRend;

@@ -18,25 +18,23 @@ Animation2DData::Animation2DData()
     transparent( 0 ),
     ref( 1 )
 {
-    InitializeCriticalSection( &cs );
 }
 
 // Destruktor
 Animation2DData::~Animation2DData()
 {
     reset();
-    DeleteCriticalSection( &cs );
 }
 
 // nicht constant
 void Animation2DData::lock()
 {
-    EnterCriticalSection( &cs );
+    cs.lock();
 }
 
 void Animation2DData::unlock()
 {
-    LeaveCriticalSection( &cs );
+    cs.unlock();
 }
 
 void Animation2DData::ladeAnimation( InitDatei *datei )

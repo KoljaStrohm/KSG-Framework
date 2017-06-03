@@ -3,6 +3,7 @@
 
 #include "Zeichnung.h"
 #include "Array.h"
+#include "Critical.h"
 
 namespace Framework
 {
@@ -242,13 +243,13 @@ namespace Framework
     protected:
         DiagDaten *daten;
         bool changed;
-        CRITICAL_SECTION *lock;
+        Critical *lock;
         int ref;
 
     public:
         // Konstruktor
-        //  lock: Ein Zeiger zur CRITICAL_SECTION, mit der die Diagramm Klasse, die von dieser Klasse erbt Multithread sicher gemacht wird
-        __declspec( dllexport ) BaseDiag( CRITICAL_SECTION *lock );
+        //  lock: Ein Zeiger zur Critical, mit der die Diagramm Klasse, die von dieser Klasse erbt Multithread sicher gemacht wird
+        __declspec( dllexport ) BaseDiag( Critical *lock );
         // Destruktor
         __declspec( dllexport ) virtual ~BaseDiag();
         // Setzt einen Zeiger auf die Daten des Diagramms
