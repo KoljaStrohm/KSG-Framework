@@ -1,6 +1,8 @@
 #include "Critical.h"
 #include "Globals.h"
 #include "Thread.h"
+#include <iostream>
+#include <time.h>
 
 using namespace Framework;
 
@@ -9,22 +11,30 @@ using namespace Framework;
 Critical::Critical()
 {
     InitializeCriticalSection( &cs );
+    owner = 0;
+    lockCount = 0;
+    id = (int)time( 0 );
+    std::cout << "Create Critical: " << id << "\n";
 }
 
 // Destructor
 Critical::~Critical()
 {
+    std::cout << "Delete Critical: " << id << "\n";
     DeleteCriticalSection( &cs );
 }
 
 // sperrt das Objekt
 void Critical::lock()
 {
+    pthread_t t = GetCurrentThread();
+    Thread *tmp = getThreadRegister()->zThread( t );
+    if( tmp )
+        tmp->addCriticalLock();
     EnterCriticalSection( &cs );
+    std::cout << "Lock Critical: " << id << "\n";
     if( !owner )
-        owner = getThreadRegister()->zThread( GetCurrentThread() );
-    if( owner )
-        owner->addCriticalLock();
+        owner = tmp;
     lockCount++;
 }
 
@@ -33,11 +43,13 @@ bool Critical::tryLock()
 {
     if( lockCount > 0 )
         return false;
+    Thread *tmp = getThreadRegister()->zThread( GetCurrentThread() );
+    if( tmp )
+        tmp->addCriticalLock();
     EnterCriticalSection( &cs );
+    std::cout << "Lock Critical: " << id << "\n";
     if( !owner )
-        owner = getThreadRegister()->zThread( GetCurrentThread() );
-    if( owner )
-        owner->addCriticalLock();
+        owner = tmp;
     lockCount++;
     return true;
 }
@@ -45,13 +57,15 @@ bool Critical::tryLock()
 // entsperrt das Objekt
 void Critical::unlock()
 {
-    if( owner && owner->getThreadHandle() != GetCurrentThread() )
+    if( owner && GetThreadId( owner->getThreadHandle() ) != GetThreadId( GetCurrentThread() ) )
         throw std::runtime_error( "A Thread that does not own a Critical Object trys to unlock it" );
-    if( owner )
-        owner->removeCriticalLock();
+    Thread *tmp = owner;
     if( !--lockCount )
         owner = 0;
+    std::cout << "Unlock Critical: " << id << "\n";
     LeaveCriticalSection( &cs );
+    if( tmp )
+        tmp->removeCriticalLock();
 }
 
 

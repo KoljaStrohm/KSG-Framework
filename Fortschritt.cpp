@@ -30,8 +30,6 @@ FBalken::FBalken()
 // Destructor 
 FBalken::~FBalken()
 {
-    if( rahmen )
-        rahmen->release();
     if( fRahmen )
         fRahmen->release();
     if( fBuffer )

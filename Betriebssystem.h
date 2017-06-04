@@ -75,6 +75,7 @@ private:
 class CriticalSection;
 #endif
 #define GetCurrentThread               pthread_self
+#define GetThreadId( x )               x
 #define CRITICAL_SECTION               CriticalSection*
 #define InitializeCriticalSection( x ) ( *( x ) ) = new CriticalSection()
 #define DeleteCriticalSection( x )     delete ( *( x ) )

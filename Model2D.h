@@ -78,7 +78,6 @@ namespace Framework
         int ref;
         int farbe;
         Bild *textur;
-        Punkt pos;
 
     public:
         // Konstruktor

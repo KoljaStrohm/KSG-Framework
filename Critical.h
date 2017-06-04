@@ -12,6 +12,7 @@ namespace Framework
         CRITICAL_SECTION cs;
         Thread *owner;
         int lockCount;
+        int id;
 
     public:
         // Konstructor

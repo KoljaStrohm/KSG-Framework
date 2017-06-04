@@ -12,6 +12,7 @@ Thread::Thread()
     threadId = 0;
     thRegister->add( this );
     run = 0;
+    lockCount = 0;
 }
 
 // Destruktor 
@@ -216,7 +217,7 @@ Thread *ThreadRegister::zThread( pthread_t handle )
     EnterCriticalSection( &cs );
     for( auto i = threads.getArray(); i.set; i++ )
     {
-        if( i.var->getThreadHandle() == handle )
+        if( GetThreadId( i.var->getThreadHandle() ) == GetThreadId( handle ) )
         {
             LeaveCriticalSection( &cs );
             return i.var;
