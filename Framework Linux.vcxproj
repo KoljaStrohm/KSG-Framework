@@ -104,6 +104,7 @@
   <ItemGroup>
     <ClCompile Include="AlphaFeld.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Animation3D.cpp" />
     <ClCompile Include="AuswahlBox.cpp" />
     <ClCompile Include="Bild.cpp" />
     <ClCompile Include="Bildschirm.cpp" />

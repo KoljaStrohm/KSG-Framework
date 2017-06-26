@@ -14,13 +14,11 @@ Critical::Critical()
     owner = 0;
     lockCount = 0;
     id = (int)time( 0 );
-    std::cout << "Create Critical: " << id << "\n";
 }
 
 // Destructor
 Critical::~Critical()
 {
-    std::cout << "Delete Critical: " << id << "\n";
     DeleteCriticalSection( &cs );
 }
 
@@ -32,7 +30,6 @@ void Critical::lock()
     if( tmp )
         tmp->addCriticalLock();
     EnterCriticalSection( &cs );
-    std::cout << "Lock Critical: " << id << "\n";
     if( !owner )
         owner = tmp;
     lockCount++;
@@ -47,7 +44,6 @@ bool Critical::tryLock()
     if( tmp )
         tmp->addCriticalLock();
     EnterCriticalSection( &cs );
-    std::cout << "Lock Critical: " << id << "\n";
     if( !owner )
         owner = tmp;
     lockCount++;
@@ -62,7 +58,6 @@ void Critical::unlock()
     Thread *tmp = owner;
     if( !--lockCount )
         owner = 0;
-    std::cout << "Unlock Critical: " << id << "\n";
     LeaveCriticalSection( &cs );
     if( tmp )
         tmp->removeCriticalLock();

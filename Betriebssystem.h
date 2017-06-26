@@ -1,5 +1,6 @@
 #ifndef Betriebssystem_H
 #define Betriebssystem_H
+#define MAX_KNOCHEN_ANZ 128
 #define _NOHEAP
 #ifdef _WIN32
 

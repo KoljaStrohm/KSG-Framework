@@ -13,7 +13,7 @@ namespace Framework
         /////////////                                                                                   \n\
         cbuffer MatrixBuffer : register( b0 )                                                           \n\
         {                                                                                               \n\
-            matrix knochenMatrix[ 128 ];                                                                \n\
+            matrix knochenMatrix[ "; ret += MAX_KNOCHEN_ANZ; ret += " ];                                                                \n\
         };                                                                                              \n\
                                                                                                         \n\
         //////////////                                                                                  \n\

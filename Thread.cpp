@@ -217,7 +217,7 @@ Thread *ThreadRegister::zThread( pthread_t handle )
     EnterCriticalSection( &cs );
     for( auto i = threads.getArray(); i.set; i++ )
     {
-        if( GetThreadId( i.var->getThreadHandle() ) == GetThreadId( handle ) )
+        if( i.var->getThreadHandle() && GetThreadId( i.var->getThreadHandle() ) == GetThreadId( handle ) )
         {
             LeaveCriticalSection( &cs );
             return i.var;

@@ -22,6 +22,7 @@
     <ProjectGuid>{C67E1D50-8FED-42FC-9538-1818297CF817}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Framework</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -263,6 +264,7 @@ copy "x64\Release\Framework.dll" "..\..\Spiele Platform\SMP\Fertig\x64\framework
   <ItemGroup>
     <ClCompile Include="AlphaFeld.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Animation3D.cpp" />
     <ClCompile Include="AuswahlBox.cpp" />
     <ClCompile Include="Bild.cpp" />
     <ClCompile Include="Bildschirm.cpp" />

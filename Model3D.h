@@ -17,6 +17,7 @@ namespace Framework
     class Render3D; // Render3D.h
     class Model3DTextur; // Model3D.h
     class Model3DList; // Model3DList.h
+    class Animation3D; // Animation3D.h
 
     // Repräsentiert einen Knochen eines 3D Models. Kann annimiert werden
     class Knochen
@@ -56,6 +57,14 @@ namespace Framework
         __declspec( dllexport ) Knochen *kopiereKnochen() const;
         // Gibt die Id des Knochens zurück
         __declspec( dllexport ) int getId() const;
+        // Gibt die Drehung des Knochens zurück
+        __declspec( dllexport ) Vec3< float > getDrehung() const;
+        // Gibt die Position des Knochens zurück
+        __declspec( dllexport ) Vec3< float > getPosition() const;
+        // Gibt den Radius des Knochens zurück
+        float getRadius() const;
+
+        friend Animation3D;
     };
 
     // Repräsentiert alle Knochen eines Models, mit denen es Annimiert werden kann
@@ -72,7 +81,7 @@ namespace Framework
         // Destruktor
         __declspec( dllexport ) ~Skelett();
         // Gibt die Id des nächsten Knochens zurück und berechnet die neue Id für den Knochen danach
-        // Es können maximal 128 Knochen für ein Skelett existieren. Wenn diese Zahl überschritten wird, so wird -1 zurückgegeben
+        // Es können maximal MAX_KNOCHEN_ANZ Knochen für ein Skelett existieren. Wenn diese Zahl überschritten wird, so wird -1 zurückgegeben
         __declspec( dllexport ) int getNextKnochenId();
         // Fügt dem Skellet einen Knochen hinzu
         //  k: Der Knochen
@@ -84,6 +93,8 @@ namespace Framework
         //  return: gibt die Anzahl der verwendeten Matrizen zurück
         //  kamMatrix: Die vereiniegung der view und projektions Matrizen
         __declspec( dllexport ) int kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuffer, Mat4< float > &kamMatrix );
+        // Berechnet den Radius des Skeletts
+        _declspec( dllexport ) float getRadius() const;
         // Kopiert das Skelett
         __declspec( dllexport ) Skelett *kopiereSkelett() const;
         // Erhöht den Reference Counting Zähler.
@@ -92,6 +103,8 @@ namespace Framework
         // Verringert den Reference Counting Zähler. Wenn der Zähler 0 erreicht, wird das Zeichnung automatisch gelöscht.
         //  return: 0.
         __declspec( dllexport ) Skelett *release();
+
+        friend Animation3D;
     };
 
     // Eine struktor um für eine Ecke eines 3D Models die Raum Position, die Textur Koordinaten und den zugehörigen Knochen speichert
@@ -217,9 +230,20 @@ namespace Framework
     class Model3D : public Zeichnung3D
     {
     protected:
+        struct AnimationData
+        {
+            Animation3D *a;
+            double speed;
+            double offset;
+
+            AnimationData *getThis();
+            AnimationData *release();
+        };
+
         Model3DData *model;
         Skelett *skelett;
         Model3DTextur *textur;
+        RCArray< AnimationData > *animations;
         int ref;
 
     public:
@@ -227,6 +251,12 @@ namespace Framework
         __declspec( dllexport ) Model3D();
         // Destruktor
         __declspec( dllexport ) virtual ~Model3D();
+        // Fügt eine Animation hinzu
+        //  a: Die neue Animation
+        __declspec( dllexport ) void addAnimation( Animation3D *a, double speed = 1 );
+        // Entfernt eine Animation
+        //  zA: Die zu entfernende Animation
+        __declspec( dllexport ) void removeAnimation( Animation3D *zA );
         // Setzt den Zeiger auf das zum Annimieren verwendete Skelett
         //  s: Das Skelett, das verwendet werden soll
         __declspec( dllexport ) void setSkelettZ( Skelett *s );

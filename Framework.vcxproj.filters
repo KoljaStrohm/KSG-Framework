@@ -413,5 +413,8 @@
     <ClCompile Include="Critical.cpp">
       <Filter>Quelldateien\Framework\OS</Filter>
     </ClCompile>
+    <ClCompile Include="Animation3D.cpp">
+      <Filter>Quelldateien\Framework\Grafik\3D</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

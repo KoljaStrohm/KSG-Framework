@@ -675,7 +675,7 @@ void Bildschirm3D::update() // aktualisiert directX
     // create a device, device context and swap chain using the information in the scd struct
     UINT flag = 0;
 #ifdef _DEBUG
-    flag |= D3D11_CREATE_DEVICE_DEBUG;
+    //flag |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
     result = D3D11CreateDeviceAndSwapChain( NULL,
                                             D3D_DRIVER_TYPE_HARDWARE,
@@ -827,7 +827,7 @@ void Bildschirm3D::update() // aktualisiert directX
     polygonLayout[ 2 ].InstanceDataStepRate = 0;
 
     vertexShader->erstelleInputLayout( d3d11Device, polygonLayout, 3 );
-    vertexShader->erstelleConstBuffer( d3d11Device, sizeof( Mat4< float > ) * 128, 0 );
+    vertexShader->erstelleConstBuffer( d3d11Device, sizeof( Mat4< float > ) * MAX_KNOCHEN_ANZ, 0 );
 
     // Create a texture sampler state description.
     D3D11_SAMPLER_DESC samplerDesc;

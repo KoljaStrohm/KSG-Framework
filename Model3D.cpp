@@ -2,6 +2,7 @@
 #include "Model2D.h"
 #include "DXBuffer.h"
 #include "Textur.h"
+#include "Animation3D.h"
 #ifdef WIN32
 #include "Render3D.h"
 #include <d3d11.h>
@@ -120,6 +121,29 @@ int Knochen::getId() const
     return id;
 }
 
+// Gibt die Drehung des Knochens zurück
+Vec3< float > Knochen::getDrehung() const
+{
+    return winkel;
+}
+
+// Gibt die Position des Knochens zurück
+Vec3< float > Knochen::getPosition() const
+{
+    return pos;
+}
+
+// Gibt den Radius des Knochens zurück
+float Knochen::getRadius() const
+{
+    float r = pos.getLength();
+    if( geschwister )
+        r = max( r, geschwister->getRadius() );
+    if( kinder )
+        r += kinder->getRadius();
+    return r;
+}
+
 // Inhalt der Skelett Klasse
 
 // Konstruktor
@@ -138,7 +162,7 @@ Skelett::~Skelett()
 }
 
 // Gibt die Id des nächsten Knochens zurück und berechnet die neue Id für den Knochen danach
-// Es können maximal 128 Knochen für ein Skelett existieren. Wenn diese Zahl überschritten wird, so wird -1 zurückgegeben
+// Es können maximal MAX_KNOCHEN_ANZ Knochen für ein Skelett existieren. Wenn diese Zahl überschritten wird, so wird -1 zurückgegeben
 int Skelett::getNextKnochenId()
 {
     return nextId++;
@@ -166,6 +190,14 @@ int Skelett::kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuff
 {
     k->kalkulateMatrix( modelMatrix, matBuffer, kamMatrix );
     return nextId;
+}
+
+// Berechnet den Radius des Skeletts
+float Skelett::getRadius() const
+{
+    if( k )
+        return k->getRadius();
+    return 0;
 }
 
 // Kopiert das Skelett
@@ -482,6 +514,18 @@ Model3DTextur *Model3DTextur::release()
     return 0;
 }
 
+// Inhalt der AnimationData Struktur
+Model3D::AnimationData *Model3D::AnimationData::getThis()
+{
+    return this;
+}
+
+Model3D::AnimationData *Model3D::AnimationData::release()
+{
+    a->release();
+    delete this;
+    return 0;
+}
 
 // Inhalt der Model3D Klasse
 // Konstruktor
@@ -491,6 +535,7 @@ Model3D::Model3D()
     model = 0;
     textur = 0;
     skelett = 0;
+    animations = new RCArray< AnimationData >();
     ref = 1;
 }
 
@@ -503,6 +548,32 @@ Model3D::~Model3D()
         textur->release();
     if( skelett )
         skelett->release();
+    animations->release();
+}
+
+// Fügt eine Animation hinzu
+//  a: Die neue Animation
+void Model3D::addAnimation( Animation3D *a, double speed )
+{
+    AnimationData *d = new AnimationData();
+    d->a = a;
+    d->speed = speed;
+    d->offset = 0;
+    animations->add( d );
+}
+
+// Entfernt eine Animation
+//  zA: Die zu entfernende Animation
+void Model3D::removeAnimation( Animation3D *zA )
+{
+    for( int i = 0; i < animations->getEintragAnzahl(); i++ )
+    {
+        if( animations->z( i )->a == zA )
+        {
+            animations->remove( i );
+            return;
+        }
+    }
 }
 
 // Setzt den Zeiger auf das zum Annimieren verwendete Skelett
@@ -554,6 +625,12 @@ int Model3D::errechneMatrizen( Mat4< float > &viewProj, Mat4< float > *matBuffer
 bool Model3D::tick( double tickval )
 {
     radius = model ? model->getRadius() : 0;
+    if( skelett )
+    {
+        radius += skelett->getRadius();
+        for( auto i = animations->getArray(); i.set && i.var; i++ )
+            i.var->a->apply( skelett, i.var->offset, tickval * i.var->speed );
+    }
     return Zeichnung3D::tick( tickval );
 }
 

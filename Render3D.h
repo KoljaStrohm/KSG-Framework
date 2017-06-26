@@ -22,7 +22,7 @@ namespace Framework
     class Render3D
     {
     private:
-        Mat4< float > matrixBuffer[ 128 ];
+        Mat4< float > matrixBuffer[ MAX_KNOCHEN_ANZ ];
         Mat4< float > view;
         Mat4< float > proj;
         Ebene3D< float > frustrum[ 6 ];
