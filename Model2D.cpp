@@ -478,11 +478,11 @@ void Model2D::setFarbe( int f )
 
 void Model2D::doMausEreignis( MausEreignis &me )
 {
-    if( !Mak || me.verarbeitet || !istPunktInnen( Punkt( me.mx, me.my ) ) )
+    if( !mak || me.verarbeitet || !istPunktInnen( Punkt( me.mx, me.my ) ) )
         return;
     me.mx -= pos.x;
     me.my -= pos.y;
-    Mak( makParam, this, me );
+    mak( makParam, this, me );
     me.mx += pos.x;
     me.my += pos.y;
     me.verarbeitet = 1;

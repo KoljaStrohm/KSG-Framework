@@ -1366,9 +1366,9 @@ void Fenster::setClosingMeParam( void *param )
     closingMeParam = param;
 }
 
-void Fenster::setClosingMe( bool( *closeMe )( void *, void *, MausEreignis ) ) // setzt das Schlieﬂen Mausereignis
+void Fenster::setClosingMe( std::function< bool( void*, void*, MausEreignis ) > closingMe ) // setzt das Schlieﬂen Mausereignis
 {
-    this->closingMe = closeMe;
+    this->closingMe = closingMe;
 }
 
 // -- Schlieﬂen Hintergrund -- 
@@ -1590,9 +1590,7 @@ bool Fenster::tick( double tickval ) // tick
         rend |= vScroll->getRend();
     if( hScroll && hatStyle( Style::HScroll ) )
         rend |= hScroll->getRend();
-    bool ret = rend;
-    rend = 0;
-    return ret;
+    return Zeichnung::tick( tickval );
 }
 
 void Fenster::doMausEreignis( MausEreignis &me )
@@ -1625,7 +1623,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
     if( hatStyle( Style::Sichtbar ) )
     {
         bool mvtmp = me.verarbeitet;
-        if( !Mak )
+        if( !mak )
             return;
         if( hatStyleNicht( Style::Erlaubt ) )
             me.verarbeitet = 1;
@@ -1644,7 +1642,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
         {
             if( hatStyle( Style::Beweglich ) || hatStyle( Style::HeightChangeable ) || hatStyle( Style::BreiteChangeable ) || hatStyle( Style::TitelHeightChangeable ) )
             {
-                if( Mak( makParam, this, me ) )
+                if( mak( makParam, this, me ) )
                 {
                     mpr = 1;
                     bool ret1 = 0;
@@ -1804,7 +1802,7 @@ void Fenster::doMausEreignis( MausEreignis &me )
             }
         }
         bool inside = me.mx >= 0 && me.mx <= gr.x && me.my >= 0 && me.my <= gr.y;
-        if( mpr || me.verarbeitet || ( !inside || Mak( makParam, this, me ) ) )
+        if( mpr || me.verarbeitet || ( !inside || mak( makParam, this, me ) ) )
         {
             if( me.id == ME_RLinks )
             {
@@ -1908,7 +1906,7 @@ void Fenster::doTastaturEreignis( TastaturEreignis &te )
         }
         else
         {
-            if( Tak && Tak( takParam, this, te ) )
+            if( tak && tak( takParam, this, te ) )
             {
                 if( members )
                     members->sendTastaturAll( te );
@@ -2396,8 +2394,8 @@ Zeichnung *Fenster::dublizieren() const // Erzeugt eine Kopie des Fensters
     ret->setSize( gr );
     ret->setMausEreignisParameter( makParam );
     ret->setTastaturEreignisParameter( takParam );
-    ret->setMausEreignis( Mak );
-    ret->setTastaturEreignis( Tak );
+    ret->setMausEreignis( mak );
+    ret->setTastaturEreignis( tak );
     if( toolTip )
         ret->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     ret->setStyle( style );

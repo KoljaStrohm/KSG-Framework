@@ -306,7 +306,7 @@ void TextFeld::doMausEreignis( MausEreignis &me ) // Maus Ereignis
 		if( removeFokus && me.id == ME_RLinks )
 		{
 			me.mx -= pos.x, me.my -= pos.y;
-			if( hatStyle( Style::Fokus ) && Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+			if( hatStyle( Style::Fokus ) && mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
 				removeStyle( Style::Fokus );
 			if( nmakc && me.verarbeitet && nMak )
 				me.verarbeitet = nMak( nmakParam, this, me );
@@ -329,7 +329,7 @@ void TextFeld::doMausEreignis( MausEreignis &me ) // Maus Ereignis
 		doMausEreignis( me2 );
 	}
 	me.mx -= pos.x, me.my -= pos.y;
-	if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+	if( mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
 	{
 		if( removeFokus && me.id == ME_RLinks )
 			removeStyle( Style::Fokus );
@@ -471,10 +471,10 @@ void TextFeld::doTastaturEreignis( TastaturEreignis &te )
 	bool ntakc = !te.verarbeitet;
 	if( te.verarbeitet || hatStyleNicht( Style::Fokus ) )
 		return;
-	if( !Tak )
+	if( !tak )
 		return;
 	++ref;
-	if( Tak( takParam, this, te ) )
+	if( tak( takParam, this, te ) )
 	{
 		if( hatStyleNicht( Style::Erlaubt ) )
 		{
@@ -789,8 +789,8 @@ Zeichnung *TextFeld::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
 	obj->setSize( gr );
 	obj->setMausEreignisParameter( makParam );
 	obj->setTastaturEreignisParameter( takParam );
-	obj->setMausEreignis( Mak );
-	obj->setTastaturEreignis( Tak );
+	obj->setMausEreignis( mak );
+	obj->setTastaturEreignis( tak );
 	if( toolTip )
 		obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
 	obj->setStyle( style );

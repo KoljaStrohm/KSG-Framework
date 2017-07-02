@@ -2,6 +2,8 @@
 #define Betriebssystem_H
 #define MAX_KNOCHEN_ANZ 128
 #define _NOHEAP
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #ifdef _WIN32
 
 #ifdef _DEBUG

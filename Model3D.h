@@ -94,7 +94,7 @@ namespace Framework
         //  kamMatrix: Die vereiniegung der view und projektions Matrizen
         __declspec( dllexport ) int kalkulateMatrix( Mat4< float > &modelMatrix, Mat4< float > *matBuffer, Mat4< float > &kamMatrix );
         // Berechnet den Radius des Skeletts
-        _declspec( dllexport ) float getRadius() const;
+        __declspec( dllexport ) float getRadius() const;
         // Kopiert das Skelett
         __declspec( dllexport ) Skelett *kopiereSkelett() const;
         // Erhöht den Reference Counting Zähler.

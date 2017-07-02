@@ -3,6 +3,8 @@
 
 #include "Punkt.h"
 #include "Critical.h"
+#include <queue>
+#include <functional>
 
 namespace Framework
 {
@@ -36,23 +38,26 @@ namespace Framework
         Punkt gr;
         void *makParam;
         void *takParam;
-        bool( *Mak )( void *, void *, MausEreignis );
-        bool( *Tak )( void *, void *, TastaturEreignis );
+        std::function< bool( void*, void*, MausEreignis ) > mak;
+        std::function< bool( void*, void*, TastaturEreignis ) > tak;
         void *nmakParam;
         void *ntakParam;
-        bool( *nMak )( void *, void *, MausEreignis );
-        bool( *nTak )( void *, void *, TastaturEreignis );
+        std::function< bool( void*, void*, MausEreignis ) > nMak;
+        std::function< bool( void*, void*, TastaturEreignis ) > nTak;
         bool mausIn;
         Critical cs;
         ToolTip *toolTip;
         __int64 style;
         bool rend;
+        std::queue< std::function< void() > > actions;
 
     public:
         // Konstruktor 
         __declspec( dllexport ) Zeichnung();
         // Destruktor 
         __declspec( dllexport ) ~Zeichnung();
+        // Übergibt einen Void Funktionspointer auf eine Aktion die einmalig vom Hauptthread ausgeführt werden soll. (Passiert nach dem Tick)
+        __declspec( dllexport ) void postAction( std::function< void() > action );
         // Legt fest, ob sich die Zeichnung seit des letzten Bildes verändert hat und neu gezeichnet werden muss
         __declspec( dllexport ) void setRender();
         // Setzt den Text, der erscheint, wenn der Benutzer für längere Zeit mit der Maus in der Zeichnung verweilt
@@ -75,13 +80,13 @@ namespace Framework
         // Wenn die Rückruffunktion 0 zurückgiebt, oder nicht gesetzt wurde, wird ein Maus Ereignis von der Zeichnung nicht weiter beachtet
         // Es kann die Standartfunktion __ret1ME verwendet werden, die in MausEreignis.h definiert ist und immer 1 zurückgibt
         //  ak: Ein Zeiger auf die Rückruffunktion
-        __declspec( dllexport ) void setMausEreignis( bool( *ak )( void *, void *, MausEreignis ) );
+        __declspec( dllexport ) void setMausEreignis( std::function< bool( void*, void*, MausEreignis ) > ak );
         // Setzt die Rückruffunktion, die bei einem Tastatur Ereignis aufgerufen werdne soll.
         // Wenn die Rückruffunktion 0 zurückgiebt, oder nicht gesetzt wurde, wird ein Tastatur Ereignis von der Zeichnung nicht weiter beachtet
         // Es kann die Standartfunktion __ret1TE verwendet werden, die in TastaturEreignis.h definiert ist und immer 1 zurückgibt
         // Weitere Standartfunktionen sind _nurNummernTE und _nurHexTE ebenfals aus TastaturEreignis.h
         //  ak: Ein Zeiger auf die Rückruffunktion
-        __declspec( dllexport ) void setTastaturEreignis( bool( *ak )( void *, void *, TastaturEreignis ) );
+        __declspec( dllexport ) void setTastaturEreignis( std::function< bool( void*, void*, TastaturEreignis ) > ak );
         // setzt den Parameter, der bei einem Maus Ereignis an die Rückruffunktion übergeben wird, die aufgerufen wird, fals das Ereignis von der Zeichnung verarbeitet wurde
         //  p: Der Parameter
         __declspec( dllexport ) void setNMausEreignisParameter( void *p );
@@ -92,13 +97,13 @@ namespace Framework
         // Wenn die Rückruffunktion 1 zurückgiebt, oder nicht gesetzt wurde, wird das Maus Ereignis von keiner weiteren Zeichnung verarbeitet, die zum Beispiel hinter dieser Zeichnung liegen
         // Es kann die Standartfunktion __ret1ME verwendet werden, die in MausEreignis.h definiert ist und immer 1 zurückgibt
         //  ak: Ein Zeiger auf die Rückruffunktion
-        __declspec( dllexport ) void setNMausEreignis( bool( *ak )( void *, void *, MausEreignis ) );
+        __declspec( dllexport ) void setNMausEreignis( std::function< bool( void*, void*, MausEreignis ) > ak );
         // Setzt die Rückruffunktion, die bei einem Tastatur Ereignis aufgerufen werdne soll, nachdem das Ereignis bereits von der Zeichnung verarbeitet wurde
         // Wenn die Rückruffunktion 1 zurückgiebt, oder nicht gesetzt wurde, wird das Tastatur Ereignis von keiner weiteren Zeichnung verarbeitet
         // Es kann die Standartfunktion __ret1TE verwendet werden, die in TastaturEreignis.h definiert ist und immer 1 zurückgibt
         // Weitere Standartfunktionen sind _nurNummernTE und _nurHexTE ebenfals aus TastaturEreignis.h
         //  ak: Ein Zeiger auf die Rückruffunktion
-        __declspec( dllexport ) void setNTastaturEreignis( bool( *ak )( void *, void *, TastaturEreignis ) );
+        __declspec( dllexport ) void setNTastaturEreignis( std::function< bool( void*, void*, TastaturEreignis ) > ak );
         // Verarbeitet ein Maus Ereignis. Wird vom Framework automatisch aufgerufen.
         //  me: Das Ereignis
         __declspec( dllexport ) virtual void doMausEreignis( MausEreignis &me );

@@ -147,7 +147,7 @@ void Knopf::doMausEreignis( MausEreignis &me ) // Maus Ereignis
     }
     ++ref;
     me.mx -= pos.x, me.my -= pos.y;
-    if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+    if( mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
     {
         if( me.id == ME_Betritt )
         {
@@ -274,8 +274,8 @@ Zeichnung *Knopf::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
     obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
-    obj->setMausEreignis( Mak );
-    obj->setTastaturEreignis( Tak );
+    obj->setMausEreignis( mak );
+    obj->setTastaturEreignis( tak );
     if( toolTip )
         obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     obj->setStyle( style );
@@ -622,7 +622,7 @@ void KontrollKnopf::doMausEreignis( MausEreignis &me ) // Nachrichten verarbeitu
     }
     me.mx -= pos.x;
     me.my -= pos.y;
-    if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+    if( mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
     {
         if( me.id == ME_Betritt && hatStyle( Style::MausKlick ) != MausStand[ M_Links ] )
             setStyle( Style::MausKlick, MausStand[ M_Links ] );

@@ -92,8 +92,8 @@ Zeichnung *LRahmen::dublizieren() const // Kopiert das Zeichnung
     obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
-    obj->setMausEreignis( Mak );
-    obj->setTastaturEreignis( Tak );
+    obj->setMausEreignis( mak );
+    obj->setTastaturEreignis( tak );
     if( toolTip )
         obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     obj->setAlpha( alpha );

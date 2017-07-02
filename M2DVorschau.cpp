@@ -90,7 +90,7 @@ void M2DVorschau::doMausEreignis( MausEreignis &me )
         doMausEreignis( me2 );
     }
     me.mx -= pos.x, me.my -= pos.y;
-    if( Mak && Mak( makParam, this, me ) )
+    if( mak && mak( makParam, this, me ) )
     {
         if( hatStyle( Style::UsrScale ) )
         {

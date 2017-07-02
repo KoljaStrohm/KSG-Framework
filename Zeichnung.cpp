@@ -21,8 +21,8 @@ Zeichnung::Zeichnung()
     gr( 0, 0 ),
     makParam( 0 ),
     takParam( 0 ),
-    Mak( 0 ),
-    Tak( 0 ),
+    mak( 0 ),
+    tak( 0 ),
     nmakParam( 0 ),
     ntakParam( 0 ),
     nMak( 0 ),
@@ -30,14 +30,19 @@ Zeichnung::Zeichnung()
     mausIn( 0 ),
     toolTip( 0 ),
     rend( 0 )
-{
-}
+{}
 
 // Destruktor 
 Zeichnung::~Zeichnung()
 {
     if( toolTip )
         toolTip->release();
+}
+
+// Übergibt einen Void Funktionspointer auf eine Aktion die einmalig vom Hauptthread ausgeführt werden soll. (Passiert nach dem Tick)
+void Zeichnung::postAction( std::function< void() > action )
+{
+    actions.push( action );
 }
 
 // nicht constant 
@@ -78,14 +83,14 @@ void Zeichnung::setTastaturEreignisParameter( void *p ) // setzt den Parameter v
     takParam = p;
 }
 
-void Zeichnung::setMausEreignis( bool( *ak )( void *, void *, MausEreignis ) ) // setzt das Maus Ereignis
+void Zeichnung::setMausEreignis( std::function< bool( void*, void*, MausEreignis ) > ak ) // setzt das Maus Ereignis
 {
-    Mak = ak;
+    mak = ak;
 }
 
-void Zeichnung::setTastaturEreignis( bool( *ak )( void *, void *, TastaturEreignis ) ) // setzt das TastaturEreignis
+void Zeichnung::setTastaturEreignis( std::function< bool( void*, void*, TastaturEreignis ) > ak ) // setzt das TastaturEreignis
 {
-    Tak = ak;
+    tak = ak;
 }
 
 void Zeichnung::setNMausEreignisParameter( void *p ) // setzt den Parameter vom Maus Ereignis
@@ -98,12 +103,12 @@ void Zeichnung::setNTastaturEreignisParameter( void *p ) // setzt den Parameter 
     ntakParam = p;
 }
 
-void Zeichnung::setNMausEreignis( bool( *ak )( void *, void *, MausEreignis ) ) // setzt das Maus Ereignis
+void Zeichnung::setNMausEreignis( std::function< bool( void*, void*, MausEreignis ) > ak ) // setzt das Maus Ereignis
 {
     nMak = ak;
 }
 
-void Zeichnung::setNTastaturEreignis( bool( *ak )( void *, void *, TastaturEreignis ) ) // setzt das TastaturEreignis
+void Zeichnung::setNTastaturEreignis( std::function< bool( void*, void*, TastaturEreignis ) > ak ) // setzt das TastaturEreignis
 {
     nTak = ak;
 }
@@ -139,8 +144,8 @@ void Zeichnung::doMausEreignis( MausEreignis &me ) // ruft Mak auf
         doMausEreignis( me2 );
     }
     me.mx -= pos.x, me.my -= pos.y;
-    if( Mak )
-        me.verarbeitet |= Mak( makParam, this, me );
+    if( mak )
+        me.verarbeitet |= mak( makParam, this, me );
     if( nMak && me.verarbeitet )
         me.verarbeitet = nMak( nmakParam, this, me );
     me.mx += pos.x, me.my += pos.y;
@@ -150,8 +155,8 @@ void Zeichnung::doTastaturEreignis( TastaturEreignis &te ) // ruft Tak auf
 {
     if( te.verarbeitet )
         return;
-    if( Tak )
-        te.verarbeitet |= Tak( takParam, this, te );
+    if( tak )
+        te.verarbeitet |= tak( takParam, this, te );
     if( nTak && te.verarbeitet )
         te.verarbeitet = nTak( ntakParam, this, te );
 }
@@ -208,6 +213,11 @@ void Zeichnung::setSize( int x, int y ) // setzt die Größe
 
 bool Zeichnung::tick( double tickval )
 {
+    while( !actions.empty() )
+    {
+        actions.front()();
+        actions.pop();
+    }
     bool r = rend;
     rend = 0;
     return r;
@@ -267,12 +277,12 @@ void Zeichnung::render( Bild &zRObj )
 // constant 
 bool Zeichnung::hatMausEreignis() const // prüft, ob Mak gesetzt ist
 {
-    return Mak != 0;
+    return mak != 0;
 }
 
 bool Zeichnung::hatTastaturEreignis() const // prüft, ob Tak gesetzt ist
 {
-    return Tak != 0;
+    return tak != 0;
 }
 
 const Punkt &Zeichnung::getPosition() const // gibt die Position zurück
@@ -332,8 +342,8 @@ Zeichnung *Zeichnung::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
     obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
-    obj->setMausEreignis( Mak );
-    obj->setTastaturEreignis( Tak );
+    obj->setMausEreignis( mak );
+    obj->setTastaturEreignis( tak );
     if( toolTip )
         obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     return obj;
@@ -745,7 +755,7 @@ void ZeichnungHintergrund::render( Bild &rObj )
         unlockZeichnung();
         return;
     }
-	Zeichnung::render( rObj );
+    Zeichnung::render( rObj );
     int rbr = 0;
     if( hatStyle( Style::Rahmen ) && rahmen )
     {
@@ -944,8 +954,8 @@ Zeichnung *ZeichnungHintergrund::dublizieren() const // Erzeugt eine Kopie des Z
     obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
-    obj->setMausEreignis( Mak );
-    obj->setTastaturEreignis( Tak );
+    obj->setMausEreignis( mak );
+    obj->setTastaturEreignis( tak );
     if( toolTip )
         obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     obj->setStyle( style );

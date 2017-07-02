@@ -322,10 +322,8 @@ bool Animation2D::tick( double zeit )
     data->unlock();
     if( tmp != jetzt )
         rend = 1;
-    bool ret = rend;
-    rend = 0;
     unlockZeichnung();
-    return ret;
+    return Zeichnung::tick( zeit );
 }
 
 void Animation2D::render( Bild &zRObj )
@@ -415,8 +413,8 @@ Zeichnung *Animation2D::dublizieren() const
     ret->setSize( gr );
     ret->setMausEreignisParameter( makParam );
     ret->setTastaturEreignisParameter( takParam );
-    ret->setMausEreignis( Mak );
-    ret->setTastaturEreignis( Tak );
+    ret->setMausEreignis( mak );
+    ret->setTastaturEreignis( tak );
     if( toolTip )
         ret->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     if( data )

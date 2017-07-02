@@ -138,7 +138,7 @@ float Knochen::getRadius() const
 {
     float r = pos.getLength();
     if( geschwister )
-        r = max( r, geschwister->getRadius() );
+        r = MAX( r, geschwister->getRadius() );
     if( kinder )
         r += kinder->getRadius();
     return r;
@@ -629,7 +629,10 @@ bool Model3D::tick( double tickval )
     {
         radius += skelett->getRadius();
         for( auto i = animations->getArray(); i.set && i.var; i++ )
+        {
+            rend = i.var->speed > 0;
             i.var->a->apply( skelett, i.var->offset, tickval * i.var->speed );
+        }
     }
     return Zeichnung3D::tick( tickval );
 }

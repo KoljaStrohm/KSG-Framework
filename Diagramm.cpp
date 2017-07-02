@@ -1507,7 +1507,7 @@ void LDiag::doMausEreignis( MausEreignis &me )
     me.my -= pos.y;
     if( hatDatenStyle( DiagDaten::Style::Sichtbar ) && ( hatStyle( Style::HScroll ) || hatStyle( Style::VScroll ) ) )
     {
-        if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+        if( mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
         {
             if( me.id != ME_Betritt && me.id != ME_Leaves )
             {

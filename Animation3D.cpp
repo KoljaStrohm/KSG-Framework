@@ -92,7 +92,7 @@ void Animation3D::apply( Knochen *zK, double timeOffset, double sec ) const
             double left = d->time - timeOffset;
             if( left > 0 )
             {
-                float proc = (float)min( sec / left, 1 );
+                float proc = (float)MIN( sec / left, 1 );
                 zK->pos += ( d->pos - zK->pos ) * proc;
                 zK->winkel += ( d->rot - zK->winkel ) * proc;
                 sec -= left;

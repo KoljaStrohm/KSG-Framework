@@ -277,7 +277,7 @@ namespace Framework
             const static __int64 normal = Sichtbar | Erlaubt | Rahmen | Titel | TitelBuffered | Closable | ClosingHBild | ClosingKlickBuffer | Beweglich; // Vereint die Flags Sichtbar, Erlaubt, Rahmen, Titel, TitelBuffered, Schließbar, SchließHBild, SchließKlickBuffer, Beweglich
         };
     private:
-        bool( *closingMe )( void *, void *, MausEreignis );
+        std::function< bool( void*, void*, MausEreignis ) > closingMe;
         void *closingMeParam;
         LRahmen *rahmen;
         TextFeld *titel;
@@ -384,7 +384,7 @@ namespace Framework
         // Wenn die Rückruffunktion 0 zurückgiebt, oder nicht gesetzt wurde, wird ein Maus Ereignis von der Zeichnung nicht weiter beachtet
         // Das Fenster wird nicht von selbst geschlossen, sondern sollte in der Rückruffunktion durch den aufruf von löscheStyle( Fenster::Style::Sichtbar ); geschlossen werden
         //  ak: Ein Zeiger auf die Rückruffunktion
-        __declspec( dllexport ) void setClosingMe( bool( *closingMe )( void *, void *, MausEreignis ) );
+        __declspec( dllexport ) void setClosingMe( std::function< bool( void*, void*, MausEreignis ) > closingMe );
         // Setzt die Hintergrund Farbe des Schließen Knopfes
         //  f: Die Farbe im A8R8G8B8 Format
         __declspec( dllexport ) void setSBgFarbe( int f );

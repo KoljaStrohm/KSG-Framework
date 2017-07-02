@@ -847,7 +847,7 @@ void ObjTabelle::doMausEreignis( MausEreignis &me ) // verarbeitet Nachrichten
         removeFokus = 1;
     }
     bool ausserhalb = !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves;
-    bool MakB = Mak && ( me.verarbeitet || ausserhalb || Mak( makParam, this, me ) );
+    bool MakB = mak && ( me.verarbeitet || ausserhalb || mak( makParam, this, me ) );
     if( !( me.mx >= pos.x && me.mx <= pos.x + gr.x && me.my >= pos.y && me.my <= pos.y + gr.y ) && me.id != ME_Leaves )
     {
         if( removeFokus && me.id == ME_RLinks )
@@ -1004,7 +1004,7 @@ void ObjTabelle::doTastaturEreignis( TastaturEreignis &te )
     bool ntakc = !te.verarbeitet;
     if( hatStyleNicht( Style::Fokus ) || hatStyleNicht( Style::Erlaubt ) || hatStyleNicht( Style::Sichtbar ) )
         return;
-    if( Tak && ( te.verarbeitet || Tak( takParam, this, te ) ) )
+    if( tak && ( te.verarbeitet || tak( takParam, this, te ) ) )
     {
         lockZeichnung();
         if( zZeichnung( selected.x, selected.y ) )
@@ -1523,8 +1523,8 @@ Zeichnung *ObjTabelle::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
     obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
-    obj->setMausEreignis( Mak );
-    obj->setTastaturEreignis( Tak );
+    obj->setMausEreignis( mak );
+    obj->setTastaturEreignis( tak );
     if( toolTip )
         obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     obj->setStyle( style );

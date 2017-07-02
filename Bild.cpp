@@ -1973,7 +1973,7 @@ BildZ::BildZ()
 	ref( 1 )
 {
 	style = 0;
-	Mak = _ret1ME;
+	mak = _ret1ME;
 }
 
 // Destruktor 
@@ -2053,7 +2053,7 @@ void BildZ::doMausEreignis( MausEreignis &me ) // ruft Mak auf
 	me.my -= pos.y;
 	if( hatStyle( Style::Sichtbar ) )
 	{
-		if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+		if( mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
 		{
 			if( me.id != ME_Betritt && me.id != ME_Leaves )
 			{
@@ -2145,8 +2145,8 @@ Zeichnung *BildZ::dublizieren() const // erstellt eine Kopie des Zeichnungs
 	obj->setSize( gr );
 	obj->setMausEreignisParameter( makParam );
 	obj->setTastaturEreignisParameter( takParam );
-	obj->setMausEreignis( Mak );
-	obj->setTastaturEreignis( Tak );
+	obj->setMausEreignis( mak );
+	obj->setTastaturEreignis( tak );
 	if( toolTip )
 		obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
 	obj->setStyle( style );

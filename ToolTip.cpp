@@ -126,9 +126,7 @@ bool ToolTip::tick( double tickVal )
             rend = 1;
         }
     }
-    bool ret = rend;
-    rend = 0;
-    return ret;
+    return TextFeld::tick( tickVal );
 }
 
 void ToolTip::doMausEreignis( MausEreignis &me )

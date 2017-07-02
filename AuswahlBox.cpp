@@ -884,7 +884,7 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
     {
         if( removeFokus && me.id == ME_RLinks )
         {
-            if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+            if( mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
                 removeStyle( Style::Fokus );
             ausgeklappt = 0;
             me.mx -= pos.x, me.my -= pos.y;
@@ -909,7 +909,7 @@ void AuswahlBox::doMausEreignis( MausEreignis &me ) // Maus
         doMausEreignis( me2 );
     }
     me.mx -= pos.x, me.my -= pos.y;
-    if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+    if( mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
     {
         bool vera = me.verarbeitet;
         if( ausfahren )
@@ -2129,8 +2129,8 @@ Zeichnung *AuswahlBox::dublizieren() const // Erzeugt eine Kopie des Zeichnungs
     obj->setSize( gr );
     obj->setMausEreignisParameter( makParam );
     obj->setTastaturEreignisParameter( takParam );
-    obj->setMausEreignis( Mak );
-    obj->setTastaturEreignis( Tak );
+    obj->setMausEreignis( mak );
+    obj->setTastaturEreignis( tak );
     if( toolTip )
         obj->setToolTipText( toolTip->zText()->getText(), toolTip->zBildschirm() );
     obj->setStyle( style );

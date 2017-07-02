@@ -506,7 +506,7 @@ void AuswahlListe::doMausEreignis( MausEreignis &me )
         doMausEreignis( me2 );
     }
     me.mx -= pos.x, me.my -= pos.y;
-    if( Mak && ( me.verarbeitet || Mak( makParam, this, me ) ) )
+    if( mak && ( me.verarbeitet || mak( makParam, this, me ) ) )
     {
         if( removeFokus && me.id == ME_RLinks )
             removeStyle( Style::Fokus );
@@ -578,10 +578,10 @@ void AuswahlListe::doMausEreignis( MausEreignis &me )
 void AuswahlListe::doTastaturEreignis( TastaturEreignis &te )
 {
     bool ntakc = !te.verarbeitet;
-    if( hatStyleNicht( Style::Fokus ) || !Tak || te.verarbeitet )
+    if( hatStyleNicht( Style::Fokus ) || !tak || te.verarbeitet )
         return;
     ++ref;
-    if( Tak( takParam, this, te ) )
+    if( tak( takParam, this, te ) )
     {
         if( te.id == TE_Press )
         {
